@@ -33,8 +33,7 @@ import edu.uci.ics.jung.visualization.control.*;
  * @author Tom Nelson
  *
  */
-public class MyGraphMousePlugin<V,E> extends AbstractGraphMousePlugin implements
-    MouseListener, MouseMotionListener {
+public class MyGraphMousePlugin<V,E> extends AbstractGraphMousePlugin implements MouseListener, MouseMotionListener {
     
     protected V startVertex;
     protected Point2D down;
@@ -77,6 +76,8 @@ public class MyGraphMousePlugin<V,E> extends AbstractGraphMousePlugin implements
     public boolean checkModifiers(MouseEvent e) {
         return (e.getModifiers() & modifiers) != 0;
     }
+    
+    
 
     /**
      * If the mouse is pressed in an empty area, create a new vertex there.
@@ -150,8 +151,6 @@ public class MyGraphMousePlugin<V,E> extends AbstractGraphMousePlugin implements
             GraphElementAccessor<V,E> pickSupport = vv.getPickSupport();
             if(pickSupport != null) {
                 final V vertex = pickSupport.getVertex(layout, p.getX(), p.getY());
-                System.out.println("down: "+ down.toString());
-                System.out.println("p: "+ p.toString());
                 if((vertex != null) && (startVertex != null)) {
                 	if(!(down.getX() == p.getX() && down.getY() == p.getY())) {
                 		Graph<V,E> graph = vv.getGraphLayout().getGraph();
