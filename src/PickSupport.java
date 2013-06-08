@@ -131,12 +131,12 @@ public class PickSupport<V,E> {
             Layout<V,E> layout = vv.getGraphLayout();
             double dx = graphPoint.getX()-graphDown.getX();
             double dy = graphPoint.getY()-graphDown.getY();
-            PickedState<V> ps = vv.getPickedVertexState();
+            PickedState<V> pickedState = vv.getPickedVertexState();
             
-            for(V v : ps.getPicked()) {
-                Point2D vp = layout.transform(v);
-                vp.setLocation(vp.getX()+dx, vp.getY()+dy);
-                layout.setLocation(v, vp);
+            for(V v : pickedState.getPicked()) {
+                Point2D vertexPoint = layout.transform(v);
+                vertexPoint.setLocation(vertexPoint.getX()+dx, vertexPoint.getY()+dy);
+                layout.setLocation(v, vertexPoint);
             }
             mDown = p;
 
