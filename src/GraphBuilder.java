@@ -25,18 +25,16 @@ import edu.uci.ics.jung.visualization.control.ViewScalingControl;
 
 
 public class GraphBuilder {
+	
+	private static final int PADDING = 20;
 
 	private Layout<Node, Edge> mLayout;
 	private SparseMultigraph<Node, Edge> mGraph;
 	private VisualizationViewer<Node, Edge> mVViewer;
 	private MyModalGraphMouse<Node, Edge> mGraphMouse; 
-	private ScalingControl mScaler;
 	
 	private Factory<Node> mNodeFactory;
 	private Factory<Edge> mEdgeFactory;
-	
-	private int nodeCount;
-	private int edgeCount;
 	
 	public GraphBuilder(JPanel panel) {
 		System.out.println("GraphBuilder Creation");
@@ -44,8 +42,6 @@ public class GraphBuilder {
 		mGraph = new SparseMultigraph<Node, Edge>();
 		mLayout = new StaticLayout<Node, Edge>(mGraph);
 		mVViewer = new VisualizationViewer<Node, Edge>(mLayout);
-		
-		mScaler = new LayoutScalingControl();
 		
 		System.out.println("layout: "+ mLayout.getSize());
 		
@@ -88,27 +84,43 @@ public class GraphBuilder {
 	
 	
 	public void resizeGraph() {
-		Rectangle graphRect = getGraphRect();
 		
-		if(!fitInBounds(graphRect)) {
-			System.out.println("check bounds!!!");
-			// TODO resize graph by mdifying the positions of the vertices
-			
-		}
-			
+		modifyLocationsIfOutOfBounds();
+		
 	}
 	
 	
-	public boolean fitInBounds(Rectangle graphRect) {
+	public void modifyLocationsIfOutOfBounds() {
 		
-		Dimension dimen = mLayout.getSize();
-		if(graphRect == null)
-			return true;
-		
-		if((graphRect.x < 11) || (graphRect.y < 11) || ((graphRect.x + graphRect.width) > (dimen.width - 22)) || ((graphRect.y + graphRect.height) > (dimen.height - 22)))
-			return false;
-		
-		return true;
+		Graph<Node,Edge> graph = mVViewer.getModel().getGraphLayout().getGraph();
+		if(!graph.getVertices().isEmpty()) {
+			Dimension dimen = mVViewer.getSize();
+			int i = 0;
+			
+			System.out.println("dimen: "+ dimen.toString());
+			for(Node v : graph.getVertices()) {
+				Point2D p = mLayout.transform(v);
+				System.out.println("vertex "+ i++ +": ("+ p.getX() +", "+ p.getY() +")");
+				double x = p.getX();
+				double y = p.getY();
+				double newX = x;
+				double newY = y;
+				
+				if(x < PADDING)
+					newX = PADDING;
+				else if(x > dimen.width-PADDING)
+					newX = dimen.width-PADDING;
+				if(y < PADDING)
+					newY = PADDING;
+				else if(y > dimen.height-PADDING)
+					newY = dimen.height-PADDING;
+				
+				if((newX != x) || (newY != y)) {
+					p.setLocation(newX, newY);
+					mLayout.setLocation(v, p);
+				}
+			}
+		}
 	}
 	
 	
