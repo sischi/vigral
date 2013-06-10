@@ -30,48 +30,21 @@ import edu.uci.ics.jung.visualization.picking.PickedState;
 public class MyPopupGraphMousePlugin<V,E> extends AbstractPopupGraphMousePlugin {
     
     protected JPopupMenu popup = new JPopupMenu();
-    
-    //protected JPopupMenu mVertexPopup;
-    //protected JPopupMenu mEdgePopup;
 
     public MyPopupGraphMousePlugin() {
     	this(MouseEvent.BUTTON3_MASK);
-    	//mEdgePopup = new EdgePopupMenu.EdgeMenu(null);
-    	//mVertexPopup = new VertexPopupMenu.VertexMenu(null);
     }
     
     public MyPopupGraphMousePlugin(int modifiers) {
     	super(modifiers);
     }
     
-    /*
-    private void updateEdgeMenu(E edge, VisualizationViewer vv, Point2D point) {
-        if (mEdgePopup == null) return;
-        Component[] menuComps = mEdgePopup.getComponents();
-        for (Component comp: menuComps) {
-        	
-            if (comp instanceof PopupMenuItemInterface) {
-                ((PopupMenuItemInterface)comp).setComponentAndView(edge, vv);
-            }
-        }
-    }
-    
-    private void updateVertexMenu(V vertex, VisualizationViewer vv, Point2D point) {
-        if (mEdgePopup == null) return;
-        Component[] menuComps = mVertexPopup.getComponents();
-        for (Component comp: menuComps) {
-        	
-            if (comp instanceof PopupMenuItemInterface) {
-                ((PopupMenuItemInterface)comp).setComponentAndView(vertex, vv);
-            }
-        }
-    }
-    */
-    
     
     protected void handlePopup(MouseEvent e) {
         final VisualizationViewer<V,E> vv = (VisualizationViewer<V,E>)e.getSource();
         Point2D p = e.getPoint();
+        
+        // TODO inform the editing plugin about a popupmenu to be present so that no new vertex will be created when clicking outside the popupmenu
         
         GraphElementAccessor<V,E> pickSupport = vv.getPickSupport();
         if(pickSupport != null) {
