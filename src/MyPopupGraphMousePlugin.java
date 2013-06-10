@@ -31,33 +31,28 @@ public class MyPopupGraphMousePlugin<V,E> extends AbstractPopupGraphMousePlugin 
     
     protected JPopupMenu popup = new JPopupMenu();
     
-    protected JPopupMenu mVertexPopup;
-    protected JPopupMenu mEdgePopup;
+    //protected JPopupMenu mVertexPopup;
+    //protected JPopupMenu mEdgePopup;
 
     public MyPopupGraphMousePlugin() {
     	this(MouseEvent.BUTTON3_MASK);
-    	mEdgePopup = new EdgePopupMenu.EdgeMenu(null);
-    	mVertexPopup = new VertexPopupMenu.VertexMenu(null);
+    	//mEdgePopup = new EdgePopupMenu.EdgeMenu(null);
+    	//mVertexPopup = new VertexPopupMenu.VertexMenu(null);
     }
     
     public MyPopupGraphMousePlugin(int modifiers) {
     	super(modifiers);
     }
     
-    
+    /*
     private void updateEdgeMenu(E edge, VisualizationViewer vv, Point2D point) {
         if (mEdgePopup == null) return;
         Component[] menuComps = mEdgePopup.getComponents();
         for (Component comp: menuComps) {
         	
-            if (comp instanceof EdgeMenuItem) {
-                ((EdgeMenuItem)comp).setEdgeAndView(edge, vv);
+            if (comp instanceof PopupMenuItemInterface) {
+                ((PopupMenuItemInterface)comp).setComponentAndView(edge, vv);
             }
-            /*
-            if (comp instanceof MenuPointListener) {
-                ((MenuPointListener)comp).setPoint(point);
-            }
-            */
         }
     }
     
@@ -66,113 +61,33 @@ public class MyPopupGraphMousePlugin<V,E> extends AbstractPopupGraphMousePlugin 
         Component[] menuComps = mVertexPopup.getComponents();
         for (Component comp: menuComps) {
         	
-            if (comp instanceof VertexMenuItem) {
-                ((VertexMenuItem)comp).setVertexAndView(vertex, vv);
-            }
-        }
-    }
-    
-    
-    protected void handlePopup(MouseEvent e) {
-        final VisualizationViewer<V,E> vv =
-                (VisualizationViewer<V,E>)e.getSource();
-        Point2D p = e.getPoint();
-        
-        GraphElementAccessor<V,E> pickSupport = vv.getPickSupport();
-        if(pickSupport != null) {
-            final V v = pickSupport.getVertex(vv.getGraphLayout(), p.getX(), p.getY());
-            if(v != null) {
-                // System.out.println("Vertex " + v + " was right clicked");
-                updateVertexMenu(v, vv, p);
-                mVertexPopup.show(vv, e.getX(), e.getY());
-            } 
-            else {
-                final E edge = pickSupport.getEdge(vv.getGraphLayout(), p.getX(), p.getY());
-                if(edge != null) {
-                    // System.out.println("Edge " + edge + " was right clicked");
-                    updateEdgeMenu(edge, vv, p);
-                    mEdgePopup.show(vv, e.getX(), e.getY());
-                  
-                }
-            }
-        }
-    }
-    
-    
-    /*
-	@SuppressWarnings({ "unchecked", "serial", "serial" })
-	protected void handlePopup(MouseEvent e) {
-        final VisualizationViewer<V,E> vv = (VisualizationViewer<V,E>)e.getSource();
-        final Layout<V,E> layout = vv.getGraphLayout();
-        final Graph<V,E> graph = layout.getGraph();
-        final Point2D p = e.getPoint();
-        final Point2D ivp = p;
-        GraphElementAccessor<V,E> pickSupport = vv.getPickSupport();
-        if(pickSupport != null) {
-            
-        	popup.removeAll();
-        	
-            final V vertex = pickSupport.getVertex(layout, ivp.getX(), ivp.getY());
-            final E edge = pickSupport.getEdge(layout, ivp.getX(), ivp.getY());
-            final PickedState<V> pickedVertexState = vv.getPickedVertexState();
-            final PickedState<E> pickedEdgeState = vv.getPickedEdgeState();
-            
-            if(vertex != null) {
-            	Set<V> picked = pickedVertexState.getPicked();
-            	if(picked.size() > 0) {
-            		if(graph instanceof UndirectedGraph == false) {
-            			JMenu directedMenu = new JMenu("Create Directed Edge");
-            			popup.add(directedMenu);
-            			for(final V other : picked) {
-            				directedMenu.add(new AbstractAction("["+other+","+vertex+"]") {
-            					public void actionPerformed(ActionEvent e) {
-            						graph.addEdge((E) Edge.EdgeFactory.getInstance().create(), other, vertex, EdgeType.DIRECTED);
-            						vv.repaint();
-            					}
-            				});
-            			}
-            		}
-            		if(graph instanceof DirectedGraph == false) {
-            			JMenu undirectedMenu = new JMenu("Create Undirected Edge");
-            			popup.add(undirectedMenu);
-            			for(final V other : picked) {
-            				undirectedMenu.add(new AbstractAction("[" + other+","+vertex+"]") {
-            					public void actionPerformed(ActionEvent e) {
-            						graph.addEdge((E) Edge.EdgeFactory.getInstance().create(),
-            								other, vertex);
-            						vv.repaint();
-            					}
-            				});
-            			}
-            		}
-                }
-                popup.add(new AbstractAction("Delete Vertex") {
-                    public void actionPerformed(ActionEvent e) {
-                        pickedVertexState.pick(vertex, false);
-                        graph.removeVertex(vertex);
-                        vv.repaint();
-                    }});
-            } else if(edge != null) {
-                popup.add(new AbstractAction("Delete Edge") {
-                    public void actionPerformed(ActionEvent e) {
-                        pickedEdgeState.pick(edge, false);
-                        graph.removeEdge(edge);
-                        vv.repaint();
-                    }});
-            } else {
-                popup.add(new AbstractAction("Create Vertex") {
-                    public void actionPerformed(ActionEvent e) {
-                        V newVertex = (V) Vertex.VertexFactory.getInstance().create();
-                        graph.addVertex(newVertex);
-                        layout.setLocation(newVertex, vv.getRenderContext().getMultiLayerTransformer().inverseTransform(p));
-                        vv.repaint();
-                    }
-                });
-            }
-            if(popup.getComponentCount() > 0) {
-                popup.show(vv, e.getX(), e.getY());
+            if (comp instanceof PopupMenuItemInterface) {
+                ((PopupMenuItemInterface)comp).setComponentAndView(vertex, vv);
             }
         }
     }
     */
+    
+    
+    protected void handlePopup(MouseEvent e) {
+        final VisualizationViewer<V,E> vv = (VisualizationViewer<V,E>)e.getSource();
+        Point2D p = e.getPoint();
+        
+        GraphElementAccessor<V,E> pickSupport = vv.getPickSupport();
+        if(pickSupport != null) {
+            final V vertex = pickSupport.getVertex(vv.getGraphLayout(), p.getX(), p.getY());
+            if(vertex != null) {
+            	ElementPopupMenu.setMode(ElementPopupMenu.VERTEXMENU, (Vertex)vertex, null, vv);
+            	new ElementPopupMenu.PopupMenu(null).show(vv, e.getX(), e.getY());
+            } 
+            else {
+                final E edge = pickSupport.getEdge(vv.getGraphLayout(), p.getX(), p.getY());
+                if(edge != null) {
+                	ElementPopupMenu.setMode(ElementPopupMenu.EDGEMENU, null, (Edge)edge, vv);
+                	new ElementPopupMenu.PopupMenu(null).show(vv, e.getX(), e.getY());
+                }
+            }
+        }
+    }
+
 }
