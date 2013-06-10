@@ -100,25 +100,6 @@ public class GraphCreationGUI extends JFrame {
 		mPnl_graph.setBounds(x, y, w, h);
 	}
 
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					GraphCreationGUI frame = new GraphCreationGUI();
-					frame.setVisible(true);
-					Dimension dimen = frame.getSize();
-					dimen.height++;
-					dimen.width++;
-					frame.resize(dimen);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
 
 	/**
 	 * Create the frame.
