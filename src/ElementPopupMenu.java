@@ -69,6 +69,7 @@ public class ElementPopupMenu {
 					    }
 					});
 		            
+					dialog.setModal(true);
 		            dialog.setVisible(true);
 		        }
 		    });
