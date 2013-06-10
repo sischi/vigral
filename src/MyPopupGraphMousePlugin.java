@@ -37,6 +37,7 @@ public class MyPopupGraphMousePlugin<V,E> extends AbstractPopupGraphMousePlugin 
     public MyPopupGraphMousePlugin() {
     	this(MouseEvent.BUTTON3_MASK);
     	mEdgePopup = new EdgePopupMenu.EdgeMenu(null);
+    	mVertexPopup = new VertexPopupMenu.VertexMenu(null);
     }
     
     public MyPopupGraphMousePlugin(int modifiers) {
@@ -60,6 +61,17 @@ public class MyPopupGraphMousePlugin<V,E> extends AbstractPopupGraphMousePlugin 
         }
     }
     
+    private void updateVertexMenu(V vertex, VisualizationViewer vv, Point2D point) {
+        if (mEdgePopup == null) return;
+        Component[] menuComps = mVertexPopup.getComponents();
+        for (Component comp: menuComps) {
+        	
+            if (comp instanceof VertexMenuItem) {
+                ((VertexMenuItem)comp).setVertexAndView(vertex, vv);
+            }
+        }
+    }
+    
     
     protected void handlePopup(MouseEvent e) {
         final VisualizationViewer<V,E> vv =
@@ -71,8 +83,8 @@ public class MyPopupGraphMousePlugin<V,E> extends AbstractPopupGraphMousePlugin 
             final V v = pickSupport.getVertex(vv.getGraphLayout(), p.getX(), p.getY());
             if(v != null) {
                 // System.out.println("Vertex " + v + " was right clicked");
-                //updateVertexMenu(v, vv, p);
-                //vertexPopup.show(vv, e.getX(), e.getY());
+                updateVertexMenu(v, vv, p);
+                mVertexPopup.show(vv, e.getX(), e.getY());
             } 
             else {
                 final E edge = pickSupport.getEdge(vv.getGraphLayout(), p.getX(), p.getY());
