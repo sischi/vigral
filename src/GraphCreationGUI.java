@@ -109,6 +109,10 @@ public class GraphCreationGUI extends JFrame {
 				try {
 					GraphCreationGUI frame = new GraphCreationGUI();
 					frame.setVisible(true);
+					Dimension dimen = frame.getSize();
+					dimen.height++;
+					dimen.width++;
+					frame.resize(dimen);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
