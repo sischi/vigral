@@ -33,6 +33,11 @@ public class Vertex {
 	}
 	
 	
+	public String getIdentifier() {
+		return "V"+ mID;
+	}
+	
+	
 	public static class VertexFactory implements Factory<Vertex> {
 
 		private static int IDCOUNT = 0;
