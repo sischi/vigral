@@ -102,13 +102,13 @@ public class GraphCreationGUI extends JFrame {
 	public GraphCreationGUI() {
 		setTitle("ViGrAl - Graph Creation");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setMinimumSize(new Dimension(460, 310));
+		setMinimumSize(new Dimension(500, 300));
 		addComponentListener(resizeListener);
 		
 		initComponents();
 		resizeComponents();
 		
-		setBounds(100, 100, 450, 300);
+		setBounds(100, 100, 600, 450);
 		
 		mGraphBuilder = new GraphBuilder(mPnl_graph);
 	}
