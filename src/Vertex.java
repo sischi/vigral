@@ -2,20 +2,27 @@ import org.apache.commons.collections15.Factory;
 
 
 public class Vertex {
-
-	private static int IDENTIFICATION = 0;
 	
 	private int mID;
 	private String mLabel;
 	
 	public Vertex() {
-		mID = IDENTIFICATION++;
 		System.out.println("Vertex created! id= "+ mID);
 		mLabel = "";
 	}
 	
+	public Vertex(int id) {
+		mID = id;
+		mLabel = "V"+ mID;
+		System.out.println("Vertex created! id= "+ mID +", label="+ mLabel);
+	}
+	
 	public String getLabel() {
 		return mLabel;
+	}
+	
+	public void setLabel(String label) {
+		mLabel = label;
 	}
 	
 	public String toString() {
@@ -28,6 +35,7 @@ public class Vertex {
 	
 	public static class VertexFactory implements Factory<Vertex> {
 
+		private static int IDCOUNT = 0;
 		private static VertexFactory mInstance = new VertexFactory();
 		
 		private VertexFactory() {
@@ -39,7 +47,7 @@ public class Vertex {
 		
 		@Override
 		public Vertex create() {
-			return new Vertex();
+			return new Vertex(IDCOUNT++);
 		}
 		
 	}
