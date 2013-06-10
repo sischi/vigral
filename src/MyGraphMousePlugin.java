@@ -116,14 +116,21 @@ public class MyGraphMousePlugin<V,E> extends AbstractGraphMousePlugin implements
                 		mPicking.mousePressed(e);
                 	}
                 	else {
-                		// exit picking  and clear selection
-                		if(mMode == PICKING_MODE) {
-                			mPicking.clearPickedCollection(vv);
-                			mMode = EDITING_MODE;
+
+                		if((e.getModifiers() & MouseEvent.CTRL_MASK) == 0) {
+                			
+                			if(vv.getPickedVertexState().getPicked().size() == 0)
+                				mMode = EDITING_MODE;
+                			
+	                		// exit picking  and clear selection
+	                		if(mMode == PICKING_MODE) {
+	                			mPicking.clearPickedCollection(vv);
+	                			mMode = EDITING_MODE;
+	                		}
+	                		// make a new vertex
+	                		else if(mMode == EDITING_MODE)
+	                			mEditing.addVertex(e, vv);
                 		}
-                		// make a new vertex
-                		else if(mMode == EDITING_MODE)
-                			mEditing.addVertex(e, vv);
                 	}
                 }
             }
