@@ -28,13 +28,12 @@ import edu.uci.ics.jung.visualization.picking.PickedState;
  */
 public class MyPopupGraphMousePlugin<V,E> extends AbstractPopupGraphMousePlugin {
     
-    protected Factory<V> vertexFactory;
-    protected Factory<E> edgeFactory;
     protected JPopupMenu popup = new JPopupMenu();
+    
+    protected JPopupMenu mVertexPopup;
+    protected JPopupMenu mEdgePopup;
 
-    public MyPopupGraphMousePlugin(Factory<V> vertexFactory, Factory<E> edgeFactory) {
-        this.vertexFactory = vertexFactory;
-        this.edgeFactory = edgeFactory;
+    public MyPopupGraphMousePlugin() {
     }
     
 	@SuppressWarnings({ "unchecked", "serial", "serial" })
@@ -63,7 +62,7 @@ public class MyPopupGraphMousePlugin<V,E> extends AbstractPopupGraphMousePlugin 
             			for(final V other : picked) {
             				directedMenu.add(new AbstractAction("["+other+","+vertex+"]") {
             					public void actionPerformed(ActionEvent e) {
-            						graph.addEdge(edgeFactory.create(), other, vertex, EdgeType.DIRECTED);
+            						graph.addEdge((E) Edge.EdgeFactory.getInstance().create(), other, vertex, EdgeType.DIRECTED);
             						vv.repaint();
             					}
             				});
@@ -75,7 +74,7 @@ public class MyPopupGraphMousePlugin<V,E> extends AbstractPopupGraphMousePlugin 
             			for(final V other : picked) {
             				undirectedMenu.add(new AbstractAction("[" + other+","+vertex+"]") {
             					public void actionPerformed(ActionEvent e) {
-            						graph.addEdge(edgeFactory.create(),
+            						graph.addEdge((E) Edge.EdgeFactory.getInstance().create(),
             								other, vertex);
             						vv.repaint();
             					}
@@ -99,7 +98,7 @@ public class MyPopupGraphMousePlugin<V,E> extends AbstractPopupGraphMousePlugin 
             } else {
                 popup.add(new AbstractAction("Create Vertex") {
                     public void actionPerformed(ActionEvent e) {
-                        V newVertex = vertexFactory.create();
+                        V newVertex = (V) Vertex.VertexFactory.getInstance().create();
                         graph.addVertex(newVertex);
                         layout.setLocation(newVertex, vv.getRenderContext().getMultiLayerTransformer().inverseTransform(p));
                         vv.repaint();

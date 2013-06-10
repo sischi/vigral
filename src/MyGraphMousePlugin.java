@@ -56,21 +56,21 @@ public class MyGraphMousePlugin<V,E> extends AbstractGraphMousePlugin implements
     
     
     
-    public MyGraphMousePlugin(Factory<V> vertexFactory, Factory<E> edgeFactory) {
-        this(MouseEvent.BUTTON1_MASK, vertexFactory, edgeFactory);
+    public MyGraphMousePlugin() {
+        this(MouseEvent.BUTTON1_MASK);
     }
 
     /**
      * create instance and prepare shapes for visual effects
      * @param modifiers
      */
-    public MyGraphMousePlugin(int modifiers, Factory<V> vertexFactory, Factory<E> edgeFactory) {
+    public MyGraphMousePlugin(int modifiers) {
         super(modifiers);
         
 		this.cursor = Cursor.getPredefinedCursor(Cursor.CROSSHAIR_CURSOR);
 		
 		mPicking = new PickSupport<V,E>();
-		mEditing = new EditSupport<V,E>(vertexFactory, edgeFactory);
+		mEditing = new EditSupport<V,E>();
 		mMode = EDITING_MODE;
 		
     }

@@ -23,9 +23,6 @@ import edu.uci.ics.jung.visualization.RenderContext;
 
 public class MyModalGraphMouse<V,E> extends AbstractModalGraphMouse implements ModalGraphMouse, ItemSelectable {
 	
-
-	protected Factory<V> vertexFactory;
-	protected Factory<E> edgeFactory;
 	protected MyGraphMousePlugin<V,E> editingPlugin;
 	protected LabelEditingGraphMousePlugin<V,E> labelEditingPlugin;
 	protected MyPopupGraphMousePlugin<V,E> popupEditingPlugin;
@@ -37,8 +34,8 @@ public class MyModalGraphMouse<V,E> extends AbstractModalGraphMouse implements M
 	 * create an instance with default values
 	 *
 	 */
-	public MyModalGraphMouse(RenderContext<V,E> rc, Factory<V> vertexFactory, Factory<E> edgeFactory) {
-		this(rc, vertexFactory, edgeFactory, 1.1f, 1/1.1f);
+	public MyModalGraphMouse(RenderContext<V,E> rc) {
+		this(rc, 1.1f, 1/1.1f);
 	}
 
 	/**
@@ -46,10 +43,8 @@ public class MyModalGraphMouse<V,E> extends AbstractModalGraphMouse implements M
 	 * @param in override value for scale in
 	 * @param out override value for scale out
 	 */
-	public MyModalGraphMouse(RenderContext<V,E> rc, Factory<V> vertexFactory, Factory<E> edgeFactory, float in, float out) {
+	public MyModalGraphMouse(RenderContext<V,E> rc, float in, float out) {
 		super(in,out);
-		this.vertexFactory = vertexFactory;
-		this.edgeFactory = edgeFactory;
 		this.rc = rc;
 		this.basicTransformer = rc.getMultiLayerTransformer();
 		loadPlugins();
@@ -68,10 +63,10 @@ public class MyModalGraphMouse<V,E> extends AbstractModalGraphMouse implements M
 		//scalingPlugin = new ScalingGraphMousePlugin(new CrossoverScalingControl(), 0, in, out);
 		//rotatingPlugin = new RotatingGraphMousePlugin();
 		//shearingPlugin = new ShearingGraphMousePlugin();
-		editingPlugin = new MyGraphMousePlugin<V,E>(vertexFactory, edgeFactory);
+		editingPlugin = new MyGraphMousePlugin<V,E>();
 		//labelEditingPlugin = new LabelEditingGraphMousePlugin<V,E>();
 		//annotatingPlugin = new AnnotatingGraphMousePlugin<V,E>(rc);
-		popupEditingPlugin = new MyPopupGraphMousePlugin<V,E>(vertexFactory, edgeFactory);
+		popupEditingPlugin = new MyPopupGraphMousePlugin<V,E>();
 		//add(scalingPlugin);
 		
 		//setMode(Mode.EDITING);

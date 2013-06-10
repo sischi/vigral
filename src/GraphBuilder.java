@@ -7,7 +7,6 @@ import java.util.ArrayList;
 
 
 import javax.swing.JPanel;
-import javax.vecmath.Point2d;
 
 import org.apache.commons.collections15.Factory;
 
@@ -22,46 +21,34 @@ import edu.uci.ics.jung.visualization.control.LayoutScalingControl;
 import edu.uci.ics.jung.visualization.control.ModalGraphMouse;
 import edu.uci.ics.jung.visualization.control.ScalingControl;
 import edu.uci.ics.jung.visualization.control.ViewScalingControl;
-
+import edu.uci.ics.jung.visualization.decorators.ToStringLabeller;
+import edu.uci.ics.jung.visualization.renderers.Renderer;
 
 public class GraphBuilder {
 	
 	private static final int PADDING = 20;
 
-	private Layout<Node, Edge> mLayout;
-	private SparseMultigraph<Node, Edge> mGraph;
-	private VisualizationViewer<Node, Edge> mVViewer;
-	private MyModalGraphMouse<Node, Edge> mGraphMouse; 
-	
-	private Factory<Node> mNodeFactory;
-	private Factory<Edge> mEdgeFactory;
+	private Layout<Vertex, Edge> mLayout;
+	private SparseMultigraph<Vertex, Edge> mGraph;
+	private VisualizationViewer<Vertex, Edge> mVViewer;
+	private MyModalGraphMouse<Vertex, Edge> mGraphMouse; 
 	
 	public GraphBuilder(JPanel panel) {
 		System.out.println("GraphBuilder Creation");
 		
-		mGraph = new SparseMultigraph<Node, Edge>();
-		mLayout = new StaticLayout<Node, Edge>(mGraph);
-		mVViewer = new VisualizationViewer<Node, Edge>(mLayout);
+		mGraph = new SparseMultigraph<Vertex, Edge>();
+		mLayout = new StaticLayout<Vertex, Edge>(mGraph);
+		mVViewer = new VisualizationViewer<Vertex, Edge>(mLayout);
 		
 		System.out.println("layout: "+ mLayout.getSize());
 		
-		mNodeFactory = new Factory<Node>() {
-			@Override
-			public Node create() {
-				return new Node();
-			}
-		};
-		mEdgeFactory = new Factory<Edge>() {
-			@Override
-			public Edge create() {
-				return new Edge();
-			}
-		};
-		
-		mGraphMouse = new MyModalGraphMouse<Node, Edge>(mVViewer.getRenderContext(), mNodeFactory, mEdgeFactory);
+		mGraphMouse = new MyModalGraphMouse<Vertex, Edge>(mVViewer.getRenderContext());
 		mVViewer.setGraphMouse(mGraphMouse);
 		mGraphMouse.setMode(ModalGraphMouse.Mode.EDITING);
 		mVViewer.setBackground(Color.green);
+		
+		mVViewer.getRenderContext().setVertexLabelTransformer(new ToStringLabeller());
+		mVViewer.getRenderer().getVertexLabelRenderer().setPosition(Renderer.VertexLabel.Position.CNTR);
 		
 		panel.add(mVViewer);
 		
@@ -91,13 +78,13 @@ public class GraphBuilder {
 	
 	public void modifyLocationsIfOutOfBounds() {
 		
-		Graph<Node,Edge> graph = mVViewer.getModel().getGraphLayout().getGraph();
+		Graph<Vertex,Edge> graph = mVViewer.getModel().getGraphLayout().getGraph();
 		if(!graph.getVertices().isEmpty()) {
 			Dimension dimen = mVViewer.getSize();
 			int i = 0;
 			
 			System.out.println("dimen: "+ dimen.toString());
-			for(Node v : graph.getVertices()) {
+			for(Vertex v : graph.getVertices()) {
 				Point2D p = mLayout.transform(v);
 				System.out.println("vertex "+ i++ +": ("+ p.getX() +", "+ p.getY() +")");
 				double x = p.getX();
@@ -125,7 +112,7 @@ public class GraphBuilder {
 	
 	
 	public Rectangle getGraphRect() {
-		Graph<Node,Edge> graph = mVViewer.getModel().getGraphLayout().getGraph();
+		Graph<Vertex,Edge> graph = mVViewer.getModel().getGraphLayout().getGraph();
 		if(!graph.getVertices().isEmpty()) {
 			Dimension dimen = mVViewer.getSize();
 			double minX = 0;
@@ -135,7 +122,7 @@ public class GraphBuilder {
 			boolean initialised = false;
 			int i = 0;
 			
-			for(Node v : graph.getVertices()) {
+			for(Vertex v : graph.getVertices()) {
 				Point2D p = mLayout.transform(v);
 				double x = p.getX();
 				double y = p.getY();

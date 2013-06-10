@@ -30,8 +30,6 @@ public class EditSupport<V,E> {
     protected VisualizationServer.Paintable mEdgePaintable;
     protected VisualizationServer.Paintable mArrowPaintable;
     protected EdgeType mEdgeIsDirected;
-    protected Factory<V> mVertexFactory;
-    protected Factory<E> mEdgeFactory;
 
 	
 	/**
@@ -74,9 +72,7 @@ public class EditSupport<V,E> {
     
     
 	
-	public EditSupport(Factory<V> vertexFactory, Factory<E> edgeFactory) {
-		mVertexFactory = vertexFactory;
-        mEdgeFactory = edgeFactory;
+	public EditSupport() {
         mRawEdge.setCurve(0.0f, 0.0f, 0.33f, 100, .66f, -50, 1.0f, 0.0f);
         mRawArrowShape = ArrowFactory.getNotchedArrow(20, 16, 8);
         mEdgePaintable = new EdgePaintable();
@@ -120,7 +116,7 @@ public class EditSupport<V,E> {
 		// get the graph
     	Graph<V,E> graph = vv.getModel().getGraphLayout().getGraph();
 		
-		V newVertex = mVertexFactory.create();
+		V newVertex = (V) Vertex.VertexFactory.getInstance().create();
 		
         Layout<V,E> layout = vv.getModel().getGraphLayout();
         graph.addVertex(newVertex);
@@ -135,7 +131,7 @@ public class EditSupport<V,E> {
 		if((vertex != null) && (mStartVertex != null)) {
 			if(!(mDown.getX() == p.getX() && mDown.getY() == p.getY())) {
 	    		Graph<V,E> graph = vv.getGraphLayout().getGraph();
-	    		graph.addEdge(mEdgeFactory.create(), mStartVertex, vertex, mEdgeIsDirected);
+	    		graph.addEdge((E) Edge.EdgeFactory.getInstance().create(), mStartVertex, vertex, mEdgeIsDirected);
 	    	}
 		}
         vv.repaint();
