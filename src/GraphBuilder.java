@@ -74,9 +74,8 @@ public class GraphBuilder {
 		Dimension dimen = new Dimension(panel.getBounds().width, panel.getBounds().height);
 		System.out.println("panel dimension: "+ dimen.toString());
 		mVViewer.setPreferredSize(dimen);
-		mLayout.setSize(dimen);
-		Point2D p = new Point(0, 0);
-		//mScaler.scale(mVViewer, new Float(1.001), p);		
+		//mLayout.setSize(dimen);
+		Point2D p = new Point(0, 0);	
 		
 		resizeGraph();
 	}

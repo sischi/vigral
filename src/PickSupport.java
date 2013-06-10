@@ -96,12 +96,8 @@ public class PickSupport<V,E> {
             if(pickedVertexState.isPicked(mPickedVertex) == false) {
             	pickedVertexState.clear();
             	pickedVertexState.pick(mPickedVertex, true);
-            } 
-            /*
-            else {
-            	pickedVertexState.clear();
             }
-            */
+            
             // layout.getLocation applies the layout transformer so
             // q is transformed by the layout transformer only
             Point2D q = layout.transform(mPickedVertex);
@@ -184,6 +180,14 @@ public class PickSupport<V,E> {
         vv.getPickedEdgeState().clear();
     }
     
+    
+    public void addToSelection(V v, VisualizationViewer<V, E> vv) {
+    	PickedState<V> pickedVertexState = vv.getPickedVertexState();
+    	
+    	if(pickedVertexState.isPicked(v) == false) {
+        	pickedVertexState.pick(v, true);
+        }
+    }
     
     
     /**

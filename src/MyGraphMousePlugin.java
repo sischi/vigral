@@ -102,46 +102,50 @@ public class MyGraphMousePlugin<V,E> extends AbstractGraphMousePlugin implements
             
             // get an instance of the graphelementaccessor
             GraphElementAccessor<V,E> pickSupport = vv.getPickSupport();
-            
-            
             if(pickSupport != null) {
             	
             	// get the clicked vertex
                 final V vertex = pickSupport.getVertex(vv.getModel().getGraphLayout(), p.getX(), p.getY());
-                
-                if(vertex != null) { // get ready to make an edge
-                	
+
+                if(vertex != null) {
                 	// edge drawing mode
                 	if((e.getModifiers() & MouseEvent.CTRL_MASK) != 0) {
                 		mPicking.clearPickedCollection(vv);
                 		mMode = EDITING_MODE;
                 		mEditing.startEdge(e, vertex);
                 	}
-                	
-                	// picking mode
+                	// picking mode (multiple selection)
+                	else if((e.getModifiers() & MouseEvent.SHIFT_MASK) != 0) {
+                		mMode = PICKING_MODE;
+                		// TODO implement multiple vertices selection by pressing shift and clicking on a vertex
+                		mPicking.addToSelection(vertex, vv);
+                	}
+                	// pick the vertex
                 	else {
                 		mMode = PICKING_MODE;
                         mPicking.mousePressed(e);
                 	}
                 	
-                } else { // make a new vertex
+                } 
+                else {
                 	
+                	// prepare to draw a selection rectangle
                 	if((e.getModifiers() & MouseEvent.SHIFT_MASK) != 0) {
                 		mMode = PICKING_MODE;
                 		mPicking.mousePressed(e);
                 	}
                 	else {
+                		// exit picking  and clear selection
                 		if(mMode == PICKING_MODE) {
                 			mPicking.clearPickedCollection(vv);
                 			mMode = EDITING_MODE;
                 		}
+                		// make a new vertex
                 		else if(mMode == EDITING_MODE)
                 			mEditing.addVertex(e, vv);
-                			
                 	}
                 }
             }
-            
             vv.repaint();
         }
     }
@@ -155,6 +159,7 @@ public class MyGraphMousePlugin<V,E> extends AbstractGraphMousePlugin implements
     @SuppressWarnings("unchecked")
 	public void mouseReleased(MouseEvent e) {
         if((e.getModifiers() & MouseEvent.BUTTON1_MASK) != 0) {
+        	// add an edge?
         	if(mMode == EDITING_MODE) {
 	        	final VisualizationViewer<V,E> vv = (VisualizationViewer<V,E>)e.getSource();
 	            final Point2D p = e.getPoint();
@@ -165,6 +170,7 @@ public class MyGraphMousePlugin<V,E> extends AbstractGraphMousePlugin implements
 	                mEditing.addEdge(e, p, vertex, vv);
 	            }
         	}
+        	// select vertices
         	else if(mMode == PICKING_MODE) {
         		mPicking.mouseReleased(e);
         	}
@@ -178,8 +184,10 @@ public class MyGraphMousePlugin<V,E> extends AbstractGraphMousePlugin implements
     @SuppressWarnings("unchecked")
     public void mouseDragged(MouseEvent e) {
         if((e.getModifiers() & MouseEvent.BUTTON1_MASK) != 0) {
+        	//draw edge
         	if(mMode == EDITING_MODE)
         		mEditing.drawEdge(e);
+        	// move vertices or draw selection rectangle
         	else if(mMode == PICKING_MODE)
         		mPicking.mouseDragged(e);
         }
