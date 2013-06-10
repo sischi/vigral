@@ -53,7 +53,7 @@ public class MyModalGraphMouse<V,E> extends AbstractModalGraphMouse implements M
 		this.rc = rc;
 		this.basicTransformer = rc.getMultiLayerTransformer();
 		loadPlugins();
-		setModeKeyListener(new ModeKeyAdapter(this));
+		//setModeKeyListener(new ModeKeyAdapter(this));
 	}
 
 	/**
@@ -62,28 +62,30 @@ public class MyModalGraphMouse<V,E> extends AbstractModalGraphMouse implements M
 	 */
 	@Override
     protected void loadPlugins() {
-		pickingPlugin = new PickingGraphMousePlugin<V,E>();
-		animatedPickingPlugin = new AnimatedPickingGraphMousePlugin<V,E>();
-		translatingPlugin = new TranslatingGraphMousePlugin(InputEvent.BUTTON1_MASK);
-		scalingPlugin = new ScalingGraphMousePlugin(new CrossoverScalingControl(), 0, in, out);
-		rotatingPlugin = new RotatingGraphMousePlugin();
-		shearingPlugin = new ShearingGraphMousePlugin();
+		//pickingPlugin = new PickingGraphMousePlugin<V,E>();
+		//animatedPickingPlugin = new AnimatedPickingGraphMousePlugin<V,E>();
+		//translatingPlugin = new TranslatingGraphMousePlugin(InputEvent.BUTTON1_MASK);
+		//scalingPlugin = new ScalingGraphMousePlugin(new CrossoverScalingControl(), 0, in, out);
+		//rotatingPlugin = new RotatingGraphMousePlugin();
+		//shearingPlugin = new ShearingGraphMousePlugin();
 		editingPlugin = new MyGraphMousePlugin<V,E>(vertexFactory, edgeFactory);
-		labelEditingPlugin = new LabelEditingGraphMousePlugin<V,E>();
-		annotatingPlugin = new AnnotatingGraphMousePlugin<V,E>(rc);
+		//labelEditingPlugin = new LabelEditingGraphMousePlugin<V,E>();
+		//annotatingPlugin = new AnnotatingGraphMousePlugin<V,E>(rc);
 		popupEditingPlugin = new MyPopupGraphMousePlugin<V,E>(vertexFactory, edgeFactory);
-		add(scalingPlugin);
-		setMode(Mode.EDITING);
+		//add(scalingPlugin);
+		
+		//setMode(Mode.EDITING);
+		setEditingMode();
 	}
 
 	/**
 	 * setter for the Mode.
 	 */
+	/*
 	@Override
     public void setMode(Mode mode) {
 		if(this.mode != mode) {
-			fireItemStateChanged(new ItemEvent(this, ItemEvent.ITEM_STATE_CHANGED,
-					this.mode, ItemEvent.DESELECTED));
+			fireItemStateChanged(new ItemEvent(this, ItemEvent.ITEM_STATE_CHANGED, this.mode, ItemEvent.DESELECTED));
 			this.mode = mode;
 			if(mode == Mode.TRANSFORMING) {
 				setTransformingMode();
@@ -100,7 +102,9 @@ public class MyModalGraphMouse<V,E> extends AbstractModalGraphMouse implements M
 			fireItemStateChanged(new ItemEvent(this, ItemEvent.ITEM_STATE_CHANGED, mode, ItemEvent.SELECTED));
 		}
 	}
+	*/
 	
+	/*
 	@Override
     protected void setPickingMode() {
 		remove(translatingPlugin);
@@ -126,8 +130,10 @@ public class MyModalGraphMouse<V,E> extends AbstractModalGraphMouse implements M
 		add(labelEditingPlugin);
 		add(popupEditingPlugin);
 	}
+	*/
 
 	protected void setEditingMode() {
+		/*
 		remove(pickingPlugin);
 		remove(animatedPickingPlugin);
 		remove(translatingPlugin);
@@ -135,10 +141,12 @@ public class MyModalGraphMouse<V,E> extends AbstractModalGraphMouse implements M
 		remove(shearingPlugin);
 		remove(labelEditingPlugin);
 		remove(annotatingPlugin);
+		*/
 		add(editingPlugin);
 		add(popupEditingPlugin);
 	}
 
+	/*
 	protected void setAnnotatingMode() {
 		remove(pickingPlugin);
 		remove(animatedPickingPlugin);
@@ -150,11 +158,12 @@ public class MyModalGraphMouse<V,E> extends AbstractModalGraphMouse implements M
 		remove(popupEditingPlugin);
 		add(annotatingPlugin);
 	}
-
+	*/
 
 	/**
 	 * @return the modeBox.
 	 */
+	/*
 	@Override
     public JComboBox getModeComboBox() {
 		if(modeBox == null) {
@@ -164,12 +173,14 @@ public class MyModalGraphMouse<V,E> extends AbstractModalGraphMouse implements M
 		modeBox.setSelectedItem(mode);
 		return modeBox;
 	}
+	*/
 
 	/**
 	 * create (if necessary) and return a menu that will change
 	 * the mode
 	 * @return the menu
 	 */
+	/*
 	@Override
     public JMenu getModeMenu() {
 		if(modeMenu == null) {
@@ -230,7 +241,9 @@ public class MyModalGraphMouse<V,E> extends AbstractModalGraphMouse implements M
 		}
 		return modeMenu;
 	}
+	*/
 	
+	/*
     public static class ModeKeyAdapter extends KeyAdapter {
     	private char t = 't';
     	private char p = 'p';
@@ -268,13 +281,16 @@ public class MyModalGraphMouse<V,E> extends AbstractModalGraphMouse implements M
 			}
 		}
     }
+    */
 
 	/**
 	 * @return the annotatingPlugin
 	 */
+	/*
 	public AnnotatingGraphMousePlugin<V, E> getAnnotatingPlugin() {
 		return annotatingPlugin;
 	}
+	*/
 
 	/**
 	 * @return the editingPlugin
@@ -286,14 +302,18 @@ public class MyModalGraphMouse<V,E> extends AbstractModalGraphMouse implements M
 	/**
 	 * @return the labelEditingPlugin
 	 */
+	/*
 	public LabelEditingGraphMousePlugin<V, E> getLabelEditingPlugin() {
 		return labelEditingPlugin;
 	}
+	*/
 
 	/**
 	 * @return the popupEditingPlugin
 	 */
+	/*
 	public MyPopupGraphMousePlugin<V, E> getPopupEditingPlugin() {
 		return popupEditingPlugin;
 	}
+	*/
 }
