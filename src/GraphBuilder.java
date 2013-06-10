@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import javax.swing.JPanel;
 
 import org.apache.commons.collections15.Factory;
+import org.apache.commons.collections15.Transformer;
 
 import edu.uci.ics.jung.algorithms.layout.Layout;
 import edu.uci.ics.jung.algorithms.layout.StaticLayout;
@@ -49,6 +50,14 @@ public class GraphBuilder {
 		
 		mVViewer.getRenderContext().setVertexLabelTransformer(new ToStringLabeller());
 		mVViewer.getRenderer().getVertexLabelRenderer().setPosition(Renderer.VertexLabel.Position.CNTR);
+		
+		mVViewer.getRenderContext().setEdgeLabelTransformer(new Transformer<Edge, String>() {
+			@Override
+			public String transform(Edge e) {
+				return ""+ e.getWeight();
+			}
+		});
+		mVViewer.getRenderContext().getEdgeLabelRenderer().setRotateEdgeLabels(false);
 		
 		panel.add(mVViewer);
 		
