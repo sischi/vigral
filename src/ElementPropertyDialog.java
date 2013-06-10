@@ -19,6 +19,8 @@ public class ElementPropertyDialog<GE> extends JDialog {
 
 private GE mElement;
 	
+	private static final int MAXIMUMDIGITS = 7;
+
 	private final JPanel contentPanel = new JPanel();
 	private JTextField txt_field;
 
@@ -45,12 +47,8 @@ private GE mElement;
 					public void keyTyped(KeyEvent e) {
 						char c = e.getKeyChar();
 						
-						if((!Character.isDigit(c) && c != KeyEvent.VK_BACK_SPACE && c != KeyEvent.VK_DELETE) || txt_field.getText().length() == 7)
+						if((!Character.isDigit(c) && c != KeyEvent.VK_BACK_SPACE && c != KeyEvent.VK_DELETE) || txt_field.getText().length() == MAXIMUMDIGITS)
 							e.consume();
-						
-						if(txt_field.getText().equals(""))
-							txt_field.setText("0");
-						
 					}
 					@Override
 					public void keyReleased(KeyEvent e) {
@@ -81,8 +79,13 @@ private GE mElement;
 					public void actionPerformed(ActionEvent e) {
 						if(mElement instanceof Vertex)
 							((Vertex) mElement).setLabel(txt_field.getText().toString().trim());
-						else // it is an Edge
-							((Edge) mElement).setWeight(Integer.parseInt(txt_field.getText().toString().trim()));
+						else { // it is an Edge
+							String in = txt_field.getText().toString().trim();
+							if(in.equals(""))
+								in = "1";
+							
+							((Edge) mElement).setWeight(Integer.parseInt(in));
+						}
 						dispose();
 					}
 				});
