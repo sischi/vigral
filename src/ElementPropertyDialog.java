@@ -2,6 +2,8 @@ import java.awt.BorderLayout;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 
 import javax.swing.AbstractButton;
 import javax.swing.JButton;
@@ -35,11 +37,30 @@ private GE mElement;
 			txt_field = new JTextField();
 			txt_field.setBounds(100, 12, 114, 19);
 			contentPanel.add(txt_field);
-			txt_field.setColumns(10);
 			if(mElement instanceof Vertex)
 				txt_field.setText(""+((Vertex) mElement).getLabel());
-			else // it is an Edge
+			else {// it is an Edge
+				txt_field.addKeyListener(new KeyListener() {
+					@Override
+					public void keyTyped(KeyEvent e) {
+						char c = e.getKeyChar();
+						
+						if((!Character.isDigit(c) && c != KeyEvent.VK_BACK_SPACE && c != KeyEvent.VK_DELETE) || txt_field.getText().length() == 7)
+							e.consume();
+						
+						if(txt_field.getText().equals(""))
+							txt_field.setText("0");
+						
+					}
+					@Override
+					public void keyReleased(KeyEvent e) {
+					}
+					@Override
+					public void keyPressed(KeyEvent arg0) {
+					}
+				});
 				txt_field.setText(""+((Edge) mElement).getWeight());
+			}
 		}
 		
 		JLabel lbl_propName = new JLabel();
@@ -80,6 +101,11 @@ private GE mElement;
 				buttonPane.add(cancelButton);
 			}
 		}
+	}
+	
+	
+	private void allowNumbersOnly() {
+		
 	}
 
 
