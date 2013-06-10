@@ -1,3 +1,4 @@
+import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.MouseEvent;
 import java.awt.geom.Point2D;
@@ -34,8 +35,59 @@ public class MyPopupGraphMousePlugin<V,E> extends AbstractPopupGraphMousePlugin 
     protected JPopupMenu mEdgePopup;
 
     public MyPopupGraphMousePlugin() {
+    	this(MouseEvent.BUTTON3_MASK);
+    	mEdgePopup = new EdgePopupMenu.EdgeMenu(null);
     }
     
+    public MyPopupGraphMousePlugin(int modifiers) {
+    	super(modifiers);
+    }
+    
+    
+    private void updateEdgeMenu(E edge, VisualizationViewer vv, Point2D point) {
+        if (mEdgePopup == null) return;
+        Component[] menuComps = mEdgePopup.getComponents();
+        for (Component comp: menuComps) {
+        	
+            if (comp instanceof EdgeMenuItem) {
+                ((EdgeMenuItem)comp).setEdgeAndView(edge, vv);
+            }
+            /*
+            if (comp instanceof MenuPointListener) {
+                ((MenuPointListener)comp).setPoint(point);
+            }
+            */
+        }
+    }
+    
+    
+    protected void handlePopup(MouseEvent e) {
+        final VisualizationViewer<V,E> vv =
+                (VisualizationViewer<V,E>)e.getSource();
+        Point2D p = e.getPoint();
+        
+        GraphElementAccessor<V,E> pickSupport = vv.getPickSupport();
+        if(pickSupport != null) {
+            final V v = pickSupport.getVertex(vv.getGraphLayout(), p.getX(), p.getY());
+            if(v != null) {
+                // System.out.println("Vertex " + v + " was right clicked");
+                //updateVertexMenu(v, vv, p);
+                //vertexPopup.show(vv, e.getX(), e.getY());
+            } 
+            else {
+                final E edge = pickSupport.getEdge(vv.getGraphLayout(), p.getX(), p.getY());
+                if(edge != null) {
+                    // System.out.println("Edge " + edge + " was right clicked");
+                    updateEdgeMenu(edge, vv, p);
+                    mEdgePopup.show(vv, e.getX(), e.getY());
+                  
+                }
+            }
+        }
+    }
+    
+    
+    /*
 	@SuppressWarnings({ "unchecked", "serial", "serial" })
 	protected void handlePopup(MouseEvent e) {
         final VisualizationViewer<V,E> vv = (VisualizationViewer<V,E>)e.getSource();
@@ -110,4 +162,5 @@ public class MyPopupGraphMousePlugin<V,E> extends AbstractPopupGraphMousePlugin 
             }
         }
     }
+    */
 }
