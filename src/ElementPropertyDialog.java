@@ -30,14 +30,14 @@ private GE mElement;
 	public ElementPropertyDialog(JFrame parent, GE elem) {
 		mElement = elem;
 		
-		setBounds(100, 100, 251, 115);
+		setBounds(100, 100, 300, 115);
 		getContentPane().setLayout(new BorderLayout());
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
 		getContentPane().add(contentPanel, BorderLayout.CENTER);
 		contentPanel.setLayout(null);
 		{
 			txt_field = new JTextField();
-			txt_field.setBounds(100, 12, 114, 19);
+			txt_field.setBounds(150, 12, 100, 20);
 			contentPanel.add(txt_field);
 			if(mElement instanceof Vertex)
 				txt_field.setText(""+((Vertex) mElement).getLabel());
@@ -65,9 +65,9 @@ private GE mElement;
 		if(mElement instanceof Vertex)
 			lbl_propName.setText("Label");
 		else // it is an edge
-			lbl_propName.setText("Weight");
+			lbl_propName.setText("Weight (1 - 9.999.999)");
 		
-		lbl_propName.setBounds(12, 14, 70, 15);
+		lbl_propName.setBounds(12, 14, 130, 15);
 		contentPanel.add(lbl_propName);
 		{
 			JPanel buttonPane = new JPanel();
