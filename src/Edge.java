@@ -3,18 +3,25 @@ import org.apache.commons.collections15.Factory;
 
 public class Edge {
 	
-	
-	private static int IDENTIFICATION = 0;
 	private int mID;
 	private int mWeight;
 	
-	public Edge() {
-		mID = IDENTIFICATION++;
-		System.out.println("Edge created! ID="+ mID);
+	public Edge(int id) {
+		this(id, 1);
+	}
+	
+	public Edge(int id, int weight) {
+		mID = id;
+		mWeight = weight;
+		System.out.println("Edge created! ID="+ mID +", weight="+ mWeight);
 	}
 	
 	public int getWeight() {
 		return mWeight;
+	}
+	
+	public void setWeight(int weight) {
+		mWeight = weight;
 	}
 	
 	public String toString() {
@@ -25,6 +32,7 @@ public class Edge {
 	
 	public static class EdgeFactory implements Factory<Edge> {
 		
+		private static int IDCOUNT = 0;
 		private static EdgeFactory mInstance = new EdgeFactory();
 		
 		private EdgeFactory() {
@@ -36,7 +44,7 @@ public class Edge {
 
 		@Override
 		public Edge create() {
-			return new Edge();
+			return new Edge(IDCOUNT++);
 		}
 	}
 }
