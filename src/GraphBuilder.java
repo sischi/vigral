@@ -2,6 +2,9 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Point;
 import java.awt.Rectangle;
+import java.awt.Shape;
+import java.awt.geom.AffineTransform;
+import java.awt.geom.Ellipse2D;
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
 
@@ -73,6 +76,14 @@ public class GraphBuilder {
 			}
 		});
 		mVViewer.getRenderContext().getEdgeLabelRenderer().setRotateEdgeLabels(false);
+		
+		mVViewer.getRenderContext().setVertexShapeTransformer(new Transformer<Vertex, Shape>() {
+			@Override
+			public Shape transform(Vertex arg0) {
+				Ellipse2D circle = new Ellipse2D.Double(-15, -15, 30, 30);
+				return AffineTransform.getScaleInstance(2, 2).createTransformedShape(circle);
+			}
+		});
 		
 	}
 	
