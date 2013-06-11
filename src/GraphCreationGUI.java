@@ -1,6 +1,8 @@
 import java.awt.Dimension;
 import java.awt.Rectangle;
 
+import javax.swing.Icon;
+import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
@@ -25,7 +27,14 @@ public class GraphCreationGUI extends JFrame implements ActionListener {
 	private JComboBox mCb_graphType = new JComboBox();
 	private JComboBox mCb_algorithm = new JComboBox();
 	private JButton mBtn_changeMode = new JButton();
+	private JButton mBtn_play = new JButton();
+	private JButton mBtn_pause = new JButton();
+	private JButton mBtn_jumpToStart = new JButton();
+	private JButton mBtn_stepBack = new JButton();
+	private JButton mBtn_stepForward = new JButton();
+	private JButton mBtn_jumpToEnd = new JButton();
 	private JPanel mPnl_graph = new JPanel();
+	private JPanel mPnl_buttonBar = new JPanel();
 	private JPanel mContentPane;
 	
 	private GraphBuilder mGraphBuilder;
@@ -93,6 +102,40 @@ public class GraphCreationGUI extends JFrame implements ActionListener {
 		
 		mBtn_changeMode.addActionListener(this);
 		mContentPane.add(mBtn_changeMode);
+		
+		initButtonBar();
+		mContentPane.add(mPnl_buttonBar);
+	}
+	
+	
+	public void initButtonBar() {
+		initButtonFromButtonBar(mBtn_jumpToStart, new ImageIcon("res/jumptostart_inactive.png"), new ImageIcon("res/jumptostart_active.png"), 0);
+		initButtonFromButtonBar(mBtn_stepBack, new ImageIcon("res/stepback_inactive.png"), new ImageIcon("res/stepback_active.png"), 1);
+		initButtonFromButtonBar(mBtn_play, new ImageIcon("res/play_inactive.png"), new ImageIcon("res/play_active.png"), 2);
+		initButtonFromButtonBar(mBtn_pause, new ImageIcon("res/pause_inactive.png"), new ImageIcon("res/pause_active.png"), 2);
+		initButtonFromButtonBar(mBtn_stepForward, new ImageIcon("res/stepforward_inactive.png"), new ImageIcon("res/stepforward_active.png"), 3);
+		initButtonFromButtonBar(mBtn_jumpToEnd, new ImageIcon("res/jumptoend_inactive.png"), new ImageIcon("res/jumptoend_active.png"), 4);
+		mBtn_pause.setVisible(false);
+	}
+	
+	
+	public void initButtonFromButtonBar(JButton btn, Icon inactive, Icon active, int pos) {
+		
+		btn.setContentAreaFilled(false);
+	    btn.setFocusPainted(false);
+		int w = active.getIconWidth();
+		int h = active.getIconHeight();
+		int x = pos*w + pos*10;
+		int y = 0;
+		Dimension d = new Dimension(w, h);
+		btn.setIcon(inactive);
+		btn.setRolloverIcon(active);
+		btn.setPressedIcon(active);
+		btn.setPreferredSize(d);
+		btn.setMinimumSize(d);
+		btn.setMaximumSize(d);
+		btn.setBounds(x, y, w, h);
+		mPnl_buttonBar.add(btn);
 	}
 	
 	
@@ -133,10 +176,16 @@ public class GraphCreationGUI extends JFrame implements ActionListener {
 		y = windowRect.height - h - 10;
 		mBtn_changeMode.setBounds(x, y, w, h);
 		
+		w = 5 * mBtn_play.getBounds().width + 4 * 10;
+		h = mBtn_play.getBounds().height;
+		x = 0;
+		y = windowRect.height - h - 10;
+		mPnl_buttonBar.setBounds(x, y, w, h);
+		
 		x = windowRect.x + 10;
 		y = mCb_graphType.getBounds().y + mCb_graphType.getBounds().height + 10;
 		w = windowRect.width - 20;
-		h = mBtn_changeMode.getBounds().y - 10 - mCb_graphType.getBounds().y - mCb_graphType.getBounds().height - 10;
+		h = mPnl_buttonBar.getBounds().y - 10 - mCb_graphType.getBounds().y - mCb_graphType.getBounds().height - 10;
 		mPnl_graph.setBounds(x, y, w, h);
 	}
 	
@@ -151,11 +200,13 @@ public class GraphCreationGUI extends JFrame implements ActionListener {
 			mCb_algorithm.setEnabled(true);
 			mCb_graphType.setEnabled(true);
 			mBtn_changeMode.setText("Visualisation");
+			mPnl_buttonBar.setVisible(false);
 		}
 		else if(mMode == Mode.VISUALISATION) {
 			mCb_algorithm.setEnabled(false);
 			mCb_graphType.setEnabled(false);
 			mBtn_changeMode.setText("Graph Creation");
+			mPnl_buttonBar.setVisible(true);
 		}
 		
 	}
