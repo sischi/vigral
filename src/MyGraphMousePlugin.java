@@ -95,7 +95,7 @@ public class MyGraphMousePlugin<V,E> extends AbstractGraphMousePlugin implements
             	// picking mode
             	else if((e.getModifiers() & MouseEvent.SHIFT_MASK) != 0 && vertex != null) {
             		mMode = PICKING_MODE;
-            		mPicking.addToSelection(vertex, vv);
+            		mPicking.addToSelection(vertex, vv, p);
             	}
             	// start rectangle
             	else if((e.getModifiers() & MouseEvent.SHIFT_MASK) != 0 && vertex == null){

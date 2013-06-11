@@ -294,9 +294,10 @@ public class PickSupport<V,E> {
     }
     
     
-    public void addToSelection(V v, VisualizationViewer<V, E> vv) {
+    public void addToSelection(V v, VisualizationViewer<V, E> vv, Point2D p) {
     	PickedState<V> pickedVertexState = vv.getPickedVertexState();
     	mPickedVertex = v;
+    	mDown = p;
     	
     	if(pickedVertexState.isPicked(mPickedVertex) == false) {
         	pickedVertexState.pick(mPickedVertex, true);
