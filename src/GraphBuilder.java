@@ -34,7 +34,7 @@ public class GraphBuilder {
 	private VisualizationViewer<Vertex, Edge> mVViewer;
 	private MyModalGraphMouse<Vertex, Edge> mGraphMouse; 
 	
-	public GraphBuilder(JPanel panel) {
+	public GraphBuilder() {
 		System.out.println("GraphBuilder Creation");
 		
 		mGraph = new SparseMultigraph<Vertex, Edge>();
@@ -59,8 +59,11 @@ public class GraphBuilder {
 		});
 		mVViewer.getRenderContext().getEdgeLabelRenderer().setRotateEdgeLabels(false);
 		
+	}
+	
+	
+	public void addToPanel(JPanel panel) {
 		panel.add(mVViewer);
-		
 		onResizePanel(panel);
 	}
 	

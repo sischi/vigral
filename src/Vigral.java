@@ -5,6 +5,22 @@ import java.awt.EventQueue;
 public class Vigral {
 
 	
+	private GraphBuilder mGraphBuilder;
+	private GraphCreationGUI mfrm_graphCreation;
+	
+	
+	
+	public Vigral() {
+		mGraphBuilder = new GraphBuilder();
+		mfrm_graphCreation = new GraphCreationGUI(mGraphBuilder);
+		Dimension dim = mfrm_graphCreation.getSize();
+		dim.height++;
+		mfrm_graphCreation.resize(dim);
+		mfrm_graphCreation.setVisible(true);
+	}
+
+	
+	
 	/**
 	 * Launch the application.
 	 */
@@ -12,12 +28,7 @@ public class Vigral {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					GraphCreationGUI frame = new GraphCreationGUI();
-					frame.setVisible(true);
-					Dimension dimen = frame.getSize();
-					dimen.height++;
-					dimen.width++;
-					frame.resize(dimen);
+					Vigral vigral = new Vigral();
 				} catch (Exception e) {
 					e.printStackTrace();
 				}

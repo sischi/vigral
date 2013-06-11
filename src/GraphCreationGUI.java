@@ -69,6 +69,8 @@ public class GraphCreationGUI extends JFrame {
 		// get the rectangle of the contentPane
 		Rectangle windowRect = mContentPane.getBounds();
 		
+		System.out.println("window.rect = "+ windowRect);
+		
 		// for each component: align the component relative to the contentPane rectangle and the other components
 		int x = 10;
 		int y = 10;
@@ -99,18 +101,18 @@ public class GraphCreationGUI extends JFrame {
 	/**
 	 * Create the frame.
 	 */
-	public GraphCreationGUI() {
+	public GraphCreationGUI(GraphBuilder gb) {
 		setTitle("ViGrAl - Graph Creation");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setMinimumSize(new Dimension(500, 300));
+		setBounds(100, 100, 600, 400);
+		setMinimumSize(new Dimension(600, 400));
 		addComponentListener(resizeListener);
 		
 		initComponents();
 		resizeComponents();
 		
-		setBounds(100, 100, 600, 450);
-		
-		mGraphBuilder = new GraphBuilder(mPnl_graph);
+		mGraphBuilder = gb;
+		mGraphBuilder.addToPanel(mPnl_graph);
 	}
 	
 	
