@@ -5,6 +5,7 @@ public class Vertex {
 	
 	private int mID;
 	private String mLabel;
+	private int mState;
 	
 	public Vertex() {
 		System.out.println("Vertex created! id= "+ mID);
@@ -38,6 +39,11 @@ public class Vertex {
 	}
 	
 	
+	
+	
+	
+	
+	// singleton factory to create a vertex
 	public static class VertexFactory implements Factory<Vertex> {
 
 		private static int IDCOUNT = 0;
