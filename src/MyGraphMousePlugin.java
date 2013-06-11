@@ -8,6 +8,7 @@ import javax.swing.JComponent;
 
 import edu.uci.ics.jung.algorithms.layout.GraphElementAccessor;
 import edu.uci.ics.jung.algorithms.layout.Layout;
+import edu.uci.ics.jung.graph.util.EdgeType;
 import edu.uci.ics.jung.visualization.VisualizationViewer;
 import edu.uci.ics.jung.visualization.control.*;
 
@@ -66,6 +67,61 @@ public class MyGraphMousePlugin<V,E> extends AbstractGraphMousePlugin implements
         return (e.getModifiers() & modifiers) != 0;
     }
     
+
+    @SuppressWarnings("unchecked")
+    public void mousePressed(MouseEvent e) {
+    	// on left mouse press
+    	if((e.getModifiers() & MouseEvent.BUTTON1_MASK) != 0) {
+    		// get the clicked vv and the coordinates
+        	final VisualizationViewer<V,E> vv = (VisualizationViewer<V,E>)e.getSource();
+            final Point2D p = e.getPoint();
+            
+            // get an instance of the graphelementaccessor
+            GraphElementAccessor<V,E> pickSupport = vv.getPickSupport();
+            if(pickSupport != null) {
+            	final V vertex = pickSupport.getVertex(vv.getModel().getGraphLayout(), p.getX(), p.getY());
+            	
+            	// edge drawing
+            	if((e.getModifiers() & MouseEvent.CTRL_MASK) != 0 && vertex != null) {
+            		EdgeType directed = EdgeType.UNDIRECTED;
+            		
+            		// directed edge
+            		if((e.getModifiers() & MouseEvent.SHIFT_MASK) != 0)
+            			directed = EdgeType.DIRECTED;
+            		
+            		mPicking.clearPickedCollection(vv);
+            		mMode = EDITING_MODE;
+            		mEditing.startEdge(e, vertex, directed);
+            	}
+            	// picking mode
+            	else if((e.getModifiers() & MouseEvent.SHIFT_MASK) != 0 && vertex != null) {
+            		mMode = PICKING_MODE;
+            		mPicking.addToSelection(vertex, vv);
+            	}
+            	// start rectangle
+            	else if((e.getModifiers() & MouseEvent.SHIFT_MASK) != 0 && vertex == null){
+            		mMode = PICKING_MODE;
+            		mPicking.clearPickedCollection(vv);
+            		mPicking.prepareToDrawRect(vv, p);
+            	}
+            	
+            	else {
+            		// create vertex
+            		if(vertex == null && mMode == EDITING_MODE)
+            			mEditing.addVertex(e, vv);
+            		else if(vertex == null && mMode == PICKING_MODE) {
+            			mMode = EDITING_MODE;
+            			mPicking.clearPickedCollection(vv);
+            		}
+            		else {
+            			mMode = PICKING_MODE;
+            			mPicking.pickVertex(vv, vertex, p);
+            		}
+            	}
+            }
+    	}
+    }
+    
     
 
     /**
@@ -73,6 +129,7 @@ public class MyGraphMousePlugin<V,E> extends AbstractGraphMousePlugin implements
      * If the mouse is pressed on an existing vertex, prepare to create
      * an edge from that vertex to another
      */
+    /*
     @SuppressWarnings("unchecked")
 	public void mousePressed(MouseEvent e) {
         if((e.getModifiers() & MouseEvent.BUTTON1_MASK) != 0) {
@@ -91,14 +148,18 @@ public class MyGraphMousePlugin<V,E> extends AbstractGraphMousePlugin implements
                 if(vertex != null) {
                 	// edge drawing mode
                 	if((e.getModifiers() & MouseEvent.CTRL_MASK) != 0) {
+                		
+                		EdgeType directed = EdgeType.UNDIRECTED;
+                		if((e.getModifiers() & MouseEvent.SHIFT_MASK) != 0)
+                			directed = EdgeType.DIRECTED;
+                		
                 		mPicking.clearPickedCollection(vv);
                 		mMode = EDITING_MODE;
-                		mEditing.startEdge(e, vertex);
+                		mEditing.startEdge(e, vertex, directed);
                 	}
                 	// picking mode (multiple selection)
                 	else if((e.getModifiers() & MouseEvent.SHIFT_MASK) != 0) {
                 		mMode = PICKING_MODE;
-                		// TODO implement multiple vertices selection by pressing shift and clicking on a vertex
                 		mPicking.addToSelection(vertex, vv);
                 	}
                 	// pick the vertex
@@ -137,6 +198,7 @@ public class MyGraphMousePlugin<V,E> extends AbstractGraphMousePlugin implements
             vv.repaint();
         }
     }
+    */
     
     /**
      * If startVertex is non-null, and the mouse is released over an
@@ -144,6 +206,45 @@ public class MyGraphMousePlugin<V,E> extends AbstractGraphMousePlugin implements
      * the vertex under the mouse pointer. If shift was also pressed,
      * create a directed edge instead.
      */
+    
+    
+    
+    @SuppressWarnings("unchecked")
+    public void mouseDragged(MouseEvent e) {
+    	
+    	if((e.getModifiers() & MouseEvent.BUTTON1_MASK) != 0) {
+	    	final VisualizationViewer<V,E> vv = (VisualizationViewer<V,E>)e.getSource();
+	        final Point2D p = e.getPoint();
+	        
+	        if(mMode == EDITING_MODE)
+	        	mEditing.drawEdge(e);
+	        else if(mMode == PICKING_MODE)
+	        	mPicking.performDrag(vv, p);
+    	}
+    }
+    
+    
+
+    /**
+     * If startVertex is non-null, stretch an edge shape between
+     * startVertex and the mouse pointer to simulate edge creation
+     */
+    /*
+    @SuppressWarnings("unchecked")
+    public void mouseDragged(MouseEvent e) {
+        if((e.getModifiers() & MouseEvent.BUTTON1_MASK) != 0) {
+        	//draw edge
+        	if(mMode == EDITING_MODE)
+        		mEditing.drawEdge(e);
+        	// move vertices or draw selection rectangle
+        	else if(mMode == PICKING_MODE)
+        		mPicking.mouseDragged(e);
+        }
+    }
+    */
+
+    
+    /*
     @SuppressWarnings("unchecked")
 	public void mouseReleased(MouseEvent e) {
         if((e.getModifiers() & MouseEvent.BUTTON1_MASK) != 0) {
@@ -164,24 +265,27 @@ public class MyGraphMousePlugin<V,E> extends AbstractGraphMousePlugin implements
         	}
         }
     }
-
-    /**
-     * If startVertex is non-null, stretch an edge shape between
-     * startVertex and the mouse pointer to simulate edge creation
-     */
+    */
+    
+    
     @SuppressWarnings("unchecked")
-    public void mouseDragged(MouseEvent e) {
-        if((e.getModifiers() & MouseEvent.BUTTON1_MASK) != 0) {
-        	//draw edge
-        	if(mMode == EDITING_MODE)
-        		mEditing.drawEdge(e);
-        	// move vertices or draw selection rectangle
-        	else if(mMode == PICKING_MODE)
-        		mPicking.mouseDragged(e);
-        }
+    public void mouseReleased(MouseEvent e) {
+    	if((e.getModifiers() & MouseEvent.BUTTON1_MASK) != 0) {
+    		final VisualizationViewer<V,E> vv = (VisualizationViewer<V,E>)e.getSource();
+            final Point2D p = e.getPoint();
+            Layout<V,E> layout = vv.getModel().getGraphLayout();
+            GraphElementAccessor<V,E> pickSupport = vv.getPickSupport();
+            
+            if(pickSupport != null) {
+            	if(mMode == EDITING_MODE) {
+            		final V vertex = pickSupport.getVertex(layout, p.getX(), p.getY());
+	                mEditing.addEdge(e, p, vertex, vv);
+            	}
+            	else if(mMode == PICKING_MODE)
+            		mPicking.pickVerticesInRect(vv, p);
+            }
+    	}
     }
-    
-    
     
     
     

@@ -79,7 +79,9 @@ public class EditSupport<V,E> {
 	}
 	
 	
-	public void startEdge(MouseEvent e, V vertex) {
+	public void startEdge(MouseEvent e, V vertex, EdgeType directed) {
+		
+		mEdgeIsDirected = directed;
 		
 		// get the clicked vv and the coordinates
     	final VisualizationViewer<V,E> vv = (VisualizationViewer<V,E>)e.getSource();
@@ -91,6 +93,9 @@ public class EditSupport<V,E> {
         mStartVertex = vertex;
         mDown = e.getPoint();
         transformEdgeShape(mDown, mDown);
+        if(mEdgeIsDirected == EdgeType.DIRECTED)
+        	transformArrowShape(mDown, mDown);
+        
         vv.addPostRenderPaintable(mEdgePaintable);
 	}
 	
@@ -98,11 +103,10 @@ public class EditSupport<V,E> {
 	public void drawEdge(MouseEvent e) {
 		if(mStartVertex != null) {
             transformEdgeShape(mDown, e.getPoint());
-            /*
-            if(edgeIsDirected == EdgeType.DIRECTED) {
-                transformArrowShape(down, e.getPoint());
-            }
-            */
+            
+            if(mEdgeIsDirected == EdgeType.DIRECTED)
+                transformArrowShape(mDown, e.getPoint());
+
         }
         VisualizationViewer<V,E> vv = (VisualizationViewer<V,E>)e.getSource();
         vv.repaint();
@@ -124,11 +128,12 @@ public class EditSupport<V,E> {
 	
 	
 	
-	public void addEdge(MouseEvent e, Point2D p, V vertex, VisualizationViewer<V, E> vv) {
+	public void addEdge(MouseEvent e, Point2D p, V vertex, VisualizationViewer vv) {
 		
 		if((vertex != null) && (mStartVertex != null)) {
 			if(!(mDown.getX() == p.getX() && mDown.getY() == p.getY())) {
 	    		Graph<V,E> graph = vv.getGraphLayout().getGraph();
+	    		Edge.EdgeFactory.getInstance().setStartAndEnd((Vertex) mStartVertex, (Vertex) vertex);
 	    		graph.addEdge((E) Edge.EdgeFactory.getInstance().create(), mStartVertex, vertex, mEdgeIsDirected);
 	    	}
 		}

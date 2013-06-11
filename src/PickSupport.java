@@ -110,10 +110,51 @@ public class PickSupport<V,E> {
             pickedEdgeState.clear();
             pickedEdgeState.pick(mPickedEdge, true);
         } else {
+        	/*
             vv.addPostRenderPaintable(mLensPaintable);
        	    pickedEdgeState.clear();
             pickedVertexState.clear();
+            */
         }
+    }
+    
+    
+    public void pickVertex(VisualizationViewer vv, V vertex, Point2D p) {
+    	mPickedVertex = vertex;
+    	mDown = p;
+        Layout<V,E> layout = vv.getGraphLayout();
+    	
+        PickedState<V> pickedVertexState = vv.getPickedVertexState();
+    	if(pickedVertexState.isPicked(mPickedVertex) == false) {
+        	pickedVertexState.clear();
+        	pickedVertexState.pick(mPickedVertex, true);
+        }
+        
+        // layout.getLocation applies the layout transformer so
+        // q is transformed by the layout transformer only
+        Point2D q = layout.transform(mPickedVertex);
+        // transform the mouse point to graph coordinate system
+        Point2D gp = vv.getRenderContext().getMultiLayerTransformer().inverseTransform(Layer.LAYOUT, p);
+
+        mOffsetx = (float) (gp.getX()-q.getX());
+        mOffsety = (float) (gp.getY()-q.getY());
+    }
+    
+    
+    public void prepareToDrawRect(VisualizationViewer vv, Point2D p) {
+    	mPickedVertex = null;
+    	
+    	mDown = p;
+    	mRect.setFrameFromDiagonal(mDown,mDown);
+    	
+    	GraphElementAccessor<V,E> pickSupport = vv.getPickSupport();
+    	
+        PickedState<V> pickedVertexState = vv.getPickedVertexState();
+        PickedState<E> pickedEdgeState = vv.getPickedEdgeState();
+    	
+    	vv.addPostRenderPaintable(mLensPaintable);
+   	    pickedEdgeState.clear();
+        pickedVertexState.clear();
     }
 
     
@@ -150,9 +191,43 @@ public class PickSupport<V,E> {
     }
     
     
+    public void performDrag(VisualizationViewer vv, Point2D p) {
+    	if(mPickedVertex != null)
+    		moveVertex(vv, p);
+    	else
+    		updateRect(vv, p);
+    	
+    	vv.repaint();
+    }
+    
+    
+    public void updateRect(VisualizationViewer vv, Point2D p) {
+    	if(mPickedVertex == null)
+    		mRect.setFrameFromDiagonal(mDown, p);
+    }
+    
+    
+    public void moveVertex(VisualizationViewer vv, Point2D p) {
+    	if(mPickedVertex != null) {
+    		
+	        Point2D graphPoint = vv.getRenderContext().getMultiLayerTransformer().inverseTransform(p);
+	        Point2D graphDown = vv.getRenderContext().getMultiLayerTransformer().inverseTransform(mDown);
+	        Layout<V,E> layout = vv.getGraphLayout();
+	        double dx = graphPoint.getX()-graphDown.getX();
+	        double dy = graphPoint.getY()-graphDown.getY();
+	        PickedState<V> pickedState = vv.getPickedVertexState();
+	        
+	        for(V v : pickedState.getPicked()) {
+	            Point2D vertexPoint = layout.transform(v);
+	            vertexPoint.setLocation(vertexPoint.getX()+dx, vertexPoint.getY()+dy);
+	            layout.setLocation(v, vertexPoint);
+	        }
+	        mDown = p;
+    	}
+    }
+    
     
     public void mouseReleased(MouseEvent e) {
-    	// TODO implement releasing mouse button in picking mode!!!
     	
     	VisualizationViewer<V,E> vv = (VisualizationViewer)e.getSource();
 
@@ -173,22 +248,17 @@ public class PickSupport<V,E> {
     }
     
     
-    
-    
-    public void clearPickedCollection(VisualizationViewer<V, E> vv) {
-    	vv.getPickedVertexState().clear();
-        vv.getPickedEdgeState().clear();
+    public void pickVerticesInRect(VisualizationViewer vv, Point2D p) {
+    	if(mDown != null && mPickedVertex == null && heyThatsTooClose(mDown, p, 5) == false) {
+    		pickContainedVertices(vv, mDown, p, true);
+    	}
+    	mDown = null;
+        mPickedVertex = null;
+        mPickedEdge = null;
+        mRect.setFrame(0,0,0,0);
+        vv.removePostRenderPaintable(mLensPaintable);
+        vv.repaint();
     }
-    
-    
-    public void addToSelection(V v, VisualizationViewer<V, E> vv) {
-    	PickedState<V> pickedVertexState = vv.getPickedVertexState();
-    	
-    	if(pickedVertexState.isPicked(v) == false) {
-        	pickedVertexState.pick(v, true);
-        }
-    }
-    
     
     /**
      * pick the vertices inside the rectangle created from points
@@ -215,6 +285,26 @@ public class PickSupport<V,E> {
             }
         }
     }
+    
+    
+    
+    public void clearPickedCollection(VisualizationViewer<V, E> vv) {
+    	vv.getPickedVertexState().clear();
+        vv.getPickedEdgeState().clear();
+    }
+    
+    
+    public void addToSelection(V v, VisualizationViewer<V, E> vv) {
+    	PickedState<V> pickedVertexState = vv.getPickedVertexState();
+    	mPickedVertex = v;
+    	
+    	if(pickedVertexState.isPicked(mPickedVertex) == false) {
+        	pickedVertexState.pick(mPickedVertex, true);
+        }
+    }
+    
+    
+    
     
     
     /**
