@@ -105,6 +105,23 @@ public class GraphCreationGUI extends JFrame implements ActionListener {
 		
 		initButtonBar();
 		mContentPane.add(mPnl_buttonBar);
+		
+		
+		mBtn_play.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				mBtn_play.setVisible(false);
+				mBtn_pause.setVisible(true);
+			}
+		});
+		
+		mBtn_pause.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				mBtn_play.setVisible(true);
+				mBtn_pause.setVisible(false);
+			}
+		});
 	}
 	
 	
@@ -135,6 +152,7 @@ public class GraphCreationGUI extends JFrame implements ActionListener {
 		btn.setMinimumSize(d);
 		btn.setMaximumSize(d);
 		btn.setBounds(x, y, w, h);
+		btn.setBorderPainted(false);
 		mPnl_buttonBar.add(btn);
 	}
 	
@@ -177,9 +195,9 @@ public class GraphCreationGUI extends JFrame implements ActionListener {
 		mBtn_changeMode.setBounds(x, y, w, h);
 		
 		w = 5 * mBtn_play.getBounds().width + 4 * 10;
-		h = mBtn_play.getBounds().height;
+		h = mBtn_play.getBounds().height + 10;
 		x = 0;
-		y = windowRect.height - h - 10;
+		y = windowRect.height - h - 5;
 		mPnl_buttonBar.setBounds(x, y, w, h);
 		
 		x = windowRect.x + 10;
