@@ -27,18 +27,33 @@ import edu.uci.ics.jung.visualization.renderers.Renderer;
 
 public class GraphBuilder {
 	
+	/**
+	 * numerical value that will be considered in modifying the position of the vertices
+	 */
 	private static final int PADDING = 20;
 
 	private Layout<Vertex, Edge> mLayout;
+	/**
+	 * the graph, that inherits the vertices and egdes
+	 */
 	private SparseMultigraph<Vertex, Edge> mGraph;
+	/**
+	 * responsible for the visualization of the graph
+	 */
 	private VisualizationViewer<Vertex, Edge> mVViewer;
+	/**
+	 * responsible for the GraphMousePlugins (Drawing with the mouse and context menus)
+	 */
 	private MyModalGraphMouse<Vertex, Edge> mGraphMouse; 
 	
 	public GraphBuilder() {
 		System.out.println("GraphBuilder Creation");
 		
+		// create a graph
 		mGraph = new SparseMultigraph<Vertex, Edge>();
+		// add the graph to the layout
 		mLayout = new StaticLayout<Vertex, Edge>(mGraph);
+		// add the layout to the VisualizationViewer
 		mVViewer = new VisualizationViewer<Vertex, Edge>(mLayout);
 		
 		System.out.println("layout: "+ mLayout.getSize());
@@ -61,13 +76,20 @@ public class GraphBuilder {
 		
 	}
 	
-	
+	/**
+	 * adds the VisualisationViewer to the given panel
+	 * @param panel the panel represents the graph drawing panel
+	 */
 	public void addToPanel(JPanel panel) {
 		panel.add(mVViewer);
 		onResizePanel(panel);
 	}
 	
 	
+	/**
+	 * called if the panel (the frame) is resized
+	 * @param panel the given panel that shows the graph
+	 */
 	public void onResizePanel(JPanel panel) {
 		System.out.println("onResize");
 		Dimension dimen = new Dimension(panel.getBounds().width, panel.getBounds().height);
@@ -76,18 +98,15 @@ public class GraphBuilder {
 		//mLayout.setSize(dimen);
 		Point2D p = new Point(0, 0);	
 		
-		resizeGraph();
-	}
-	
-	
-	
-	public void resizeGraph() {
-		
 		modifyLocationsIfOutOfBounds();
-		
 	}
 	
-	
+	/**
+	 * is called when resizing the frame
+	 * checks for all vertices if their position will be gone out of view. if so, the position will
+	 * be modified to avoid disappearing of some vertices. This will ensure, that the complete graph
+	 * is visible all the time.
+	 */
 	public void modifyLocationsIfOutOfBounds() {
 		
 		Graph<Vertex,Edge> graph = mVViewer.getModel().getGraphLayout().getGraph();
@@ -122,7 +141,10 @@ public class GraphBuilder {
 	}
 	
 	
-	
+	/**
+	 * calculates the rectangle of the drawed graph
+	 * @return the rectangle of the graph or null, if no vertex is present
+	 */
 	public Rectangle getGraphRect() {
 		Graph<Vertex,Edge> graph = mVViewer.getModel().getGraphLayout().getGraph();
 		if(!graph.getVertices().isEmpty()) {

@@ -13,11 +13,10 @@ import edu.uci.ics.jung.visualization.VisualizationViewer;
 import edu.uci.ics.jung.visualization.control.*;
 
 /**
- * A plugin that can create vertices, undirected edges, and directed edges
- * using mouse gestures.
+ * A plugin that can create vertices, undirected edges and directed edges.
+ * Further this Plugin can pick and move one or more vertices
+ * by using the mouse in combination with modifier keys (SHIFT, CTRL) 
  * 
- * @author Tom Nelson
- *
  */
 public class MyGraphMousePlugin<V,E> extends AbstractGraphMousePlugin implements MouseListener, MouseMotionListener {
     
