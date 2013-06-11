@@ -188,5 +188,14 @@ public class GraphBuilder {
 	
 	
 	
+	public void setMode(int mode) {
+		if(mode == GraphCreationGUI.Mode.GRAPHCREATION)
+			mGraphMouse.addEditingFunctionality();
+		else if(mode == GraphCreationGUI.Mode.VISUALISATION) {
+			mGraphMouse.removeEditingFunctionality();
+		}
+	}
+	
+	
 	
 }

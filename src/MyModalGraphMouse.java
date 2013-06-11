@@ -56,12 +56,17 @@ public class MyModalGraphMouse<V,E> extends AbstractModalGraphMouse implements M
     protected void loadPlugins() {
 		editingPlugin = new MyGraphMousePlugin<V,E>();
 		popupEditingPlugin = new MyPopupGraphMousePlugin<V,E>();
-		setEditingMode();
+		addEditingFunctionality();
 	}
 
-	protected void setEditingMode() {
+	public void addEditingFunctionality() {
 		add(editingPlugin);
 		add(popupEditingPlugin);
+	}
+	
+	public void removeEditingFunctionality() {
+		remove(editingPlugin);
+		remove(popupEditingPlugin);
 	}
 
 	/**
