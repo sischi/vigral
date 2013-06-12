@@ -11,7 +11,7 @@ public class Vigral {
 	/**
 	 * an instance of the graph creation GUI
 	 */
-	private GraphCreationGUI mfrm_graphCreation;
+	private VigralGUI mfrm_graphCreation;
 	
 	
 	/**
@@ -19,7 +19,7 @@ public class Vigral {
 	 */
 	public Vigral() {
 		mGraphBuilder = new GraphBuilder();
-		mfrm_graphCreation = new GraphCreationGUI(mGraphBuilder);
+		mfrm_graphCreation = new VigralGUI(mGraphBuilder);
 		
 		// workaround for linux:
 		// without initially resizing the frame, the editing panel of the JUNG framework is not shown

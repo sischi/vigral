@@ -206,9 +206,9 @@ public class GraphBuilder {
 	
 	
 	public void setMode(int mode) {
-		if(mode == GraphCreationGUI.Mode.GRAPHCREATION)
+		if(mode == VigralGUI.Mode.GRAPHCREATION)
 			mGraphMouse.addEditingFunctionality();
-		else if(mode == GraphCreationGUI.Mode.VISUALISATION) {
+		else if(mode == VigralGUI.Mode.VISUALISATION) {
 			mGraphMouse.removeEditingFunctionality();
 		}
 	}
