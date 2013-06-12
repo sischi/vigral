@@ -1,11 +1,12 @@
+import java.awt.Paint;
+
 import org.apache.commons.collections15.Factory;
 
 
-public class Vertex {
+public class Vertex extends GraphElement {
 	
 	private int mID;
 	private String mLabel;
-	private int mState;
 	
 	public Vertex() {
 		System.out.println("Vertex created! id= "+ mID);
@@ -33,12 +34,9 @@ public class Vertex {
 			return mLabel;
 	}
 	
-	
 	public String getIdentifier() {
 		return "V"+ mID;
 	}
-	
-	
 	
 	
 	

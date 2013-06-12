@@ -1,14 +1,16 @@
+import java.awt.Paint;
+
 import org.apache.commons.collections15.Factory;
 
 
-public class Edge {
+public class Edge extends GraphElement {
+	
+	
 	
 	private int mID;
 	private int mWeight;
 	private Vertex mStart;
 	private Vertex mEnd;
-	private int mState;
-	
 	private boolean mIsDirected;
 	
 	
@@ -36,19 +38,13 @@ public class Edge {
 	public Vertex getEndVertex() {
 		return mEnd;
 	}
-	
-	public void setState(int state) {
-		mState = state;
-	}
-	
-	public int getState() {
-		return mState;
-	}
-	
+
 	
 	public String toString() {
 		return "E"+ mID +" ("+ mStart.toString() +", "+ mEnd.toString() +")";
 	}
+	
+
 	
 	
 	
