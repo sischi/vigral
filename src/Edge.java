@@ -44,6 +44,20 @@ public class Edge extends GraphElement {
 		System.out.println("Edge created! "+ this.toString());
 	}
 	
+	public Edge(Edge e) {
+		super(e);
+		mID = e.getId();
+		mWeight = e.getWeight();
+		mStart = new Vertex(e.getStartVertex());
+		mEnd = new Vertex(e.getEndVertex());
+		mIsDirected = e.isDirected();
+	}
+	
+	
+	public boolean isDirected() {
+		return mIsDirected;
+	}
+	
 	/**
 	 * getter for the weight
 	 * @return returns the weight as an integer
@@ -84,7 +98,9 @@ public class Edge extends GraphElement {
 	}
 	
 
-	
+	public int getId() {
+		return mID;
+	}
 	
 	
 	
