@@ -238,19 +238,29 @@ public class GraphCreationGUI extends JFrame implements ActionListener {
 	public void changeMode(int mode) {
 		mMode = mode;
 		mGraphBuilder.setMode(mMode);
+		Dimension sidePanelDim = null;
+		
 		
 		if(mMode == Mode.GRAPHCREATION) {
+			sidePanelDim = new Dimension(0, 0);
+			mSplt_contentPane.setDividerLocation(1.0d);
 			mCb_algorithm.setEnabled(true);
 			mCb_graphType.setEnabled(true);
 			mBtn_changeMode.setText("Visualisation");
 			mPnl_buttonBar.setVisible(false);
 		}
 		else if(mMode == Mode.VISUALISATION) {
+			sidePanelDim = new Dimension(240, 0);
+			mSplt_contentPane.setDividerLocation(mSplt_contentPane.getWidth() - sidePanelDim.width - mSplt_contentPane.getDividerSize());
 			mCb_algorithm.setEnabled(false);
 			mCb_graphType.setEnabled(false);
 			mBtn_changeMode.setText("Graph Creation");
 			mPnl_buttonBar.setVisible(true);
 		}
+		
+		mPnl_sidePanel.setMaximumSize(sidePanelDim);
+		mPnl_sidePanel.setMinimumSize(sidePanelDim);
+		mPnl_sidePanel.setPreferredSize(sidePanelDim);
 		
 	}
 
