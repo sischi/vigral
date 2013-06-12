@@ -22,28 +22,63 @@ public class Graph {
 	 */
 	private HashMap<Vertex, ArrayList<Edge>> mOutEdges;
 	
+	private HashMap<Vertex, Integer> mInDegrees;
+	private HashMap<Vertex, Integer> mOutDegrees;
+	
+	
+	
 	
 	public Graph() {
 		mVertices = new ArrayList<Vertex>();
 		mEdges = new ArrayList<Edge>();
 		mOutEdges = new HashMap<Vertex, ArrayList<Edge>>();
+		mInDegrees = new HashMap<Vertex, Integer>();
+		mOutDegrees = new HashMap<Vertex, Integer>();
 	}
 	
 	public Graph(Graph g) {
 		mVertices = new ArrayList<Vertex>();
-		for(Vertex v : g.getVertices())
-			mVertices.add(new Vertex(v));
+		mInDegrees = new HashMap<Vertex, Integer>();
+		mOutDegrees = new HashMap<Vertex, Integer>();
+		
+		for(Vertex v : g.getVertices()) {
+			Vertex newVertex = new Vertex(v);
+			mVertices.add(newVertex);
+			mInDegrees.put(newVertex, g.getInDegree(v));
+			mOutDegrees.put(newVertex, g.getOutDegree(v));
+		}
 		
 		mEdges = new ArrayList<Edge>();
-		for(Edge e : g.getEdges())
-			mEdges.add(new Edge(e));
+		for(Edge e : g.getEdges()) {
+			Edge newEdge = new Edge(e.getId(), e.getWeight(), getVertexById(e.getStartVertex().getId()), getVertexById(e.getEndVertex().getId()), e.isDirected());
+			mEdges.add(newEdge);
+		}
 		
 		mOutEdges = new HashMap<Vertex, ArrayList<Edge>>();
-		for(Vertex v : mVertices) {
-			mOutEdges.put(v, new ArrayList<Edge>());
-			for(Edge e : mEdges)
-				mOutEdges.get(v).add(e);
+		for(Vertex v : g.getVertices()) {
+			mOutEdges.put(getVertexById(v.getId()), new ArrayList<Edge>());
+			for(Edge e : g.getOutEdges(v))
+				mOutEdges.get(getVertexById(v.getId())).add(getEdgeById(e.getId()));
 		}
+		
+	}
+	
+	
+	public Vertex getVertexById(int id) {
+		for(Vertex v : mVertices) {
+			if(v.getId() == id)
+				return v;
+		}
+		return null;
+	}
+	
+	
+	public Edge getEdgeById(int id) {
+		for(Edge e : mEdges) {
+			if(e.getId() == id)
+				return e;
+		}
+		return null;
 	}
 	
 	/**
@@ -51,16 +86,18 @@ public class Graph {
 	 * @param multiGraph the JUNG representation of a graph
 	 * @return the resulting Graph representation of the graph
 	 */
-	public static Graph parseSparseMultiGraph(SparseMultigraph<Vertex, Edge> multiGraph) {
+	public static Graph parseGraph(SparseMultigraph<Vertex, Edge> multiGraph) {
 		Graph g = new Graph();
 		
-		Collection<Vertex> vertices = multiGraph.getVertices();
-		for(Vertex v : vertices)
+		for(Vertex v : multiGraph.getVertices()) {
 			g.getVertices().add(new Vertex(v));
+		}
+
+		for(Edge e :  multiGraph.getEdges()) {
+			Edge newEdge = new Edge(e.getId(), e.getWeight(), g.getVertexById(e.getStartVertex().getId()), g.getVertexById(e.getEndVertex().getId()), e.isDirected());
+			g.getEdges().add(newEdge);
+		}
 		
-		Collection<Edge> edges = multiGraph.getEdges();
-		for(Edge e : edges)
-			g.getEdges().add(new Edge(e));
 		
 		for(Vertex v : g.getVertices()) {
 			g.getAllOutEdgesPerVertex().put(v, new ArrayList<Edge>());
@@ -69,6 +106,8 @@ public class Graph {
 					g.getOutEdges(v).add(e);
 			}
 		}
+		
+		// TODO calculate in and out edges!!!
 		
 		return g;
 	}
@@ -106,5 +145,13 @@ public class Graph {
 	
 	private HashMap<Vertex, ArrayList<Edge>> getAllOutEdgesPerVertex() {
 		return mOutEdges;
+	}
+	
+	public int getInDegree(Vertex v) {
+		return mInDegrees.get(v);
+	}
+	
+	public int getOutDegree(Vertex v) {
+		return mOutDegrees.get(v);
 	}
 }
