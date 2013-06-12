@@ -16,7 +16,7 @@ import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
 
 
-public class GraphCreationGUI extends JFrame implements ActionListener {
+public class VigralGUI extends JFrame implements ActionListener {
 
 	public static class Mode {
 		public static final int GRAPHCREATION = 0;
@@ -66,7 +66,7 @@ public class GraphCreationGUI extends JFrame implements ActionListener {
 	/**
 	 * Create the frame.
 	 */
-	public GraphCreationGUI(GraphBuilder gb) {
+	public VigralGUI(GraphBuilder gb) {
 		setTitle("ViGrAl - Graph Creation");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 650, 450);
