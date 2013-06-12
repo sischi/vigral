@@ -30,10 +30,11 @@ import edu.uci.ics.jung.visualization.renderers.Renderer;
 
 public class GraphBuilder {
 	
+	private int mVertexRadius = 15;
 	/**
 	 * numerical value that will be considered in modifying the position of the vertices
 	 */
-	private static final int PADDING = 20;
+	private static final int PADDING = 10;
 
 	private Layout<Vertex, Edge> mLayout;
 	/**
@@ -80,8 +81,9 @@ public class GraphBuilder {
 		mVViewer.getRenderContext().setVertexShapeTransformer(new Transformer<Vertex, Shape>() {
 			@Override
 			public Shape transform(Vertex arg0) {
-				Ellipse2D circle = new Ellipse2D.Double(-15, -15, 30, 30);
-				return AffineTransform.getScaleInstance(2, 2).createTransformedShape(circle);
+				Ellipse2D circle = new Ellipse2D.Double(-mVertexRadius, -mVertexRadius, 2*mVertexRadius, 2*mVertexRadius);
+				//return AffineTransform.getScaleInstance(2, 2).createTransformedShape(circle);
+				return circle;
 			}
 		});
 		
@@ -134,14 +136,17 @@ public class GraphBuilder {
 				double newX = x;
 				double newY = y;
 				
-				if(x < PADDING)
-					newX = PADDING;
-				else if(x > dimen.width-PADDING)
-					newX = dimen.width-PADDING;
-				if(y < PADDING)
-					newY = PADDING;
-				else if(y > dimen.height-PADDING)
-					newY = dimen.height-PADDING;
+				int min = PADDING + mVertexRadius;
+				int maxW = dimen.width - PADDING -mVertexRadius;
+				int maxH = dimen.height - PADDING - mVertexRadius;
+				if(x < min)
+					newX = min;
+				else if(x > maxW)
+					newX = maxW;
+				if(y < min)
+					newY = min;
+				else if(y > maxH)
+					newY = maxH;
 				
 				if((newX != x) || (newY != y)) {
 					p.setLocation(newX, newY);
