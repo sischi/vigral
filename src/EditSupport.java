@@ -118,6 +118,7 @@ public class EditSupport<V,E> {
 		// get the graph
     	Graph<V,E> graph = vv.getModel().getGraphLayout().getGraph();
 		
+    	Vertex.VertexFactory.getInstance().setLocation(e.getPoint());
 		V newVertex = (V) Vertex.VertexFactory.getInstance().create();
 		
         Layout<V,E> layout = vv.getModel().getGraphLayout();

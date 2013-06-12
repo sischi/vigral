@@ -71,52 +71,6 @@ public class PickSupport<V,E> {
     }
     
     
-    public void mousePressed(MouseEvent e) {
-    	
-    	// get the clicked vv and the coordinates
-    	final VisualizationViewer<V,E> vv = (VisualizationViewer<V,E>)e.getSource();
-    	
-    	// p is the screen point for the mouse event
-        Point2D p = e.getPoint();
-        
-        mDown = p;
-    	
-    	// get an instance of the graphelementaccessor
-        GraphElementAccessor<V,E> pickSupport = vv.getPickSupport();
-    	
-        PickedState<V> pickedVertexState = vv.getPickedVertexState();
-        PickedState<E> pickedEdgeState = vv.getPickedEdgeState();
-        Layout<V,E> layout = vv.getGraphLayout();
-        
-        mRect.setFrameFromDiagonal(mDown,mDown);
-        
-
-        mPickedVertex = pickSupport.getVertex(layout, p.getX(), p.getY());
-        if(mPickedVertex != null) {
-            if(pickedVertexState.isPicked(mPickedVertex) == false) {
-            	pickedVertexState.clear();
-            	pickedVertexState.pick(mPickedVertex, true);
-            }
-            
-            // layout.getLocation applies the layout transformer so
-            // q is transformed by the layout transformer only
-            Point2D q = layout.transform(mPickedVertex);
-            // transform the mouse point to graph coordinate system
-            Point2D gp = vv.getRenderContext().getMultiLayerTransformer().inverseTransform(Layer.LAYOUT, p);
-
-            mOffsetx = (float) (gp.getX()-q.getX());
-            mOffsety = (float) (gp.getY()-q.getY());
-        } else if((mPickedEdge = pickSupport.getEdge(layout, p.getX(), p.getY())) != null) {
-            pickedEdgeState.clear();
-            pickedEdgeState.pick(mPickedEdge, true);
-        } else {
-        	/*
-            vv.addPostRenderPaintable(mLensPaintable);
-       	    pickedEdgeState.clear();
-            pickedVertexState.clear();
-            */
-        }
-    }
     
     
     public void pickVertex(VisualizationViewer vv, V vertex, Point2D p) {
@@ -158,38 +112,6 @@ public class PickSupport<V,E> {
     }
 
     
-    public void mouseDragged(MouseEvent e) {
-    	
-    	VisualizationViewer<V,E> vv = (VisualizationViewer)e.getSource();
-        if(mPickedVertex != null) {
-            Point2D p = e.getPoint();
-            Point2D graphPoint = vv.getRenderContext().getMultiLayerTransformer().inverseTransform(p);
-            Point2D graphDown = vv.getRenderContext().getMultiLayerTransformer().inverseTransform(mDown);
-            Layout<V,E> layout = vv.getGraphLayout();
-            double dx = graphPoint.getX()-graphDown.getX();
-            double dy = graphPoint.getY()-graphDown.getY();
-            PickedState<V> pickedState = vv.getPickedVertexState();
-            
-            for(V v : pickedState.getPicked()) {
-                Point2D vertexPoint = layout.transform(v);
-                vertexPoint.setLocation(vertexPoint.getX()+dx, vertexPoint.getY()+dy);
-                layout.setLocation(v, vertexPoint);
-            }
-            mDown = p;
-
-        } else {
-            Point2D out = e.getPoint();
-            /*
-            if(e.getModifiers() == this.addToSelectionModifiers || e.getModifiers() == modifiers) {
-                rect.setFrameFromDiagonal(down,out);
-            }
-            */
-            mRect.setFrameFromDiagonal(mDown,out);
-        }
-        if(mPickedVertex != null) e.consume();
-        vv.repaint();
-    }
-    
     
     public void performDrag(VisualizationViewer vv, Point2D p) {
     	if(mPickedVertex != null)
@@ -219,32 +141,14 @@ public class PickSupport<V,E> {
 	        
 	        for(V v : pickedState.getPicked()) {
 	            Point2D vertexPoint = layout.transform(v);
+	            ((Vertex)v).updateLocation(vertexPoint);
 	            vertexPoint.setLocation(vertexPoint.getX()+dx, vertexPoint.getY()+dy);
 	            layout.setLocation(v, vertexPoint);
 	        }
+	        
+	        
 	        mDown = p;
     	}
-    }
-    
-    
-    public void mouseReleased(MouseEvent e) {
-    	
-    	VisualizationViewer<V,E> vv = (VisualizationViewer)e.getSource();
-
-            if(mDown != null) {
-                Point2D out = e.getPoint();
-
-                if(mPickedVertex == null && heyThatsTooClose(mDown, out, 5) == false) {
-                    pickContainedVertices(vv, mDown, out, true);
-                }
-            }
-
-        mDown = null;
-        mPickedVertex = null;
-        mPickedEdge = null;
-        mRect.setFrame(0,0,0,0);
-        vv.removePostRenderPaintable(mLensPaintable);
-        vv.repaint();
     }
     
     

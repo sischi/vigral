@@ -1,4 +1,5 @@
 import java.awt.Paint;
+import java.awt.geom.Point2D;
 
 import org.apache.commons.collections15.Factory;
 
@@ -14,6 +15,9 @@ public class Vertex extends GraphElement {
 	 */
 	private String mLabel;
 	
+	private Point2D mLocation;
+	
+	
 	/**
 	 * constructs a vertex
 	 */
@@ -22,9 +26,10 @@ public class Vertex extends GraphElement {
 		mLabel = "";
 	}
 	
-	public Vertex(int id) {
+	public Vertex(int id, Point2D location) {
 		mID = id;
 		mLabel = "V"+ mID;
+		mLocation = location;
 		System.out.println("Vertex created! id= "+ mID +", label="+ mLabel);
 	}
 	
@@ -63,6 +68,11 @@ public class Vertex extends GraphElement {
 		return "V"+ mID;
 	}
 	
+	public void updateLocation(Point2D p) {
+		System.out.println(mID +"= "+ p);
+		mLocation = p;
+	}
+	
 	
 	
 	
@@ -71,6 +81,7 @@ public class Vertex extends GraphElement {
 
 		private static int IDCOUNT = 0;
 		private static VertexFactory mInstance = new VertexFactory();
+		private Point2D mPoint;
 		
 		private VertexFactory() {
 		}
@@ -79,9 +90,13 @@ public class Vertex extends GraphElement {
 			return mInstance;
 		}
 		
+		public void setLocation(Point2D p) {
+			mPoint = p;
+		}
+		
 		@Override
 		public Vertex create() {
-			return new Vertex(IDCOUNT++);
+			return new Vertex(IDCOUNT++, mPoint);
 		}
 		
 	}

@@ -150,6 +150,7 @@ public class GraphBuilder {
 				
 				if((newX != x) || (newY != y)) {
 					p.setLocation(newX, newY);
+					v.updateLocation(p);
 					mLayout.setLocation(v, p);
 				}
 			}

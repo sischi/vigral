@@ -6,6 +6,8 @@ import java.awt.event.MouseMotionListener;
 import java.awt.geom.Point2D;
 import javax.swing.JComponent;
 
+import org.apache.commons.collections15.Factory;
+
 import edu.uci.ics.jung.algorithms.layout.GraphElementAccessor;
 import edu.uci.ics.jung.algorithms.layout.Layout;
 import edu.uci.ics.jung.graph.util.EdgeType;
@@ -27,6 +29,9 @@ public class MyGraphMousePlugin<V,E> extends AbstractGraphMousePlugin implements
 	
 	private PickSupport<V,E> mPicking;
 	private EditSupport<V, E> mEditing;
+	
+	private Factory<V> mVertexFactory;
+	private Factory<E> mEdgeFactory;
 	
     private int mMode;
     
