@@ -30,6 +30,9 @@ import edu.uci.ics.jung.visualization.renderers.Renderer;
 
 public class GraphBuilder {
 	
+	/**
+	 * numerical value that indicates the vertices radius
+	 */
 	private int mVertexRadius = 15;
 	/**
 	 * numerical value that will be considered in modifying the position of the vertices
@@ -104,13 +107,10 @@ public class GraphBuilder {
 	 * @param panel the given panel that shows the graph
 	 */
 	public void onResizePanel(JPanel panel) {
-		System.out.println("onResize");
 		Dimension dimen = new Dimension(panel.getBounds().width, panel.getBounds().height);
-		System.out.println("panel dimension: "+ dimen.toString());
 		mVViewer.setPreferredSize(dimen);
 		//mLayout.setSize(dimen);
-		Point2D p = new Point(0, 0);	
-		
+		mVViewer.resize(dimen);
 		modifyLocationsIfOutOfBounds();
 	}
 	
@@ -153,6 +153,7 @@ public class GraphBuilder {
 					mLayout.setLocation(v, p);
 				}
 			}
+			mVViewer.repaint();
 		}
 	}
 	
