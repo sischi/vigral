@@ -189,12 +189,14 @@ public class GraphCreationGUI extends JFrame implements ActionListener {
 		Rectangle mainPanelRect = mPnl_mainPanel.getBounds();
 		System.out.println("main panel = "+ mainPanelRect);
 		
+		/*
 		Dimension sidePanelDim = new Dimension(240, 0);
 		mPnl_sidePanel.setMaximumSize(sidePanelDim);
 		mPnl_sidePanel.setMinimumSize(sidePanelDim);
 		mPnl_sidePanel.setPreferredSize(sidePanelDim);
+		*/
 		
-		Dimension mainPanelDim = new Dimension(spltPaneRect.width - sidePanelDim.width - mSplt_contentPane.getDividerSize(), spltPaneRect.height);
+		Dimension mainPanelDim = new Dimension(spltPaneRect.width - mSplt_contentPane.getDividerSize(), spltPaneRect.height);
 		mPnl_mainPanel.setMinimumSize(mainPanelDim);
 		mPnl_mainPanel.setMaximumSize(mainPanelDim);
 		mPnl_mainPanel.setPreferredSize(mainPanelDim);
