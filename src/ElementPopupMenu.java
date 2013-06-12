@@ -20,10 +20,10 @@ public class ElementPopupMenu {
 	private static Edge mEdge;
 	
 	
-	public static void setMode(int mode, Vertex v, Edge e, VisualizationViewer vv) {
+	public static <V, E> void setMode(int mode, V v, E e, VisualizationViewer vv) {
 		mMenuMode = mode;
-		mVertex = v;
-		mEdge = e;
+		mVertex = (Vertex)v;
+		mEdge = (Edge)e;
 		mVViewer = vv;
 	}
 	

@@ -1,24 +1,10 @@
-import java.awt.Component;
-import java.awt.event.ActionEvent;
 import java.awt.event.MouseEvent;
 import java.awt.geom.Point2D;
-import java.util.Set;
-
-import javax.swing.AbstractAction;
-import javax.swing.JMenu;
 import javax.swing.JPopupMenu;
 
-import org.apache.commons.collections15.Factory;
-
 import edu.uci.ics.jung.algorithms.layout.GraphElementAccessor;
-import edu.uci.ics.jung.algorithms.layout.Layout;
-import edu.uci.ics.jung.graph.DirectedGraph;
-import edu.uci.ics.jung.graph.Graph;
-import edu.uci.ics.jung.graph.UndirectedGraph;
-import edu.uci.ics.jung.graph.util.EdgeType;
 import edu.uci.ics.jung.visualization.VisualizationViewer;
 import edu.uci.ics.jung.visualization.control.AbstractPopupGraphMousePlugin;
-import edu.uci.ics.jung.visualization.picking.PickedState;
 
 /**
  * a plugin that uses popup menus to create vertices, undirected edges,
@@ -50,13 +36,13 @@ public class MyPopupGraphMousePlugin<V,E> extends AbstractPopupGraphMousePlugin 
         if(pickSupport != null) {
             final V vertex = pickSupport.getVertex(vv.getGraphLayout(), p.getX(), p.getY());
             if(vertex != null) {
-            	ElementPopupMenu.setMode(ElementPopupMenu.VERTEXMENU, (Vertex)vertex, null, vv);
+            	ElementPopupMenu.setMode(ElementPopupMenu.VERTEXMENU, vertex, null, vv);
             	new ElementPopupMenu.PopupMenu(null).show(vv, e.getX(), e.getY());
             } 
             else {
                 final E edge = pickSupport.getEdge(vv.getGraphLayout(), p.getX(), p.getY());
                 if(edge != null) {
-                	ElementPopupMenu.setMode(ElementPopupMenu.EDGEMENU, null, (Edge)edge, vv);
+                	ElementPopupMenu.setMode(ElementPopupMenu.EDGEMENU, null, edge, vv);
                 	new ElementPopupMenu.PopupMenu(null).show(vv, e.getX(), e.getY());
                 }
             }

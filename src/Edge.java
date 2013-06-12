@@ -90,12 +90,12 @@ public class Edge extends GraphElement {
 	
 	
 	// singleton factory to create an edge
-	public static class EdgeFactory implements Factory<Edge> {
+	public static class EdgeFactory<V> implements Factory<Edge> {
 		
 		private static int IDCOUNT = 0;
 		private static EdgeFactory mInstance = new EdgeFactory();
-		private Vertex mStartVertex;
-		private Vertex mEndVertex;
+		private V mStartVertex;
+		private V mEndVertex;
 		private boolean mEdgeIsDirected;
 		
 		private EdgeFactory() {
@@ -105,7 +105,7 @@ public class Edge extends GraphElement {
 			return mInstance;
 		}
 		
-		public void setStartAndEnd(Vertex start, Vertex end) {
+		public void setStartAndEnd(V start, V end) {
 			mStartVertex = start;
 			mEndVertex = end;
 		}
@@ -116,7 +116,7 @@ public class Edge extends GraphElement {
 
 		@Override
 		public Edge create() {
-			return new Edge(IDCOUNT++, 1, mStartVertex, mEndVertex, mEdgeIsDirected);
+			return new Edge(IDCOUNT++, 1, (Vertex)mStartVertex, (Vertex)mEndVertex, mEdgeIsDirected);
 		}
 	}
 }

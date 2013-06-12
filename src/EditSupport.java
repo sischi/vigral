@@ -133,7 +133,7 @@ public class EditSupport<V,E> {
 		if((vertex != null) && (mStartVertex != null)) {
 			if(!(mDown.getX() == p.getX() && mDown.getY() == p.getY())) {
 	    		Graph<V,E> graph = vv.getGraphLayout().getGraph();
-	    		Edge.EdgeFactory.getInstance().setStartAndEnd((Vertex) mStartVertex, (Vertex) vertex);
+	    		Edge.EdgeFactory.getInstance().setStartAndEnd(mStartVertex, vertex);
 	    		graph.addEdge((E) Edge.EdgeFactory.getInstance().create(), mStartVertex, vertex, mEdgeIsDirected);
 	    	}
 		}
