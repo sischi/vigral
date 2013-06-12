@@ -5,6 +5,7 @@ import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.JSplitPane;
 import javax.swing.border.EmptyBorder;
 import javax.swing.JComboBox;
 import javax.swing.JButton;
@@ -26,6 +27,7 @@ public class GraphCreationGUI extends JFrame implements ActionListener {
 	
 	private JComboBox mCb_graphType = new JComboBox();
 	private JComboBox mCb_algorithm = new JComboBox();
+	private JSplitPane mSplt_contentPane = new JSplitPane();
 	private JButton mBtn_changeMode = new JButton();
 	private JButton mBtn_play = new JButton();
 	private JButton mBtn_pause = new JButton();
@@ -35,7 +37,8 @@ public class GraphCreationGUI extends JFrame implements ActionListener {
 	private JButton mBtn_jumpToEnd = new JButton();
 	private JPanel mPnl_graph = new JPanel();
 	private JPanel mPnl_buttonBar = new JPanel();
-	private JPanel mContentPane;
+	private JPanel mPnl_mainPanel = new JPanel();
+	private JPanel mPnl_sidePanel = new JPanel();
 	
 	private GraphBuilder mGraphBuilder;
 	
@@ -66,9 +69,8 @@ public class GraphCreationGUI extends JFrame implements ActionListener {
 	public GraphCreationGUI(GraphBuilder gb) {
 		setTitle("ViGrAl - Graph Creation");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 600, 400);
-		setMinimumSize(new Dimension(600, 400));
-		addComponentListener(resizeListener);
+		setBounds(100, 100, 650, 450);
+		setMinimumSize(new Dimension(750, 400));
 		
 		initComponents();
 		resizeComponents();
@@ -78,7 +80,7 @@ public class GraphCreationGUI extends JFrame implements ActionListener {
 		
 		changeMode(Mode.GRAPHCREATION);
 		
-		initSizes();
+		//initSizes();
 	}
 	
 	
@@ -86,25 +88,30 @@ public class GraphCreationGUI extends JFrame implements ActionListener {
 	 * initializes the components
 	 */
 	private void initComponents() {
-		mContentPane = new JPanel();
-		mContentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
-		setContentPane(mContentPane);
-		mContentPane.setLayout(null);
+		mPnl_mainPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
+		setContentPane(mSplt_contentPane);
+		mPnl_mainPanel.setLayout(null);
+		mPnl_mainPanel.addComponentListener(resizeListener);
 		
 		mCb_graphType.setBackground(Color.WHITE);
-		mContentPane.add(mCb_graphType);
+		mPnl_mainPanel.add(mCb_graphType);
 		
 		mCb_algorithm.setBackground(Color.WHITE);
-		mContentPane.add(mCb_algorithm);
+		mPnl_mainPanel.add(mCb_algorithm);
 		
 		mPnl_graph.setBackground(Color.WHITE);
-		mContentPane.add(mPnl_graph);
+		mPnl_mainPanel.add(mPnl_graph);
 		
 		mBtn_changeMode.addActionListener(this);
-		mContentPane.add(mBtn_changeMode);
+		mPnl_mainPanel.add(mBtn_changeMode);
 		
 		initButtonBar();
-		mContentPane.add(mPnl_buttonBar);
+		mPnl_mainPanel.add(mPnl_buttonBar);
+		
+		mSplt_contentPane.setMinimumSize(new Dimension(740, 370));
+		mSplt_contentPane.setLeftComponent(mPnl_mainPanel);
+		mSplt_contentPane.setRightComponent(mPnl_sidePanel);
+		mSplt_contentPane.setResizeWeight(1.0);
 		
 		
 		mBtn_play.addActionListener(new ActionListener() {
@@ -170,10 +177,28 @@ public class GraphCreationGUI extends JFrame implements ActionListener {
 	 * resize the components shown by the JFrame
 	 */
 	private void resizeComponents() {
-		// get the rectangle of the contentPane
-		Rectangle windowRect = mContentPane.getBounds();
 		
-		System.out.println("window.rect = "+ windowRect);
+		System.out.println("window = "+ getBounds());
+		
+		System.out.println("split pane = "+ mSplt_contentPane.getBounds());
+		
+		System.out.println("split divider = "+ mSplt_contentPane.getDividerSize());
+		
+		// get the rectangle of the contentPane
+		Rectangle spltPaneRect = mSplt_contentPane.getBounds();
+		Rectangle mainPanelRect = mPnl_mainPanel.getBounds();
+		System.out.println("main panel = "+ mainPanelRect);
+		
+		Dimension sidePanelDim = new Dimension(240, 0);
+		mPnl_sidePanel.setMaximumSize(sidePanelDim);
+		mPnl_sidePanel.setMinimumSize(sidePanelDim);
+		mPnl_sidePanel.setPreferredSize(sidePanelDim);
+		
+		Dimension mainPanelDim = new Dimension(spltPaneRect.width - sidePanelDim.width - mSplt_contentPane.getDividerSize(), spltPaneRect.height);
+		mPnl_mainPanel.setMinimumSize(mainPanelDim);
+		mPnl_mainPanel.setMaximumSize(mainPanelDim);
+		mPnl_mainPanel.setPreferredSize(mainPanelDim);
+		
 		
 		// for each component: align the component relative to the contentPane rectangle and the other components
 		int x = 10;
@@ -184,25 +209,25 @@ public class GraphCreationGUI extends JFrame implements ActionListener {
 		
 		w = 150;
 		h = 25;
-		x = windowRect.width - w - 10;
-		y = windowRect.y + 10;
+		x = mainPanelRect.width - w - 10;
+		y = mainPanelRect.y + 10;
 		mCb_algorithm.setBounds(x, y, w, h);
 		
 		w = 160;
 		h = 25;
-		x = windowRect.width - w - 10;
-		y = windowRect.height - h - 10;
+		x = mainPanelRect.width - w - 10;
+		y = mainPanelRect.height - h - 10;
 		mBtn_changeMode.setBounds(x, y, w, h);
 		
 		w = 5 * mBtn_play.getBounds().width + 4 * 10;
 		h = mBtn_play.getBounds().height + 10;
 		x = 0;
-		y = windowRect.height - h - 5;
+		y = mainPanelRect.height - h - 5;
 		mPnl_buttonBar.setBounds(x, y, w, h);
 		
-		x = windowRect.x + 10;
+		x = mainPanelRect.x + 10;
 		y = mCb_graphType.getBounds().y + mCb_graphType.getBounds().height + 10;
-		w = windowRect.width - 20;
+		w = mainPanelRect.width - 20;
 		h = mPnl_buttonBar.getBounds().y - 10 - mCb_graphType.getBounds().y - mCb_graphType.getBounds().height - 10;
 		mPnl_graph.setBounds(x, y, w, h);
 	}
