@@ -1,6 +1,7 @@
 import java.awt.Dimension;
 import java.awt.Rectangle;
 
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
@@ -14,14 +15,17 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
+import java.util.ArrayList;
 
 
-public class VigralGUI extends JFrame implements ActionListener {
+public class VigralGUI extends JFrame {
 
 	public static class Mode {
 		public static final int GRAPHCREATION = 0;
 		public static final int VISUALISATION = 1;
 	}
+	
+	private ArrayList<AbstractAlgorithm> mAvailableAlgorithms;
 	
 	private int mMode;
 	
@@ -42,6 +46,24 @@ public class VigralGUI extends JFrame implements ActionListener {
 	
 	private GraphBuilder mGraphBuilder;
 	
+	
+	private ActionListener mCreationListener = new ActionListener() {
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			changeMode(Mode.VISUALISATION);
+			mBtn_changeMode.removeActionListener(mCreationListener);
+			mBtn_changeMode.addActionListener(mVisualisationListener);
+		}
+	};
+	
+	private ActionListener mVisualisationListener = new ActionListener() {
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			changeMode(Mode.GRAPHCREATION);
+			mBtn_changeMode.removeActionListener(mVisualisationListener);
+			mBtn_changeMode.addActionListener(mCreationListener);
+		}
+	};
 	
 	private ComponentListener resizeListener = new ComponentListener() {
 		@Override
@@ -64,9 +86,11 @@ public class VigralGUI extends JFrame implements ActionListener {
 
 	
 	/**
-	 * Create the frame.
+	 * Create
 	 */
 	public VigralGUI(GraphBuilder gb) {
+		initAlgorithms();
+		
 		setTitle("ViGrAl - Graph Creation");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 650, 450);
@@ -79,6 +103,7 @@ public class VigralGUI extends JFrame implements ActionListener {
 		mGraphBuilder.addToPanel(mPnl_graph);
 		
 		changeMode(Mode.GRAPHCREATION);
+		
 		
 		//initSizes();
 	}
@@ -97,12 +122,13 @@ public class VigralGUI extends JFrame implements ActionListener {
 		mPnl_mainPanel.add(mCb_graphType);
 		
 		mCb_algorithm.setBackground(Color.WHITE);
+		initAlgorithmBox();
 		mPnl_mainPanel.add(mCb_algorithm);
 		
 		mPnl_graph.setBackground(Color.WHITE);
 		mPnl_mainPanel.add(mPnl_graph);
 		
-		mBtn_changeMode.addActionListener(this);
+		mBtn_changeMode.addActionListener(mCreationListener);
 		mPnl_mainPanel.add(mBtn_changeMode);
 		
 		initButtonBar();
@@ -140,6 +166,11 @@ public class VigralGUI extends JFrame implements ActionListener {
 		initButtonFromButtonBar(mBtn_stepForward, new ImageIcon("res/stepforward_inactive.png"), new ImageIcon("res/stepforward_active.png"), 3);
 		initButtonFromButtonBar(mBtn_jumpToEnd, new ImageIcon("res/jumptoend_inactive.png"), new ImageIcon("res/jumptoend_active.png"), 4);
 		mBtn_pause.setVisible(false);
+	}
+	
+	public void initAlgorithms() {
+		mAvailableAlgorithms = new ArrayList<AbstractAlgorithm>();
+		mAvailableAlgorithms.add(new Dijkstra());
 	}
 	
 	
@@ -235,6 +266,15 @@ public class VigralGUI extends JFrame implements ActionListener {
 	}
 	
 
+	private void initAlgorithmBox() {
+		String[] entries = new String[mAvailableAlgorithms.size()];
+		
+		for(int i = 0; i < mAvailableAlgorithms.size(); i++)
+			entries[i] = mAvailableAlgorithms.get(i).getAlgorithmName();
+		
+		DefaultComboBoxModel model = new DefaultComboBoxModel(entries);
+		mCb_algorithm.setModel(model);
+	}
 	
 	
 	public void changeMode(int mode) {
@@ -263,19 +303,7 @@ public class VigralGUI extends JFrame implements ActionListener {
 		mPnl_sidePanel.setMaximumSize(sidePanelDim);
 		mPnl_sidePanel.setMinimumSize(sidePanelDim);
 		mPnl_sidePanel.setPreferredSize(sidePanelDim);
-		
 	}
-
-
-	@Override
-	public void actionPerformed(ActionEvent e) {
-		if(mMode == Mode.GRAPHCREATION)
-			changeMode(Mode.VISUALISATION);
-		else if(mMode == Mode.VISUALISATION)
-			changeMode(Mode.GRAPHCREATION);
-	}
-	
-	
 	
 	
 }

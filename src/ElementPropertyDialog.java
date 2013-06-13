@@ -16,7 +16,7 @@ import javax.swing.border.EmptyBorder;
 
 public class ElementPropertyDialog<GE> extends JDialog {
 
-private GE mElement;
+	private GE mElement;
 	
 	private static final int MAXIMUMDIGITS = 7;
 
@@ -103,11 +103,6 @@ private GE mElement;
 				buttonPane.add(cancelButton);
 			}
 		}
-	}
-	
-	
-	private void allowNumbersOnly() {
-		
 	}
 
 
