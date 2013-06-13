@@ -27,10 +27,11 @@ public class Vertex extends GraphElement {
 		mLabel = "";
 	}
 	
-	public Vertex(int id, Point2D location) {
+	public Vertex(int id, Point2D location, ElementState state) {
 		mID = id;
 		mLabel = "V"+ mID;
 		mLocation = location;
+		mState = state;
 		System.out.println("Vertex created! id= "+ mID +", label="+ mLabel);
 	}
 	
@@ -99,6 +100,7 @@ public class Vertex extends GraphElement {
 		private static int IDCOUNT = 0;
 		private static VertexFactory mInstance = new VertexFactory();
 		private Point2D mPoint;
+		private static ElementState DEFAULT_STATE = ElementState.UNVISITED;
 		
 		private VertexFactory() {
 		}
@@ -113,7 +115,7 @@ public class Vertex extends GraphElement {
 		
 		@Override
 		public Vertex create() {
-			return new Vertex(IDCOUNT++, mPoint);
+			return new Vertex(IDCOUNT++, mPoint, DEFAULT_STATE);
 		}
 		
 	}
