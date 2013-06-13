@@ -19,4 +19,5 @@ public abstract class AbstractAlgorithm implements Algorithm {
 	protected void setGraph(Graph g) {
 		mGraph = g;
 	}
+
 }
