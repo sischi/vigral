@@ -3,15 +3,8 @@ import java.awt.Paint;
 
 public abstract class GraphElement {
 
-	public static class State {
-		public static final int UNVISITED = 0;
-		public static final int ACTIVE = 1;
-		public static final int VISITED = 2;
-		public static final int FINISHED_AND_RELEVANT = 3;
-		public static final int FINISHED_AND_NOT_RELEVANT = 4;
-	}
-	
-	private int mState;
+
+	private ElementState mState;
 	private Paint mCustomColor;
 	
 	public GraphElement(){}
@@ -33,11 +26,11 @@ public abstract class GraphElement {
 		mCustomColor = null;
 	}
 	
-	public void setState(int state) {
+	public void setState(ElementState state) {
 		mState = state;
 	}
 	
-	public int getState() {
+	public ElementState getState() {
 		return mState;
 	}
 }
