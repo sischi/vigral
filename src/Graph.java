@@ -90,7 +90,10 @@ public class Graph {
 		Graph g = new Graph();
 		
 		for(Vertex v : multiGraph.getVertices()) {
-			g.getVertices().add(new Vertex(v));
+			Vertex newVertex = new Vertex(v);
+			g.getVertices().add(newVertex);
+			g.getAllInDegrees().put(newVertex, multiGraph.inDegree(v));
+			g.getAllOutDegrees().put(newVertex, multiGraph.outDegree(v));
 		}
 
 		for(Edge e :  multiGraph.getEdges()) {
@@ -98,7 +101,13 @@ public class Graph {
 			g.getEdges().add(newEdge);
 		}
 		
+		for(Vertex v : multiGraph.getVertices()) {
+			g.getAllOutEdgesPerVertex().put(g.getVertexById(v.getId()), new ArrayList<Edge>());
+			for(Edge e : multiGraph.getOutEdges(v))
+				g.getAllOutEdgesPerVertex().get(g.getVertexById(v.getId())).add(g.getEdgeById(e.getId()));
+		}
 		
+		/*
 		for(Vertex v : g.getVertices()) {
 			g.getAllOutEdgesPerVertex().put(v, new ArrayList<Edge>());
 			for(Edge e : g.getEdges()) {
@@ -106,8 +115,7 @@ public class Graph {
 					g.getOutEdges(v).add(e);
 			}
 		}
-		
-		// TODO calculate in and out edges!!!
+		*/
 		
 		return g;
 	}
@@ -119,8 +127,21 @@ public class Graph {
 	public SparseMultigraph<Vertex, Edge> toSparseMultiGraph() {
 		SparseMultigraph<Vertex, Edge> multiGraph = new SparseMultigraph<Vertex, Edge>();
 		
+		
+		for(Vertex v : mVertices)
+			multiGraph.addVertex(new Vertex(v));
+		
+		
 		for(Edge e : mEdges) {
-			Edge newEdge = new Edge(e);
+			Vertex startVertex = null, endVertex = null;
+			for(Vertex v : multiGraph.getVertices()) {
+				if(e.getStartVertex().getId() == v.getId())
+					startVertex = v;
+				if(e.getEndVertex().getId() == v.getId())
+					endVertex = v;
+			}
+			
+			Edge newEdge = new Edge(e.getId(), e.getWeight(), startVertex, endVertex, e.isDirected());
 			if(newEdge.isDirected())
 				multiGraph.addEdge(newEdge, newEdge.getStartVertex(), newEdge.getEndVertex(), EdgeType.DIRECTED);
 			else
@@ -145,6 +166,14 @@ public class Graph {
 	
 	private HashMap<Vertex, ArrayList<Edge>> getAllOutEdgesPerVertex() {
 		return mOutEdges;
+	}
+	
+	private HashMap<Vertex, Integer> getAllOutDegrees() {
+		return mOutDegrees;
+	}
+	
+	private HashMap<Vertex, Integer> getAllInDegrees() {
+		return mInDegrees;
 	}
 	
 	public int getInDegree(Vertex v) {
