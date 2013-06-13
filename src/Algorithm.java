@@ -6,7 +6,7 @@ import edu.uci.ics.jung.graph.SparseMultigraph;
 public interface Algorithm {
 
 	public ArrayList<Pair<ElementType, String>> getRequirements();
-	public void setRequirements(ArrayList<Pair<ElementType, Object>> requirements);
+	public void setRequirements(ArrayList<Integer> requiredIDs);
 	
 	public Graph getFirstStep();
 	public Graph getPreviousStep();

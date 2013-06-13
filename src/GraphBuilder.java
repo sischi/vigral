@@ -204,6 +204,9 @@ public class GraphBuilder {
 			return null;
 	}
 	
+	public SparseMultigraph<Vertex, Edge> getGraph() {
+		return mGraph;
+	}
 	
 	
 	public void setMode(int mode) {

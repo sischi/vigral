@@ -39,7 +39,7 @@ public class Vertex extends GraphElement {
 		super(v);
 		mID = v.getId();
 		mLabel = v.getLabel();
-		mLocation = new Point((Point) v.getLocation());
+		mLocation = (Point2D) v.getLocation().clone();
 	}
 	
 	

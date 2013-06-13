@@ -23,15 +23,19 @@ public class RequirementDialog extends JDialog {
 	private static final int MARGIN = 20;
 	private static final Dimension MAX_LABEL_DIMENSION = new Dimension(500, 25);
 	
+	private AbstractAlgorithm mAlgorithm;
+	private Graph mGraph;
+	
 	private final JPanel contentPanel = new JPanel();
 	private ArrayList<Pair<JLabel, JComboBox>> mComboBoxes = new ArrayList<Pair<JLabel, JComboBox>>();
 	
 	/**
 	 * Create the dialog.
 	 */
-	public RequirementDialog(ArrayList<Pair<ElementType, String>> requirements, Graph graph) {
+	public RequirementDialog(ArrayList<Pair<ElementType, String>> requirements, Graph graph, AbstractAlgorithm algorithm) {
 		
-		
+		mAlgorithm = algorithm;
+		mGraph = graph;
 		ArrayList<Vertex> vertices = graph.getVertices();
 		ArrayList<Edge> edges = graph.getEdges();
 		
@@ -61,15 +65,15 @@ public class RequirementDialog extends JDialog {
 				model = new DefaultComboBoxModel(edgeLabels);
 			
 			box.setModel(model);
-			x = 500;
+			x = 250;
 			y = i * (box.getPreferredSize().height + MARGIN);
 			box.setBounds(x, y, box.getPreferredSize().width, box.getPreferredSize().height);
 			mComboBoxes.add(new Pair(lbl, box));
 			contentPanel.add(lbl);
 			contentPanel.add(box);
-			
-			setBounds(100, 100, getPreferredSize().width, getPreferredSize().height);
 		}
+		
+		setBounds(100, 100, 300, 300);
 		
 		
 		
@@ -86,6 +90,18 @@ public class RequirementDialog extends JDialog {
 				JButton okButton = new JButton("OK");
 				okButton.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
+						
+						ArrayList<Integer> require = new ArrayList<Integer>();
+						for(Pair<JLabel, JComboBox> p : mComboBoxes) {
+							String vertexLbl = (String) p.getR().getSelectedItem();
+							for(Vertex v : mGraph.getVertices()) {
+								if(v.getLabel() == vertexLbl)
+									require.add(v.getId());
+							}
+						}
+						
+						mAlgorithm.setRequirements(require);
+						
 						dispose();
 					}
 				});

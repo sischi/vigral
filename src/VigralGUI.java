@@ -26,6 +26,7 @@ public class VigralGUI extends JFrame {
 	}
 	
 	private ArrayList<AbstractAlgorithm> mAvailableAlgorithms;
+	private AbstractAlgorithm mChosenAlgorithm;
 	
 	private int mMode;
 	
@@ -53,6 +54,15 @@ public class VigralGUI extends JFrame {
 			changeMode(Mode.VISUALISATION);
 			mBtn_changeMode.removeActionListener(mCreationListener);
 			mBtn_changeMode.addActionListener(mVisualisationListener);
+			
+			Graph graph = Graph.parseGraph(mGraphBuilder.getGraph());
+			mChosenAlgorithm = mAvailableAlgorithms.get(mCb_algorithm.getSelectedIndex()); 
+			ArrayList<Pair<ElementType, String>> require = mChosenAlgorithm.getRequirements();
+			if(require != null) {
+				RequirementDialog dialog = new RequirementDialog(require, graph, mChosenAlgorithm);
+				dialog.setModal(true);
+				dialog.show();
+			}
 		}
 	};
 	

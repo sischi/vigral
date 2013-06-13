@@ -3,8 +3,8 @@ import java.util.ArrayList;
 
 public class Dijkstra extends AbstractAlgorithm {
 
-	Vertex mSrcVertex;
-	Vertex mDestVertex;
+	private int mSrcVertexID;
+	private int mDestVertexID;
 	
 	@Override
 	public ArrayList<Pair<ElementType, String>> getRequirements() {
@@ -17,11 +17,11 @@ public class Dijkstra extends AbstractAlgorithm {
 	}
 
 	@Override
-	public void setRequirements(ArrayList<Pair<ElementType, Object>> requirements) {
-		mSrcVertex = (Vertex) requirements.get(0).getR();
-		mDestVertex = (Vertex) requirements.get(1).getR();
+	public void setRequirements(ArrayList<Integer> requiredIDs) {
+		mSrcVertexID = (int) requiredIDs.get(0);
+		mDestVertexID = (int) requiredIDs.get(1);
 		
-		System.out.println("start: "+ mSrcVertex.toString() +", dest"+ mDestVertex.toString());
+		System.out.println("start: "+ mSrcVertexID +", dest:"+ mDestVertexID);
 	}
 
 	@Override
