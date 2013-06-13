@@ -11,13 +11,23 @@ public abstract class AbstractAlgorithm implements Algorithm {
 	 * a list of graphs that represent the single steps
 	 */
 	protected ArrayList<Graph> mSteps;
+
+	protected int mActualStep;
+	
+	public AbstractAlgorithm() {
+		mSteps = new ArrayList<Graph>();
+		mActualStep = 0;
+	}
 	
 	/**
 	 * sets the graph object on what the algorithm will work
 	 * @param g the graph object
 	 */
-	protected void setGraph(Graph g) {
-		mGraph = g;
+	public void setGraph(Graph g) {
+		mGraph = new Graph(g);
+		mSteps.clear();
+		mSteps.add(new Graph(mGraph));
+		mActualStep = 0;
 	}
 
 }

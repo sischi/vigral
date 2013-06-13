@@ -32,6 +32,7 @@ public class VigralGUI extends JFrame {
 	private AbstractAlgorithm mChosenAlgorithm;
 	
 	private int mMode;
+	private Graph mGraphForVisualisation;
 	
 	private JComboBox mCb_graphType = new JComboBox();
 	private JComboBox mCb_algorithm = new JComboBox();
@@ -54,18 +55,21 @@ public class VigralGUI extends JFrame {
 	private ActionListener mCreationListener = new ActionListener() {
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			changeMode(Mode.VISUALISATION);
-			mBtn_changeMode.removeActionListener(mCreationListener);
-			mBtn_changeMode.addActionListener(mVisualisationListener);
 			
-			Graph graph = Graph.parseGraph(mGraphBuilder.getGraph());
+			
+			mGraphForVisualisation = Graph.parseGraph(mGraphBuilder.getGraph());
 			mChosenAlgorithm = mAvailableAlgorithms.get(mCb_algorithm.getSelectedIndex()); 
 			ArrayList<Pair<ElementType, String>> require = mChosenAlgorithm.getRequirements();
 			if(require != null) {
-				RequirementDialog dialog = new RequirementDialog(mMainWindow, require, graph, mChosenAlgorithm);
+				RequirementDialog dialog = new RequirementDialog(mMainWindow, require, mGraphForVisualisation, mChosenAlgorithm);
 				dialog.setModal(true);
 				dialog.show();
 			}
+			else {
+				requirementsApplied();
+			}
+			
+			mGraphBuilder.showResultGraph();
 		}
 	};
 	
@@ -75,6 +79,8 @@ public class VigralGUI extends JFrame {
 			changeMode(Mode.GRAPHCREATION);
 			mBtn_changeMode.removeActionListener(mVisualisationListener);
 			mBtn_changeMode.addActionListener(mCreationListener);
+			mGraphBuilder.resetResultGraph();
+			mGraphBuilder.showOriginGraph();
 		}
 	};
 	
@@ -96,6 +102,37 @@ public class VigralGUI extends JFrame {
 		public void componentShown(ComponentEvent e) {
 		}
 	};
+	
+	
+	private ActionListener mJumpStartListener = new ActionListener() {
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			mGraphBuilder.setResultingGraph(mChosenAlgorithm.getFirstStep());
+		}
+	};
+	
+	private ActionListener mPreviousStepListener = new ActionListener() {
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			mGraphBuilder.setResultingGraph(mChosenAlgorithm.getPreviousStep());
+		}
+	};
+	
+	private ActionListener mNextStepListener = new ActionListener() {
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			mGraphBuilder.setResultingGraph(mChosenAlgorithm.getNextStep());
+		}
+	};
+	
+	private ActionListener mJumpEndListener = new ActionListener() {
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			mGraphBuilder.setResultingGraph(mChosenAlgorithm.getResult());
+		}
+	};
+	
+	
 
 	
 	/**
@@ -173,11 +210,15 @@ public class VigralGUI extends JFrame {
 	
 	public void initButtonBar() {
 		initButtonFromButtonBar(mBtn_jumpToStart, new ImageIcon("res/jumptostart_inactive.png"), new ImageIcon("res/jumptostart_active.png"), 0);
+		mBtn_jumpToStart.addActionListener(mJumpStartListener);
 		initButtonFromButtonBar(mBtn_stepBack, new ImageIcon("res/stepback_inactive.png"), new ImageIcon("res/stepback_active.png"), 1);
+		mBtn_stepBack.addActionListener(mPreviousStepListener);
 		initButtonFromButtonBar(mBtn_play, new ImageIcon("res/play_inactive.png"), new ImageIcon("res/play_active.png"), 2);
 		initButtonFromButtonBar(mBtn_pause, new ImageIcon("res/pause_inactive.png"), new ImageIcon("res/pause_active.png"), 2);
 		initButtonFromButtonBar(mBtn_stepForward, new ImageIcon("res/stepforward_inactive.png"), new ImageIcon("res/stepforward_active.png"), 3);
+		mBtn_stepForward.addActionListener(mNextStepListener);
 		initButtonFromButtonBar(mBtn_jumpToEnd, new ImageIcon("res/jumptoend_inactive.png"), new ImageIcon("res/jumptoend_active.png"), 4);
+		mBtn_jumpToEnd.addActionListener(mJumpEndListener);
 		mBtn_pause.setVisible(false);
 	}
 	
@@ -287,6 +328,15 @@ public class VigralGUI extends JFrame {
 		
 		DefaultComboBoxModel model = new DefaultComboBoxModel(entries);
 		mCb_algorithm.setModel(model);
+	}
+	
+	
+	public void requirementsApplied() {
+		changeMode(Mode.VISUALISATION);
+		mBtn_changeMode.removeActionListener(mCreationListener);
+		mBtn_changeMode.addActionListener(mVisualisationListener);
+		mChosenAlgorithm.setGraph(mGraphForVisualisation);
+		mChosenAlgorithm.perform();
 	}
 	
 	

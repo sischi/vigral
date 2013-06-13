@@ -8,6 +8,7 @@ public interface Algorithm {
 	public ArrayList<Pair<ElementType, String>> getRequirements();
 	public void setRequirements(ArrayList<Integer> requiredIDs);
 	
+	public void perform();
 	public Graph getFirstStep();
 	public Graph getPreviousStep();
 	public Graph getNextStep();

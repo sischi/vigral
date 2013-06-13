@@ -17,7 +17,6 @@ import org.apache.commons.collections15.Transformer;
 
 import edu.uci.ics.jung.algorithms.layout.Layout;
 import edu.uci.ics.jung.algorithms.layout.StaticLayout;
-import edu.uci.ics.jung.graph.Graph;
 import edu.uci.ics.jung.graph.SparseMultigraph;
 import edu.uci.ics.jung.visualization.VisualizationServer;
 import edu.uci.ics.jung.visualization.VisualizationViewer;
@@ -45,6 +44,7 @@ public class GraphBuilder {
 	 * the graph, that inherits the vertices and egdes
 	 */
 	private SparseMultigraph<Vertex, Edge> mGraph;
+	private SparseMultigraph<Vertex, Edge> mResultGraph;
 	/**
 	 * responsible for the visualization of the graph
 	 */
@@ -91,6 +91,7 @@ public class GraphBuilder {
 		
 		// create a graph
 		mGraph = new SparseMultigraph<Vertex, Edge>();
+		mResultGraph = mGraph;
 		// add the graph to the layout
 		mLayout = new StaticLayout<Vertex, Edge>(mGraph);
 		// add the layout to the VisualizationViewer
@@ -136,9 +137,12 @@ public class GraphBuilder {
 	public void onResizePanel(JPanel panel) {
 		Dimension dimen = new Dimension(panel.getBounds().width, panel.getBounds().height);
 		mVViewer.setPreferredSize(dimen);
+		
+		// possible reason for the modifylocationifoutofbounds not functioning !!!!! handle with care!!!!!
 		//mLayout.setSize(dimen);
 		mVViewer.resize(dimen);
-		modifyLocationsIfOutOfBounds();
+		modifyLocationsIfOutOfBounds(mGraph);
+		modifyLocationsIfOutOfBounds(mResultGraph);
 	}
 	
 	/**
@@ -147,9 +151,8 @@ public class GraphBuilder {
 	 * be modified to avoid disappearing of some vertices. This will ensure, that the complete graph
 	 * is visible all the time.
 	 */
-	public void modifyLocationsIfOutOfBounds() {
+	public void modifyLocationsIfOutOfBounds(SparseMultigraph<Vertex, Edge> graph) {
 		
-		Graph<Vertex,Edge> graph = mVViewer.getModel().getGraphLayout().getGraph();
 		if(!graph.getVertices().isEmpty()) {
 			Dimension dimen = mVViewer.getSize();
 			int i = 0;
@@ -178,7 +181,7 @@ public class GraphBuilder {
 				if((newX != x) || (newY != y)) {
 					p.setLocation(newX, newY);
 					v.updateLocation(p);
-					mLayout.setLocation(v, p);
+					//mLayout.setLocation(v, v.getLocation());
 				}
 			}
 			mVViewer.repaint();
@@ -191,8 +194,7 @@ public class GraphBuilder {
 	 * @return the rectangle of the graph or null, if no vertex is present
 	 */
 	public Rectangle getGraphRect() {
-		Graph<Vertex,Edge> graph = mVViewer.getModel().getGraphLayout().getGraph();
-		if(!graph.getVertices().isEmpty()) {
+		if(!mGraph.getVertices().isEmpty()) {
 			Dimension dimen = mVViewer.getSize();
 			double minX = 0;
 			double maxX = 0;
@@ -201,7 +203,7 @@ public class GraphBuilder {
 			boolean initialised = false;
 			int i = 0;
 			
-			for(Vertex v : graph.getVertices()) {
+			for(Vertex v : mGraph.getVertices()) {
 				Point2D p = mLayout.transform(v);
 				double x = p.getX();
 				double y = p.getY();
@@ -235,6 +237,40 @@ public class GraphBuilder {
 		return mGraph;
 	}
 	
+	public void setResultingGraph(Graph g) {
+		mResultGraph = g.toSparseMultiGraph();
+		mLayout.setGraph(mResultGraph);
+		updateLocations();
+		for(Vertex v : mVViewer.getGraphLayout().getGraph().getVertices())
+			System.out.println(v.debug());
+
+		mVViewer.repaint();
+	}
+	
+	public void resetResultGraph() {
+		mResultGraph = mGraph;
+		mVViewer.repaint();
+	}
+	
+	public void showOriginGraph() {
+		mLayout.setGraph(mGraph);
+		mVViewer.repaint();
+	}
+	
+	public void showResultGraph() {
+		mLayout.setGraph(mResultGraph);
+		mVViewer.repaint();
+	}
+	
+	public void updateLocations() {
+		for(Vertex v : mResultGraph.getVertices()) {
+			//mLayout.setLocation(v, v.getLocation());
+			Point2D p = mLayout.transform(v);
+			p.setLocation(v.getLocation());
+		}
+		modifyLocationsIfOutOfBounds(mResultGraph);
+
+	}
 	
 	public void setMode(int mode) {
 		if(mode == VigralGUI.Mode.GRAPHCREATION)

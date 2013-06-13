@@ -88,7 +88,7 @@ public class Graph {
 	 */
 	public static Graph parseGraph(SparseMultigraph<Vertex, Edge> multiGraph) {
 		Graph g = new Graph();
-		
+		System.out.println(multiGraph);
 		for(Vertex v : multiGraph.getVertices()) {
 			Vertex newVertex = new Vertex(v);
 			g.getVertices().add(newVertex);
@@ -116,7 +116,7 @@ public class Graph {
 			}
 		}
 		*/
-		
+		System.out.println(g.toString());
 		return g;
 	}
 	
@@ -127,7 +127,7 @@ public class Graph {
 	public SparseMultigraph<Vertex, Edge> toSparseMultiGraph() {
 		SparseMultigraph<Vertex, Edge> multiGraph = new SparseMultigraph<Vertex, Edge>();
 		
-		
+		System.out.println(toString());
 		for(Vertex v : mVertices)
 			multiGraph.addVertex(new Vertex(v));
 		
@@ -183,4 +183,17 @@ public class Graph {
 	public int getOutDegree(Vertex v) {
 		return mOutDegrees.get(v);
 	}
+	
+	
+	
+	public String toString() {
+		String out = "";
+		
+		for(Vertex v : getVertices())
+			out = out +"\n"+ v.debug();
+		
+		return out;
+	}
+	
+	
 }

@@ -93,6 +93,11 @@ public class Vertex extends GraphElement {
 	}
 	
 	
+	public String debug() {
+		return "V"+ getId() +" is at Location "+ getLocation().toString();
+	}
+	
+	
 	
 	// singleton factory to create a vertex
 	public static class VertexFactory implements Factory<Vertex> {
@@ -117,6 +122,5 @@ public class Vertex extends GraphElement {
 		public Vertex create() {
 			return new Vertex(IDCOUNT++, mPoint, DEFAULT_STATE);
 		}
-		
 	}
 }

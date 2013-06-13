@@ -5,6 +5,7 @@ public class Dijkstra extends AbstractAlgorithm {
 
 	private int mSrcVertexID;
 	private int mDestVertexID;
+
 	
 	@Override
 	public ArrayList<Pair<ElementType, String>> getRequirements() {
@@ -26,31 +27,49 @@ public class Dijkstra extends AbstractAlgorithm {
 
 	@Override
 	public Graph getFirstStep() {
-		// TODO Auto-generated method stub
-		return null;
+		mActualStep = 0;
+		System.out.println("get step "+ mActualStep);
+		return mSteps.get(mActualStep);
 	}
 
 	@Override
 	public Graph getPreviousStep() {
-		// TODO Auto-generated method stub
-		return null;
+		if(mActualStep > 0)
+			mActualStep--;
+		System.out.println("get step "+ mActualStep);
+		return mSteps.get(mActualStep);
 	}
 
 	@Override
 	public Graph getNextStep() {
-		// TODO Auto-generated method stub
-		return null;
+		if(mActualStep < mSteps.size() - 1)
+			mActualStep++;
+		System.out.println("get step "+ mActualStep);
+		return mSteps.get(mActualStep);	
 	}
 
 	@Override
 	public Graph getResult() {
-		// TODO Auto-generated method stub
-		return null;
+		mActualStep = mSteps.size()-1;
+		System.out.println("get step "+ mActualStep);
+		return mSteps.get(mActualStep);
 	}
 
 	@Override
 	public String getAlgorithmName() {
 		return "Dijkstra";
+	}
+
+	@Override
+	public void perform() {
+		for(Vertex v : mGraph.getVertices()) {
+			System.out.println(v.debug());
+			v.setState(ElementState.ACTIVE);
+			mSteps.add(new Graph(mGraph));
+			v.setState(ElementState.VISITED);
+			mSteps.add(new Graph(mGraph));
+		}
+		System.out.println("FINISHED!");
 	}
 
 }

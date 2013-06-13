@@ -32,7 +32,7 @@ public class RequirementDialog extends JDialog {
 	/**
 	 * Create the dialog.
 	 */
-	public RequirementDialog(JFrame parent, ArrayList<Pair<ElementType, String>> requirements, Graph graph, AbstractAlgorithm algorithm) {
+	public RequirementDialog(final JFrame parent, ArrayList<Pair<ElementType, String>> requirements, Graph graph, AbstractAlgorithm algorithm) {
 		
 		mAlgorithm = algorithm;
 		mGraph = graph;
@@ -101,6 +101,8 @@ public class RequirementDialog extends JDialog {
 						}
 						
 						mAlgorithm.setRequirements(require);
+						mAlgorithm.setGraph(mGraph);
+						((VigralGUI) parent).requirementsApplied();
 						
 						dispose();
 					}
@@ -113,6 +115,7 @@ public class RequirementDialog extends JDialog {
 				JButton cancelButton = new JButton("Cancel");
 				cancelButton.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
+						
 						dispose();
 					}
 				});
