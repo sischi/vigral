@@ -20,6 +20,9 @@ import java.util.ArrayList;
 
 public class VigralGUI extends JFrame {
 
+	
+	private JFrame mMainWindow = this;
+	
 	public static class Mode {
 		public static final int GRAPHCREATION = 0;
 		public static final int VISUALISATION = 1;
@@ -59,7 +62,7 @@ public class VigralGUI extends JFrame {
 			mChosenAlgorithm = mAvailableAlgorithms.get(mCb_algorithm.getSelectedIndex()); 
 			ArrayList<Pair<ElementType, String>> require = mChosenAlgorithm.getRequirements();
 			if(require != null) {
-				RequirementDialog dialog = new RequirementDialog(require, graph, mChosenAlgorithm);
+				RequirementDialog dialog = new RequirementDialog(mMainWindow, require, graph, mChosenAlgorithm);
 				dialog.setModal(true);
 				dialog.show();
 			}

@@ -32,7 +32,7 @@ public class RequirementDialog extends JDialog {
 	/**
 	 * Create the dialog.
 	 */
-	public RequirementDialog(ArrayList<Pair<ElementType, String>> requirements, Graph graph, AbstractAlgorithm algorithm) {
+	public RequirementDialog(JFrame parent, ArrayList<Pair<ElementType, String>> requirements, Graph graph, AbstractAlgorithm algorithm) {
 		
 		mAlgorithm = algorithm;
 		mGraph = graph;
@@ -73,7 +73,7 @@ public class RequirementDialog extends JDialog {
 			contentPanel.add(box);
 		}
 		
-		setBounds(100, 100, 300, 300);
+		setBounds(parent.getX() + 100, parent.getY() + 100, 350, 300);
 		
 		
 		
