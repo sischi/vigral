@@ -1,5 +1,6 @@
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Paint;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.Shape;
@@ -33,7 +34,7 @@ public class GraphBuilder {
 	/**
 	 * numerical value that indicates the vertices radius
 	 */
-	private int mVertexRadius = 15;
+	private static final int VERTEXRADIUS = 15;
 	/**
 	 * numerical value that will be considered in modifying the position of the vertices
 	 */
@@ -52,6 +53,38 @@ public class GraphBuilder {
 	 * responsible for the GraphMousePlugins (Drawing with the mouse and context menus)
 	 */
 	private MyModalGraphMouse<Vertex, Edge> mGraphMouse; 
+	
+	private Transformer<Vertex, Shape> mVertexShapeTransformer = new Transformer<Vertex, Shape>() {
+		@Override
+		public Shape transform(Vertex v) {
+			Ellipse2D circle = new Ellipse2D.Double(-VERTEXRADIUS, -VERTEXRADIUS, 2*VERTEXRADIUS, 2*VERTEXRADIUS);
+			//return AffineTransform.getScaleInstance(2, 2).createTransformedShape(circle);
+			return circle;
+		}
+	};
+
+	private Transformer<Vertex, Paint> mVertexPaintTransformer = new Transformer<Vertex, Paint>() {
+		@Override
+		public Paint transform(Vertex v) {
+			if(v.getCustomColor() != null)
+				return v.getCustomColor();
+			
+			switch(v.getState()) {
+			case UNVISITED:
+				return Color.WHITE;
+			case ACTIVE:
+				return Color.PINK;
+			case VISITED:
+				return Color.CYAN;
+			case FINISHED_AND_NOT_RELEVANT:
+				return Color.LIGHT_GRAY;
+			case FINISHED_AND_RELEVANT:
+				return Color.RED;
+			default:
+				return Color.BLACK;
+			}
+		}
+	};
 	
 	public GraphBuilder() {
 		System.out.println("GraphBuilder Creation");
@@ -81,14 +114,8 @@ public class GraphBuilder {
 		});
 		mVViewer.getRenderContext().getEdgeLabelRenderer().setRotateEdgeLabels(false);
 		
-		mVViewer.getRenderContext().setVertexShapeTransformer(new Transformer<Vertex, Shape>() {
-			@Override
-			public Shape transform(Vertex arg0) {
-				Ellipse2D circle = new Ellipse2D.Double(-mVertexRadius, -mVertexRadius, 2*mVertexRadius, 2*mVertexRadius);
-				//return AffineTransform.getScaleInstance(2, 2).createTransformedShape(circle);
-				return circle;
-			}
-		});
+		mVViewer.getRenderContext().setVertexShapeTransformer(mVertexShapeTransformer);
+		mVViewer.getRenderContext().setVertexFillPaintTransformer(mVertexPaintTransformer);
 		
 	}
 	
@@ -136,9 +163,9 @@ public class GraphBuilder {
 				double newX = x;
 				double newY = y;
 				
-				int min = PADDING + mVertexRadius;
-				int maxW = dimen.width - PADDING -mVertexRadius;
-				int maxH = dimen.height - PADDING - mVertexRadius;
+				int min = PADDING + VERTEXRADIUS;
+				int maxW = dimen.width - PADDING -VERTEXRADIUS;
+				int maxH = dimen.height - PADDING - VERTEXRADIUS;
 				if(x < min)
 					newX = min;
 				else if(x > maxW)
