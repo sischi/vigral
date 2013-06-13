@@ -4,8 +4,8 @@ import java.awt.Paint;
 public abstract class GraphElement {
 
 
-	private ElementState mState;
-	private Paint mCustomColor;
+	protected ElementState mState;
+	protected Paint mCustomColor;
 	
 	public GraphElement(){}
 	
