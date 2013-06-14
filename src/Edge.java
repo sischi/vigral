@@ -36,11 +36,18 @@ public class Edge extends GraphElement {
 	 * @param directed true if it is an directed edge and false else
 	 */
 	public Edge(int id, int weight, Vertex start, Vertex end, boolean directed) {
+		this(id, weight, start, end, directed, ElementState.UNVISITED);
+	}
+	
+	
+	public Edge(int id, int weight, Vertex start, Vertex end, boolean directed, ElementState state) {
+		super();
 		mID = id;
 		mWeight = weight;
 		mStart = start;
 		mEnd = end;
 		mIsDirected = directed;
+		mState = state;
 		System.out.println("Edge created! "+ this.toString());
 	}
 	
@@ -83,11 +90,20 @@ public class Edge extends GraphElement {
 	}
 	
 	/**
-	 * getter for the en vertex
+	 * getter for the end vertex
 	 * @return returns the end vertex
 	 */
 	public Vertex getEndVertex() {
 		return mEnd;
+	}
+	
+	public Vertex getOtherEnd(Vertex v) {
+		if(mStart == v)
+			return mEnd;
+		else if(mEnd == v)
+			return mStart;
+		
+		return null;	
 	}
 
 	/**
