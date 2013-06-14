@@ -9,10 +9,10 @@ public interface Algorithm {
 	public void setRequirements(ArrayList<Integer> requiredIDs);
 	
 	public void perform();
-	public Graph getFirstStep();
-	public Graph getPreviousStep();
-	public Graph getNextStep();
-	public Graph getLastStep();
+	public MyGraph getFirstStep();
+	public MyGraph getPreviousStep();
+	public MyGraph getNextStep();
+	public MyGraph getLastStep();
 	
 	public String getAlgorithmName();
 }

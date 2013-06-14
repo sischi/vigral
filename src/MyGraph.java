@@ -7,7 +7,7 @@ import edu.uci.ics.jung.graph.SparseMultigraph;
 import edu.uci.ics.jung.graph.util.EdgeType;
 
 
-public class Graph {
+public class MyGraph {
 	
 	/**
 	 * a list that contains all vertices in the graph
@@ -28,7 +28,7 @@ public class Graph {
 	
 	
 	
-	public Graph() {
+	public MyGraph() {
 		mVertices = new ArrayList<Vertex>();
 		mEdges = new ArrayList<Edge>();
 		mOutEdges = new HashMap<Vertex, ArrayList<Edge>>();
@@ -36,7 +36,7 @@ public class Graph {
 		mOutDegrees = new HashMap<Vertex, Integer>();
 	}
 	
-	public Graph(Graph g) {
+	public MyGraph(MyGraph g) {
 		mVertices = new ArrayList<Vertex>();
 		mInDegrees = new HashMap<Vertex, Integer>();
 		mOutDegrees = new HashMap<Vertex, Integer>();
@@ -86,8 +86,8 @@ public class Graph {
 	 * @param multiGraph the JUNG representation of a graph
 	 * @return the resulting Graph representation of the graph
 	 */
-	public static Graph parseGraph(SparseMultigraph<Vertex, Edge> multiGraph) {
-		Graph g = new Graph();
+	public static MyGraph parseGraph(SparseMultigraph<Vertex, Edge> multiGraph) {
+		MyGraph g = new MyGraph();
 		System.out.println(multiGraph);
 		for(Vertex v : multiGraph.getVertices()) {
 			Vertex newVertex = new Vertex(v);

@@ -35,9 +35,9 @@ public class Dijkstra extends AbstractAlgorithm {
 		for(Vertex v : mGraph.getVertices()) {
 			System.out.println(v.debug());
 			v.setState(ElementState.ACTIVE);
-			mSteps.add(new Graph(mGraph));
+			mSteps.add(new MyGraph(mGraph));
 			v.setState(ElementState.VISITED);
-			mSteps.add(new Graph(mGraph));
+			mSteps.add(new MyGraph(mGraph));
 		}
 		System.out.println("FINISHED!");
 	}

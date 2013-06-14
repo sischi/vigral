@@ -24,7 +24,7 @@ public class RequirementDialog extends JDialog {
 	private static final Dimension MAX_LABEL_DIMENSION = new Dimension(500, 25);
 	
 	private AbstractAlgorithm mAlgorithm;
-	private Graph mGraph;
+	private MyGraph mGraph;
 	
 	private final JPanel contentPanel = new JPanel();
 	private ArrayList<MyPair<JLabel, JComboBox>> mComboBoxes = new ArrayList<MyPair<JLabel, JComboBox>>();
@@ -32,7 +32,7 @@ public class RequirementDialog extends JDialog {
 	/**
 	 * Create the dialog.
 	 */
-	public RequirementDialog(final JFrame parent, ArrayList<MyPair<ElementType, String>> requirements, Graph graph, AbstractAlgorithm algorithm) {
+	public RequirementDialog(final JFrame parent, ArrayList<MyPair<ElementType, String>> requirements, MyGraph graph, AbstractAlgorithm algorithm) {
 		
 		mAlgorithm = algorithm;
 		mGraph = graph;

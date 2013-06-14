@@ -55,7 +55,7 @@ public class VigralGUI extends JFrame {
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			
-			final Graph graph = Graph.parseGraph(mGraphBuilder.getGraph());
+			final MyGraph graph = MyGraph.parseGraph(mGraphBuilder.getGraph());
 			mChosenAlgorithm = mAvailableAlgorithms.get(mCb_algorithm.getSelectedIndex()); 
 			ArrayList<MyPair<ElementType, String>> require = mChosenAlgorithm.getRequirements();
 			if(require != null) {
@@ -329,7 +329,7 @@ public class VigralGUI extends JFrame {
 		changeMode(Mode.VISUALISATION);
 		mBtn_changeMode.removeActionListener(mCreationListener);
 		mBtn_changeMode.addActionListener(mVisualisationListener);
-		mChosenAlgorithm.setGraph(Graph.parseGraph(mGraphBuilder.getGraph()));
+		mChosenAlgorithm.setGraph(MyGraph.parseGraph(mGraphBuilder.getGraph()));
 		mChosenAlgorithm.perform();
 		mGraphBuilder.setResultingGraph(mChosenAlgorithm.getFirstStep());
 	}
