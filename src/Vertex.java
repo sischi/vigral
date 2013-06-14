@@ -95,6 +95,7 @@ public class Vertex extends GraphElement {
 	public String debug() {
 		return "V"+ getId() +" is at Location "+ getLocation().toString();
 	}
+
 	
 	
 	
