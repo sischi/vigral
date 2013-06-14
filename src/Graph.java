@@ -184,6 +184,11 @@ public class Graph {
 		return mOutDegrees.get(v);
 	}
 	
+	public void resetStates() {
+		for(Vertex v : mVertices)
+			v.setState(ElementState.UNVISITED);
+	}
+	
 	
 	
 	public String toString() {
