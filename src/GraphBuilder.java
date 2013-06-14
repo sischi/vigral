@@ -26,7 +26,7 @@ public class GraphBuilder {
 	/**
 	 * numerical value that indicates the vertices radius
 	 */
-	private static final int VERTEXRADIUS = 15;
+	private static final int VERTEXRADIUS = 20;
 	/**
 	 * numerical value that will be considered in modifying the position of the vertices
 	 */
@@ -91,7 +91,7 @@ public class GraphBuilder {
 			case UNVISITED:
 				return Color.LIGHT_GRAY;
 			case ACTIVE:
-				return Color.PINK;
+				return Color.BLUE;
 			case VISITED:
 				return Color.CYAN;
 			case FINISHED_AND_NOT_RELEVANT:
@@ -138,6 +138,7 @@ public class GraphBuilder {
 		mVViewer.getRenderContext().setVertexShapeTransformer(mVertexShapeTransformer);
 		mVViewer.getRenderContext().setVertexFillPaintTransformer(mVertexPaintTransformer);
 		mVViewer.getRenderContext().setEdgeDrawPaintTransformer(mEdgePaintTransformer);
+		//mVViewer.getRenderContext().setEdgeFillPaintTransformer(mEdgePaintTransformer);
 		mVViewer.getRenderContext().setEdgeStrokeTransformer(new ConstantTransformer(new BasicStroke(3.0f)));
 		mVViewer.getRenderContext().setArrowFillPaintTransformer(mEdgePaintTransformer);
 		mVViewer.getRenderContext().setEdgeFontTransformer(new ConstantTransformer(new Font("Helvetica", Font.PLAIN, 16)));
