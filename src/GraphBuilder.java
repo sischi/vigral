@@ -80,6 +80,8 @@ public class GraphBuilder {
 				return Color.LIGHT_GRAY;
 			case FINISHED_AND_RELEVANT:
 				return Color.RED;
+			case PICKED:
+				return Color.YELLOW;
 			default:
 				return Color.BLACK;
 			}
@@ -254,12 +256,12 @@ public class GraphBuilder {
 		mVViewer.repaint();
 	}
 	
-	public void showOriginGraph() {
+	private void showOriginGraph() {
 		mLayout.setGraph(mGraph);
 		mVViewer.repaint();
 	}
 	
-	public void showResultGraph() {
+	private void showResultGraph() {
 		mLayout.setGraph(mResultGraph);
 		mVViewer.repaint();
 	}
@@ -271,17 +273,22 @@ public class GraphBuilder {
 			p.setLocation(v.getLocation());
 		}
 		modifyLocationsIfOutOfBounds(mResultGraph);
-
 	}
 	
 	public void setMode(int mode) {
-		if(mode == VigralGUI.Mode.GRAPHCREATION)
+		if(mode == VigralGUI.Mode.GRAPHCREATION) {
 			mGraphMouse.addEditingFunctionality();
+			showOriginGraph();
+			resetResultGraph();
+		}
 		else if(mode == VigralGUI.Mode.VISUALISATION) {
 			mGraphMouse.removeEditingFunctionality();
+			showResultGraph();
 		}
 	}
 	
-	
-	
+	public void resetVertexState() {
+		for(Vertex v : mGraph.getVertices())
+			v.setState(ElementState.UNVISITED);
+	}
 }

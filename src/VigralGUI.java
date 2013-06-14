@@ -32,7 +32,6 @@ public class VigralGUI extends JFrame {
 	private AbstractAlgorithm mChosenAlgorithm;
 	
 	private int mMode;
-	private Graph mGraphForVisualisation;
 	
 	private JComboBox mCb_graphType = new JComboBox();
 	private JComboBox mCb_algorithm = new JComboBox();
@@ -56,20 +55,17 @@ public class VigralGUI extends JFrame {
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			
-			
-			mGraphForVisualisation = Graph.parseGraph(mGraphBuilder.getGraph());
+			final Graph graph = Graph.parseGraph(mGraphBuilder.getGraph());
 			mChosenAlgorithm = mAvailableAlgorithms.get(mCb_algorithm.getSelectedIndex()); 
 			ArrayList<Pair<ElementType, String>> require = mChosenAlgorithm.getRequirements();
 			if(require != null) {
-				RequirementDialog dialog = new RequirementDialog(mMainWindow, require, mGraphForVisualisation, mChosenAlgorithm);
+				RequirementDialog dialog = new RequirementDialog(mMainWindow, require, graph, mChosenAlgorithm);
 				dialog.setModal(true);
 				dialog.show();
 			}
 			else {
 				requirementsApplied();
 			}
-			
-			mGraphBuilder.showResultGraph();
 		}
 	};
 	
@@ -79,8 +75,6 @@ public class VigralGUI extends JFrame {
 			changeMode(Mode.GRAPHCREATION);
 			mBtn_changeMode.removeActionListener(mVisualisationListener);
 			mBtn_changeMode.addActionListener(mCreationListener);
-			mGraphBuilder.resetResultGraph();
-			mGraphBuilder.showOriginGraph();
 		}
 	};
 	
@@ -128,7 +122,7 @@ public class VigralGUI extends JFrame {
 	private ActionListener mJumpEndListener = new ActionListener() {
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			mGraphBuilder.setResultingGraph(mChosenAlgorithm.getResult());
+			mGraphBuilder.setResultingGraph(mChosenAlgorithm.getLastStep());
 		}
 	};
 	
@@ -335,8 +329,9 @@ public class VigralGUI extends JFrame {
 		changeMode(Mode.VISUALISATION);
 		mBtn_changeMode.removeActionListener(mCreationListener);
 		mBtn_changeMode.addActionListener(mVisualisationListener);
-		mChosenAlgorithm.setGraph(mGraphForVisualisation);
+		mChosenAlgorithm.setGraph(Graph.parseGraph(mGraphBuilder.getGraph()));
 		mChosenAlgorithm.perform();
+		mGraphBuilder.setResultingGraph(mChosenAlgorithm.getFirstStep());
 	}
 	
 	

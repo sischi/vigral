@@ -81,6 +81,8 @@ public class PickSupport<V,E> {
         PickedState<V> pickedVertexState = vv.getPickedVertexState();
     	if(pickedVertexState.isPicked(mPickedVertex) == false) {
         	pickedVertexState.clear();
+        	clearPickedCollection(vv);
+        	((GraphElement) mPickedVertex).setState(ElementState.PICKED);
         	pickedVertexState.pick(mPickedVertex, true);
         }
         
@@ -186,6 +188,7 @@ public class PickSupport<V,E> {
             Collection<V> picked = pickSupport.getVertices(layout, pickRectangle);
             for(V v : picked) {
             	pickedVertexState.pick(v, true);
+            	((GraphElement) v).setState(ElementState.PICKED);
             }
         }
     }
@@ -194,6 +197,8 @@ public class PickSupport<V,E> {
     
     public void clearPickedCollection(VisualizationViewer<V, E> vv) {
     	vv.getPickedVertexState().clear();
+    	for(V v : vv.getGraphLayout().getGraph().getVertices())
+    		((GraphElement) v).setState(ElementState.UNVISITED);
         vv.getPickedEdgeState().clear();
     }
     
@@ -205,6 +210,7 @@ public class PickSupport<V,E> {
     	
     	if(pickedVertexState.isPicked(mPickedVertex) == false) {
         	pickedVertexState.pick(mPickedVertex, true);
+        	((Vertex) mPickedVertex).setState(ElementState.PICKED);
         }
     }
     
