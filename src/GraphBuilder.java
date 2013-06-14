@@ -18,6 +18,7 @@ import org.apache.commons.collections15.Transformer;
 import edu.uci.ics.jung.algorithms.layout.Layout;
 import edu.uci.ics.jung.algorithms.layout.StaticLayout;
 import edu.uci.ics.jung.graph.SparseMultigraph;
+import edu.uci.ics.jung.graph.util.Context;
 import edu.uci.ics.jung.visualization.VisualizationServer;
 import edu.uci.ics.jung.visualization.VisualizationViewer;
 import edu.uci.ics.jung.visualization.control.EditingModalGraphMouse;
@@ -25,6 +26,7 @@ import edu.uci.ics.jung.visualization.control.LayoutScalingControl;
 import edu.uci.ics.jung.visualization.control.ModalGraphMouse;
 import edu.uci.ics.jung.visualization.control.ScalingControl;
 import edu.uci.ics.jung.visualization.control.ViewScalingControl;
+import edu.uci.ics.jung.visualization.decorators.EdgeShape;
 import edu.uci.ics.jung.visualization.decorators.ToStringLabeller;
 import edu.uci.ics.jung.visualization.renderers.Renderer;
 
@@ -88,6 +90,22 @@ public class GraphBuilder {
 		}
 	};
 	
+	private Transformer<Edge, Paint> mEdgePaintTransformer = new Transformer<Edge, Paint>() {
+		@Override
+		public Paint transform(Edge e) {
+			return Color.BLUE;
+		}
+	};
+	
+	/*
+	private Transformer<Context<Graph<Vertex,Edge>,Edge>,Shape> mEdgeShapeTransformer = new Transformer<Context<Graph<Vertex,Edge>,Edge>,Shape>() {
+		@Override
+		public Shape transform(Edge arg0) {
+			return null;
+		}
+	};
+	*/
+	
 	public GraphBuilder() {
 		System.out.println("GraphBuilder Creation");
 		
@@ -119,7 +137,8 @@ public class GraphBuilder {
 		
 		mVViewer.getRenderContext().setVertexShapeTransformer(mVertexShapeTransformer);
 		mVViewer.getRenderContext().setVertexFillPaintTransformer(mVertexPaintTransformer);
-		
+		mVViewer.getRenderContext().setEdgeDrawPaintTransformer(mEdgePaintTransformer);
+		//mVViewer.getRenderContext().setEdgeShapeTransformer(mEdgeShapeTransformer);
 	}
 	
 	/**
