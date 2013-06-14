@@ -135,6 +135,6 @@ public class Dijkstra extends AbstractAlgorithm {
 	}
 	
 	
-	
+	// TODO implement visualisation of the shortest path
 
 }

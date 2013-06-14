@@ -1,4 +1,4 @@
 
 public enum ElementType {
-	VERTEX, EDGE
+	VERTEX, EDGE, OPTIONAL_VERTEX, OPTIONAL_EDGE
 }

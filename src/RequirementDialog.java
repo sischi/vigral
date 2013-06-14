@@ -50,6 +50,7 @@ public class RequirementDialog extends JDialog {
 		
 		for(int i = 0; i < requirements.size(); i++) {
 			
+			// TODO handle optional requirements
 			JLabel lbl = new JLabel();
 			lbl.setText(requirements.get(i).getR());
 			lbl.setMaximumSize(MAX_LABEL_DIMENSION);
