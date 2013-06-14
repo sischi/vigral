@@ -137,10 +137,12 @@ public class GraphBuilder {
 	public void onResizePanel(JPanel panel) {
 		Dimension dimen = new Dimension(panel.getBounds().width, panel.getBounds().height);
 		mVViewer.setPreferredSize(dimen);
+		mVViewer.setSize(dimen);
 		
-		// possible reason for the modifylocationifoutofbounds not functioning !!!!! handle with care!!!!!
+		// possible reason for the modifylocationifoutofbounds not functioning properly !!!!! handle with care!!!!!
 		//mLayout.setSize(dimen);
-		mVViewer.resize(dimen);
+		
+		//mVViewer.resize(dimen);
 		modifyLocationsIfOutOfBounds(mGraph);
 		modifyLocationsIfOutOfBounds(mResultGraph);
 	}
@@ -160,6 +162,7 @@ public class GraphBuilder {
 			System.out.println("dimen: "+ dimen.toString());
 			for(Vertex v : graph.getVertices()) {
 				Point2D p = mLayout.transform(v);
+				p.setLocation(v.getLocation());
 				System.out.println("vertex "+ i++ +": ("+ p.getX() +", "+ p.getY() +")");
 				double x = p.getX();
 				double y = p.getY();
@@ -180,7 +183,7 @@ public class GraphBuilder {
 				
 				if((newX != x) || (newY != y)) {
 					p.setLocation(newX, newY);
-					v.updateLocation(p);
+					//v.updateLocation(p);
 					//mLayout.setLocation(v, v.getLocation());
 				}
 			}
@@ -195,7 +198,6 @@ public class GraphBuilder {
 	 */
 	public Rectangle getGraphRect() {
 		if(!mGraph.getVertices().isEmpty()) {
-			Dimension dimen = mVViewer.getSize();
 			double minX = 0;
 			double maxX = 0;
 			double minY = 0;
