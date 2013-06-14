@@ -50,7 +50,7 @@ public class Graph {
 		
 		mEdges = new ArrayList<Edge>();
 		for(Edge e : g.getEdges()) {
-			Edge newEdge = new Edge(e.getId(), e.getWeight(), getVertexById(e.getStartVertex().getId()), getVertexById(e.getEndVertex().getId()), e.isDirected());
+			Edge newEdge = new Edge(e.getId(), e.getWeight(), getVertexById(e.getStartVertex().getId()), getVertexById(e.getEndVertex().getId()), e.isDirected(), e.getState());
 			mEdges.add(newEdge);
 		}
 		
@@ -97,7 +97,7 @@ public class Graph {
 		}
 
 		for(Edge e :  multiGraph.getEdges()) {
-			Edge newEdge = new Edge(e.getId(), e.getWeight(), g.getVertexById(e.getStartVertex().getId()), g.getVertexById(e.getEndVertex().getId()), e.isDirected());
+			Edge newEdge = new Edge(e.getId(), e.getWeight(), g.getVertexById(e.getStartVertex().getId()), g.getVertexById(e.getEndVertex().getId()), e.isDirected(), e.getState());
 			g.getEdges().add(newEdge);
 		}
 		
@@ -141,7 +141,7 @@ public class Graph {
 					endVertex = v;
 			}
 			
-			Edge newEdge = new Edge(e.getId(), e.getWeight(), startVertex, endVertex, e.isDirected());
+			Edge newEdge = new Edge(e.getId(), e.getWeight(), startVertex, endVertex, e.isDirected(), e.getState());
 			if(newEdge.isDirected())
 				multiGraph.addEdge(newEdge, newEdge.getStartVertex(), newEdge.getEndVertex(), EdgeType.DIRECTED);
 			else
