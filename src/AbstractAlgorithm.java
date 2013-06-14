@@ -6,16 +6,16 @@ public abstract class AbstractAlgorithm implements Algorithm {
 	/**
 	 * the graph object
 	 */
-	protected MyGraph mGraph;
+	protected Graph mGraph;
 	/**
 	 * a list of graphs that represent the single steps
 	 */
-	protected ArrayList<MyGraph> mSteps;
+	protected ArrayList<Graph> mSteps;
 
 	protected int mActualStep;
 	
 	public AbstractAlgorithm() {
-		mSteps = new ArrayList<MyGraph>();
+		mSteps = new ArrayList<Graph>();
 		mActualStep = 0;
 	}
 	
@@ -23,35 +23,35 @@ public abstract class AbstractAlgorithm implements Algorithm {
 	 * sets the graph object on what the algorithm will work
 	 * @param g the graph object
 	 */
-	public void setGraph(MyGraph g) {
-		mGraph = new MyGraph(g);
+	public void setGraph(Graph g) {
+		mGraph = new Graph(g);
 		mGraph.resetStates();
 		mSteps.clear();
-		mSteps.add(new MyGraph(mGraph));
+		mSteps.add(new Graph(mGraph));
 		mActualStep = 0;
 	}
 	
-	public MyGraph getFirstStep() {
+	public Graph getFirstStep() {
 		mActualStep = 0;
 		System.out.println("get step "+ mActualStep);
 		return mSteps.get(mActualStep);
 	}
 
-	public MyGraph getPreviousStep() {
+	public Graph getPreviousStep() {
 		if(mActualStep > 0)
 			mActualStep--;
 		System.out.println("get step "+ mActualStep);
 		return mSteps.get(mActualStep);
 	}
 
-	public MyGraph getNextStep() {
+	public Graph getNextStep() {
 		if(mActualStep < mSteps.size() - 1)
 			mActualStep++;
 		System.out.println("get step "+ mActualStep);
 		return mSteps.get(mActualStep);	
 	}
 
-	public MyGraph getLastStep() {
+	public Graph getLastStep() {
 		mActualStep = mSteps.size()-1;
 		System.out.println("get step "+ mActualStep);
 		return mSteps.get(mActualStep);

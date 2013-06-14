@@ -24,15 +24,15 @@ public class RequirementDialog extends JDialog {
 	private static final Dimension MAX_LABEL_DIMENSION = new Dimension(500, 25);
 	
 	private AbstractAlgorithm mAlgorithm;
-	private MyGraph mGraph;
+	private Graph mGraph;
 	
 	private final JPanel contentPanel = new JPanel();
-	private ArrayList<MyPair<JLabel, JComboBox>> mComboBoxes = new ArrayList<MyPair<JLabel, JComboBox>>();
+	private ArrayList<Pair<JLabel, JComboBox>> mComboBoxes = new ArrayList<Pair<JLabel, JComboBox>>();
 	
 	/**
 	 * Create the dialog.
 	 */
-	public RequirementDialog(final JFrame parent, ArrayList<MyPair<ElementType, String>> requirements, MyGraph graph, AbstractAlgorithm algorithm) {
+	public RequirementDialog(final JFrame parent, ArrayList<Pair<ElementType, String>> requirements, Graph graph, AbstractAlgorithm algorithm) {
 		
 		mAlgorithm = algorithm;
 		mGraph = graph;
@@ -68,7 +68,7 @@ public class RequirementDialog extends JDialog {
 			x = 250;
 			y = i * (box.getPreferredSize().height + MARGIN);
 			box.setBounds(x, y, box.getPreferredSize().width, box.getPreferredSize().height);
-			mComboBoxes.add(new MyPair(lbl, box));
+			mComboBoxes.add(new Pair(lbl, box));
 			contentPanel.add(lbl);
 			contentPanel.add(box);
 		}
@@ -92,7 +92,7 @@ public class RequirementDialog extends JDialog {
 					public void actionPerformed(ActionEvent e) {
 						
 						ArrayList<Integer> require = new ArrayList<Integer>();
-						for(MyPair<JLabel, JComboBox> p : mComboBoxes) {
+						for(Pair<JLabel, JComboBox> p : mComboBoxes) {
 							String vertexLbl = (String) p.getR().getSelectedItem();
 							for(Vertex v : mGraph.getVertices()) {
 								if(v.getLabel() == vertexLbl)

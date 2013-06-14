@@ -265,7 +265,7 @@ public class GraphBuilder {
 		return mGraph;
 	}
 	
-	public void setResultingGraph(MyGraph g) {
+	public void setResultingGraph(Graph g) {
 		mResultGraph = g.toSparseMultiGraph();
 		mLayout.setGraph(mResultGraph);
 		updateLocations();

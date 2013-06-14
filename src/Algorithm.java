@@ -5,14 +5,14 @@ import edu.uci.ics.jung.graph.SparseMultigraph;
 
 public interface Algorithm {
 
-	public ArrayList<MyPair<ElementType, String>> getRequirements();
+	public ArrayList<Pair<ElementType, String>> getRequirements();
 	public void setRequirements(ArrayList<Integer> requiredIDs);
 	
 	public void perform();
-	public MyGraph getFirstStep();
-	public MyGraph getPreviousStep();
-	public MyGraph getNextStep();
-	public MyGraph getLastStep();
+	public Graph getFirstStep();
+	public Graph getPreviousStep();
+	public Graph getNextStep();
+	public Graph getLastStep();
 	
 	public String getAlgorithmName();
 }

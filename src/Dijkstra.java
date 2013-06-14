@@ -8,11 +8,11 @@ public class Dijkstra extends AbstractAlgorithm {
 
 	
 	@Override
-	public ArrayList<MyPair<ElementType, String>> getRequirements() {
-		ArrayList<MyPair<ElementType, String>> requires = new ArrayList<MyPair<ElementType, String>>();
+	public ArrayList<Pair<ElementType, String>> getRequirements() {
+		ArrayList<Pair<ElementType, String>> requires = new ArrayList<Pair<ElementType, String>>();
 		
-		requires.add(new MyPair<ElementType, String>(ElementType.VERTEX, "Source Vertex"));
-		requires.add(new MyPair<ElementType, String>(ElementType.VERTEX, "Destination Vertex"));
+		requires.add(new Pair<ElementType, String>(ElementType.VERTEX, "Source Vertex"));
+		requires.add(new Pair<ElementType, String>(ElementType.VERTEX, "Destination Vertex"));
 		
 		return requires;
 	}
@@ -35,9 +35,9 @@ public class Dijkstra extends AbstractAlgorithm {
 		for(Vertex v : mGraph.getVertices()) {
 			System.out.println(v.debug());
 			v.setState(ElementState.ACTIVE);
-			mSteps.add(new MyGraph(mGraph));
+			mSteps.add(new Graph(mGraph));
 			v.setState(ElementState.VISITED);
-			mSteps.add(new MyGraph(mGraph));
+			mSteps.add(new Graph(mGraph));
 		}
 		System.out.println("FINISHED!");
 	}
