@@ -26,36 +26,6 @@ public class Dijkstra extends AbstractAlgorithm {
 	}
 
 	@Override
-	public Graph getFirstStep() {
-		mActualStep = 0;
-		System.out.println("get step "+ mActualStep);
-		return mSteps.get(mActualStep);
-	}
-
-	@Override
-	public Graph getPreviousStep() {
-		if(mActualStep > 0)
-			mActualStep--;
-		System.out.println("get step "+ mActualStep);
-		return mSteps.get(mActualStep);
-	}
-
-	@Override
-	public Graph getNextStep() {
-		if(mActualStep < mSteps.size() - 1)
-			mActualStep++;
-		System.out.println("get step "+ mActualStep);
-		return mSteps.get(mActualStep);	
-	}
-
-	@Override
-	public Graph getResult() {
-		mActualStep = mSteps.size()-1;
-		System.out.println("get step "+ mActualStep);
-		return mSteps.get(mActualStep);
-	}
-
-	@Override
 	public String getAlgorithmName() {
 		return "Dijkstra";
 	}

@@ -12,7 +12,7 @@ public interface Algorithm {
 	public Graph getFirstStep();
 	public Graph getPreviousStep();
 	public Graph getNextStep();
-	public Graph getResult();
+	public Graph getLastStep();
 	
 	public String getAlgorithmName();
 }
