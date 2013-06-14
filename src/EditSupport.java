@@ -135,6 +135,10 @@ public class EditSupport<V,E> {
 			if(!(mDown.getX() == p.getX() && mDown.getY() == p.getY())) {
 	    		Graph<V,E> graph = vv.getGraphLayout().getGraph();
 	    		Edge.EdgeFactory.getInstance().setStartAndEnd(mStartVertex, vertex);
+	    		if(mEdgeIsDirected == EdgeType.DIRECTED)
+	    			Edge.EdgeFactory.getInstance().setDirected(true);
+	    		else
+	    			Edge.EdgeFactory.getInstance().setDirected(false);
 	    		graph.addEdge((E) Edge.EdgeFactory.getInstance().create(), mStartVertex, vertex, mEdgeIsDirected);
 	    	}
 		}
