@@ -1,8 +1,8 @@
 
-public class Pair<L,R> {
+public class MyPair<L,R> {
     private L l;
     private R r;
-    public Pair(L l, R r){
+    public MyPair(L l, R r){
         this.l = l;
         this.r = r;
     }

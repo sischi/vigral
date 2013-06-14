@@ -8,11 +8,11 @@ public class Dijkstra extends AbstractAlgorithm {
 
 	
 	@Override
-	public ArrayList<Pair<ElementType, String>> getRequirements() {
-		ArrayList<Pair<ElementType, String>> requires = new ArrayList<Pair<ElementType, String>>();
+	public ArrayList<MyPair<ElementType, String>> getRequirements() {
+		ArrayList<MyPair<ElementType, String>> requires = new ArrayList<MyPair<ElementType, String>>();
 		
-		requires.add(new Pair<ElementType, String>(ElementType.VERTEX, "Source Vertex"));
-		requires.add(new Pair<ElementType, String>(ElementType.VERTEX, "Destination Vertex"));
+		requires.add(new MyPair<ElementType, String>(ElementType.VERTEX, "Source Vertex"));
+		requires.add(new MyPair<ElementType, String>(ElementType.VERTEX, "Destination Vertex"));
 		
 		return requires;
 	}

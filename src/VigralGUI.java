@@ -57,7 +57,7 @@ public class VigralGUI extends JFrame {
 			
 			final Graph graph = Graph.parseGraph(mGraphBuilder.getGraph());
 			mChosenAlgorithm = mAvailableAlgorithms.get(mCb_algorithm.getSelectedIndex()); 
-			ArrayList<Pair<ElementType, String>> require = mChosenAlgorithm.getRequirements();
+			ArrayList<MyPair<ElementType, String>> require = mChosenAlgorithm.getRequirements();
 			if(require != null) {
 				RequirementDialog dialog = new RequirementDialog(mMainWindow, require, graph, mChosenAlgorithm);
 				dialog.setModal(true);
