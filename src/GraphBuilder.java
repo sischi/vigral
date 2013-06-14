@@ -1,32 +1,23 @@
+import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.Paint;
-import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.Shape;
-import java.awt.geom.AffineTransform;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.Point2D;
-import java.util.ArrayList;
-
-
 import javax.swing.JPanel;
 
-import org.apache.commons.collections15.Factory;
 import org.apache.commons.collections15.Transformer;
+import org.apache.commons.collections15.functors.ConstantTransformer;
 
 import edu.uci.ics.jung.algorithms.layout.Layout;
 import edu.uci.ics.jung.algorithms.layout.StaticLayout;
 import edu.uci.ics.jung.graph.SparseMultigraph;
-import edu.uci.ics.jung.graph.util.Context;
-import edu.uci.ics.jung.visualization.VisualizationServer;
 import edu.uci.ics.jung.visualization.VisualizationViewer;
-import edu.uci.ics.jung.visualization.control.EditingModalGraphMouse;
-import edu.uci.ics.jung.visualization.control.LayoutScalingControl;
 import edu.uci.ics.jung.visualization.control.ModalGraphMouse;
-import edu.uci.ics.jung.visualization.control.ScalingControl;
-import edu.uci.ics.jung.visualization.control.ViewScalingControl;
-import edu.uci.ics.jung.visualization.decorators.EdgeShape;
+import edu.uci.ics.jung.visualization.decorators.AbstractEdgeShapeTransformer;
 import edu.uci.ics.jung.visualization.decorators.ToStringLabeller;
 import edu.uci.ics.jung.visualization.renderers.Renderer;
 
@@ -93,18 +84,28 @@ public class GraphBuilder {
 	private Transformer<Edge, Paint> mEdgePaintTransformer = new Transformer<Edge, Paint>() {
 		@Override
 		public Paint transform(Edge e) {
-			return Color.BLUE;
+			if(e.getCustomColor() != null)
+				return e.getCustomColor();
+			
+			switch(e.getState()) {
+			case UNVISITED:
+				return Color.LIGHT_GRAY;
+			case ACTIVE:
+				return Color.PINK;
+			case VISITED:
+				return Color.CYAN;
+			case FINISHED_AND_NOT_RELEVANT:
+				return Color.LIGHT_GRAY;
+			case FINISHED_AND_RELEVANT:
+				return Color.RED;
+			case PICKED:
+				return Color.YELLOW;
+			default:
+				return Color.BLACK;
+			}
 		}
 	};
 	
-	/*
-	private Transformer<Context<Graph<Vertex,Edge>,Edge>,Shape> mEdgeShapeTransformer = new Transformer<Context<Graph<Vertex,Edge>,Edge>,Shape>() {
-		@Override
-		public Shape transform(Edge arg0) {
-			return null;
-		}
-	};
-	*/
 	
 	public GraphBuilder() {
 		System.out.println("GraphBuilder Creation");
@@ -121,11 +122,7 @@ public class GraphBuilder {
 		
 		mGraphMouse = new MyModalGraphMouse<Vertex, Edge>(mVViewer.getRenderContext());
 		mVViewer.setGraphMouse(mGraphMouse);
-		mGraphMouse.setMode(ModalGraphMouse.Mode.EDITING);
-		mVViewer.setBackground(Color.green);
-		
-		mVViewer.getRenderContext().setVertexLabelTransformer(new ToStringLabeller());
-		mVViewer.getRenderer().getVertexLabelRenderer().setPosition(Renderer.VertexLabel.Position.CNTR);
+		mGraphMouse.setMode(ModalGraphMouse.Mode.EDITING);		
 		
 		mVViewer.getRenderContext().setEdgeLabelTransformer(new Transformer<Edge, String>() {
 			@Override
@@ -133,12 +130,20 @@ public class GraphBuilder {
 				return ""+ e.getWeight();
 			}
 		});
+		
+		mVViewer.setBackground(Color.WHITE);
 		mVViewer.getRenderContext().getEdgeLabelRenderer().setRotateEdgeLabels(false);
 		
+		mVViewer.getRenderContext().setVertexLabelTransformer(new ToStringLabeller());
 		mVViewer.getRenderContext().setVertexShapeTransformer(mVertexShapeTransformer);
 		mVViewer.getRenderContext().setVertexFillPaintTransformer(mVertexPaintTransformer);
 		mVViewer.getRenderContext().setEdgeDrawPaintTransformer(mEdgePaintTransformer);
+		mVViewer.getRenderContext().setEdgeStrokeTransformer(new ConstantTransformer(new BasicStroke(3.0f)));
+		mVViewer.getRenderContext().setArrowFillPaintTransformer(mEdgePaintTransformer);
+		mVViewer.getRenderContext().setEdgeFontTransformer(new ConstantTransformer(new Font("Helvetica", Font.PLAIN, 16)));
 		//mVViewer.getRenderContext().setEdgeShapeTransformer(mEdgeShapeTransformer);
+
+		mVViewer.getRenderer().getVertexLabelRenderer().setPosition(Renderer.VertexLabel.Position.CNTR);
 	}
 	
 	/**

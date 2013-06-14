@@ -7,7 +7,9 @@ public abstract class GraphElement {
 	protected ElementState mState;
 	protected Paint mCustomColor;
 	
-	public GraphElement(){}
+	public GraphElement(){
+		mState = ElementState.UNVISITED;
+	}
 	
 	public GraphElement(GraphElement ge) {
 		mState = ge.getState();
