@@ -5,6 +5,12 @@ import java.awt.geom.Point2D;
 import org.apache.commons.collections15.Factory;
 
 
+
+/**
+ * this class represents a single vertex of a graph
+ * @author Timmae
+ *
+ */
 public class Vertex extends GraphElement {
 	
 	/**
@@ -27,6 +33,11 @@ public class Vertex extends GraphElement {
 		mLabel = "";
 	}
 	
+	/**
+	 * constructs a vertex
+	 * @param id the id
+	 * @param location the location
+	 */
 	public Vertex(int id, Point2D location) {
 		mID = id;
 		mLabel = "V"+ mID;
@@ -34,7 +45,10 @@ public class Vertex extends GraphElement {
 		System.out.println("Vertex created! id= "+ mID +", label="+ mLabel);
 	}
 	
-	
+	/**
+	 * copy constructor
+	 * @param v the vertex to be copied
+	 */
 	public Vertex(Vertex v) {
 		super(v);
 		mID = v.getId();
@@ -78,15 +92,27 @@ public class Vertex extends GraphElement {
 		return "V"+ mID;
 	}
 	
+	/**
+	 * sets a new location to the vertex
+	 * @param p the new location
+	 */
 	public void updateLocation(Point2D p) {
 		System.out.println(mID +"= "+ p);
 		mLocation = p;
 	}
 	
+	/**
+	 * getter for the location
+	 * @return
+	 */
 	public Point2D getLocation() {
 		return mLocation;
 	}
 	
+	/**
+	 * getter for the id
+	 * @return returns the id of the vertex
+	 */
 	public int getId() {
 		return mID;
 	}
@@ -106,13 +132,23 @@ public class Vertex extends GraphElement {
 		private static VertexFactory mInstance = new VertexFactory();
 		private Point2D mPoint;
 		
-		private VertexFactory() {
-		}
+		/**
+		 * turn the constructor off
+		 */
+		private VertexFactory() {}
 		
+		/**
+		 * getter for the vertexfactory
+		 * @return returns an instance of the vertexfactory
+		 */
 		public static VertexFactory getInstance() {
 			return mInstance;
 		}
 		
+		/**
+		 * set the location of the vertex
+		 * @param p
+		 */
 		public void setLocation(Point2D p) {
 			mPoint = p;
 		}

@@ -44,10 +44,7 @@ public class PickSupport<V,E> {
     
     
     /**
-     * a Paintable to draw the rectangle used to pick multiple
-     * Vertices
-     * @author Tom Nelson
-     *
+     * a paintable to draw a rect to pick multiple vertices
      */
     class LensPaintable implements Paintable {
 
@@ -63,7 +60,9 @@ public class PickSupport<V,E> {
         }
     }
     
-    
+    /**
+     * default constructor
+     */
     public PickSupport() {
     	mLensPaintable = new LensPaintable();
     	mRect = new Rectangle2D.Float();
@@ -72,7 +71,12 @@ public class PickSupport<V,E> {
     
     
     
-    
+    /**
+     * picks a vertex by clicking on one
+     * @param vv the visualisation viewer
+     * @param vertex the clicked vertex
+     * @param p the clicked point
+     */
     public void pickVertex(VisualizationViewer vv, V vertex, Point2D p) {
     	mPickedVertex = vertex;
     	mDown = p;
@@ -96,7 +100,11 @@ public class PickSupport<V,E> {
         mOffsety = (float) (gp.getY()-q.getY());
     }
     
-    
+    /**
+     * prepares to draw the rect to pick multiple vertices
+     * @param vv the visualisation viewer
+     * @param p the start point of the rect
+     */
     public void prepareToDrawRect(VisualizationViewer vv, Point2D p) {
     	mPickedVertex = null;
     	
@@ -114,7 +122,11 @@ public class PickSupport<V,E> {
     }
 
     
-    
+    /**
+     * performs the drag gesture of picking
+     * @param vv the visualisation viewer
+     * @param p the actual position
+     */
     public void performDrag(VisualizationViewer vv, Point2D p) {
     	if(mPickedVertex != null)
     		moveVertex(vv, p);
@@ -124,13 +136,21 @@ public class PickSupport<V,E> {
     	vv.repaint();
     }
     
-    
+    /**
+     * draws a rect in case of dragging
+     * @param vv the visualisation viewer
+     * @param p the actual position
+     */
     public void updateRect(VisualizationViewer vv, Point2D p) {
     	if(mPickedVertex == null)
     		mRect.setFrameFromDiagonal(mDown, p);
     }
     
-    
+    /**
+     * moves a vertex
+     * @param vv the visualisation viewer
+     * @param p the actual position
+     */
     public void moveVertex(VisualizationViewer vv, Point2D p) {
     	if(mPickedVertex != null) {
     		
@@ -153,7 +173,11 @@ public class PickSupport<V,E> {
     	}
     }
     
-    
+    /**
+     * called when releasing the mouse in rect mode and pick all vertices contained by the rect
+     * @param vv the visualisation viewer
+     * @param p the end point of the rect
+     */
     public void pickVerticesInRect(VisualizationViewer vv, Point2D p) {
     	if(mDown != null && mPickedVertex == null && heyThatsTooClose(mDown, p, 5) == false) {
     		pickContainedVertices(vv, mDown, p, true);

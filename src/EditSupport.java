@@ -69,7 +69,9 @@ public class EditSupport<V,E> {
     }
     
     
-	
+	/**
+	 * constructor
+	 */
 	public EditSupport() {
         mRawEdge.setCurve(0.0f, 0.0f, 0.33f, 100, .66f, -50, 1.0f, 0.0f);
         mRawArrowShape = ArrowFactory.getNotchedArrow(20, 16, 8);
@@ -78,7 +80,12 @@ public class EditSupport<V,E> {
         mEdgeIsDirected = EdgeType.UNDIRECTED;
 	}
 	
-	
+	/**
+	 * make ready to draw an edge
+	 * @param e the mouseevent
+	 * @param vertex the start vertex of the edge
+	 * @param directed true if it is an directed edge and false otherwise
+	 */
 	public void startEdge(MouseEvent e, V vertex, EdgeType directed) {
 		
 		mEdgeIsDirected = directed;
@@ -100,6 +107,10 @@ public class EditSupport<V,E> {
 	}
 	
 
+	/**
+	 * draw the edge from start vertex to mouse cursor
+	 * @param e the mouse event
+	 */
 	public void drawEdge(MouseEvent e) {
 		if(mStartVertex != null) {
             transformEdgeShape(mDown, e.getPoint());
@@ -112,7 +123,11 @@ public class EditSupport<V,E> {
         vv.repaint();
 	}
 
-	
+	/**
+	 * adds a new vertex
+	 * @param e the mouse event
+	 * @param vv the visualisation viewer
+	 */
 	public void addVertex(MouseEvent e, VisualizationViewer<V, E> vv) {
 		
 		// get the graph
@@ -128,7 +143,13 @@ public class EditSupport<V,E> {
 	}
 	
 	
-	
+	/**
+	 * adds an edge to the graph
+	 * @param e the mouse event
+	 * @param p the the point where the draw drag ended
+	 * @param vertex the end vertex
+	 * @param vv the visualisation viewer
+	 */
 	public void addEdge(MouseEvent e, Point2D p, V vertex, VisualizationViewer vv) {
 		
 		if((vertex != null) && (mStartVertex != null)) {
@@ -171,7 +192,6 @@ public class EditSupport<V,E> {
         xform.scale(dist / mRawEdge.getBounds().getWidth(), 1.0);
         mEdgeShape = xform.createTransformedShape(mRawEdge);
     }
-    
     private void transformArrowShape(Point2D down, Point2D out) {
         float x1 = (float) down.getX();
         float y1 = (float) down.getY();

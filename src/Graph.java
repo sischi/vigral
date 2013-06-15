@@ -27,7 +27,9 @@ public class Graph {
 	
 	
 	
-	
+	/**
+	 * constructs a graph
+	 */
 	public Graph() {
 		mVertices = new ArrayList<Vertex>();
 		mEdges = new ArrayList<Edge>();
@@ -36,6 +38,10 @@ public class Graph {
 		mOutDegrees = new HashMap<Vertex, Integer>();
 	}
 	
+	/**
+	 * copy constructor
+	 * @param g the graph to be copied
+	 */
 	public Graph(Graph g) {
 		mVertices = new ArrayList<Vertex>();
 		mInDegrees = new HashMap<Vertex, Integer>();
@@ -63,7 +69,11 @@ public class Graph {
 		
 	}
 	
-	
+	/**
+	 * getter for the vertex
+	 * @param id the id of the vertex
+	 * @return returns the vertex with the given id or null if no vertex with the given id found
+	 */
 	public Vertex getVertexById(int id) {
 		for(Vertex v : mVertices) {
 			if(v.getId() == id)
@@ -72,7 +82,11 @@ public class Graph {
 		return null;
 	}
 	
-	
+	/**
+	 * getter for the edge
+	 * @param id the id of the edge
+	 * @return returns the edge with the given id or null if no edge with the given id found
+	 */
 	public Edge getEdgeById(int id) {
 		for(Edge e : mEdges) {
 			if(e.getId() == id)
@@ -122,7 +136,7 @@ public class Graph {
 	
 	/**
 	 * converts this graph back to a SparseMultiGraph (JUNG representation of this graph) 
-	 * @return
+	 * @return returns the equivalent sparsemultigraph of the given graph
 	 */
 	public SparseMultigraph<Vertex, Edge> toSparseMultiGraph() {
 		SparseMultigraph<Vertex, Edge> multiGraph = new SparseMultigraph<Vertex, Edge>();

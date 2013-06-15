@@ -3,6 +3,14 @@ import java.awt.Paint;
 import org.apache.commons.collections15.Factory;
 
 
+
+
+
+/**
+ * this class represents a single edge of a graph
+ * @author Timmae
+ *
+ */
 public class Edge extends GraphElement {
 	
 	
@@ -39,7 +47,15 @@ public class Edge extends GraphElement {
 		this(id, weight, start, end, directed, ElementState.UNVISITED);
 	}
 	
-	
+	/**
+	 * constructs the edge
+	 * @param id the identifier
+	 * @param weight the weight
+	 * @param start the start vertex
+	 * @param end the end vertex
+	 * @param directed true if it is an directed edge and false else
+	 * @param state the state of the edge
+	 */
 	public Edge(int id, int weight, Vertex start, Vertex end, boolean directed, ElementState state) {
 		super();
 		mID = id;
@@ -51,6 +67,10 @@ public class Edge extends GraphElement {
 		System.out.println("Edge created! "+ this.toString());
 	}
 	
+	/**
+	 * copy constructor
+	 * @param e the edge to be copied
+	 */
 	public Edge(Edge e) {
 		super(e);
 		mID = e.getId();
@@ -60,7 +80,10 @@ public class Edge extends GraphElement {
 		mIsDirected = e.isDirected();
 	}
 	
-	
+	/**
+	 * a function that indicates if the edge is directed or not
+	 * @return returns true if the edge is directed and false otherwise
+	 */
 	public boolean isDirected() {
 		return mIsDirected;
 	}
@@ -97,6 +120,11 @@ public class Edge extends GraphElement {
 		return mEnd;
 	}
 	
+	/**
+	 * to get the other end of the edge
+	 * @param v the one end of the edge as a Vertex
+	 * @return returns the other end of this edge as a vertex
+	 */
 	public Vertex getOtherEnd(Vertex v) {
 		if(mStart == v)
 			return mEnd;
@@ -113,7 +141,10 @@ public class Edge extends GraphElement {
 		return "E"+ mID +" ("+ mStart.toString() +", "+ mEnd.toString() +")";
 	}
 	
-
+	/**
+	 * 
+	 * @return returns the id of the edge
+	 */
 	public int getId() {
 		return mID;
 	}
@@ -130,18 +161,33 @@ public class Edge extends GraphElement {
 		private V mEndVertex;
 		private boolean mEdgeIsDirected;
 		
-		private EdgeFactory() {
-		}
+		/**
+		 * switched the constructor off
+		 */
+		private EdgeFactory() {}
 		
+		/**
+		 * gets an instance of the edge factory
+		 * @return returns the edge factory
+		 */
 		public static EdgeFactory getInstance() {
 			return mInstance;
 		}
 		
+		/**
+		 * setter for start and end vertices
+		 * @param start the start vertex
+		 * @param end the end vertex
+		 */
 		public void setStartAndEnd(V start, V end) {
 			mStartVertex = start;
 			mEndVertex = end;
 		}
 		
+		/**
+		 * setter for the direction
+		 * @param isDirected true if the edge is directed and false otherwise
+		 */
 		public void setDirected(boolean isDirected) {
 			mEdgeIsDirected = isDirected;
 		}
