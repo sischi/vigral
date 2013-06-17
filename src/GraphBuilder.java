@@ -66,6 +66,9 @@ public class GraphBuilder {
 	private Transformer<Vertex, Paint> mVertexPaintTransformer = new Transformer<Vertex, Paint>() {
 		@Override
 		public Paint transform(Vertex v) {
+			if(v.isPicked())
+				return MyColor.YELLOW;
+			
 			if(v.getCustomColor() != null)
 				return v.getCustomColor();
 			
@@ -85,6 +88,7 @@ public class GraphBuilder {
 	
 	
 	public Paint checkStateForColor(ElementState state) {
+		
 		switch(state) {
 		case UNVISITED:
 			return MyColor.LIGHT_CYAN;
@@ -96,8 +100,6 @@ public class GraphBuilder {
 			return MyColor.LIGHT_GRAY;
 		case FINISHED_AND_RELEVANT:
 			return MyColor.LIGHT_GREEN;
-		case PICKED:
-			return MyColor.YELLOW;
 		default:
 			return Color.BLACK;
 		}
@@ -269,8 +271,6 @@ public class GraphBuilder {
 		mResultGraph = g.toSparseMultiGraph();
 		mLayout.setGraph(mResultGraph);
 		updateLocations();
-		for(Vertex v : mVViewer.getGraphLayout().getGraph().getVertices())
-			System.out.println(v.debug());
 
 		mVViewer.repaint();
 	}
