@@ -21,7 +21,7 @@ public class Dijkstra extends AbstractAlgorithm {
 		ArrayList<Pair<ElementType, String>> requires = new ArrayList<Pair<ElementType, String>>();
 		
 		requires.add(new Pair<ElementType, String>(ElementType.VERTEX, "Source Vertex"));
-		requires.add(new Pair<ElementType, String>(ElementType.VERTEX, "Destination Vertex"));
+		requires.add(new Pair<ElementType, String>(ElementType.OPTIONAL_VERTEX, "Destination Vertex"));
 		
 		return requires;
 	}
@@ -73,6 +73,9 @@ public class Dijkstra extends AbstractAlgorithm {
 		}
 		
 		mSteps.add(new Graph(mGraph));
+		showShortestPath();
+		mSteps.add(new Graph(mGraph));
+		
 		System.out.println("FINISHED!");
 	}
 	
@@ -136,5 +139,60 @@ public class Dijkstra extends AbstractAlgorithm {
 	
 	
 	// TODO implement visualisation of the shortest path
-
+	private void showShortestPath() {
+		for(Vertex v : mGraph.getVertices())
+			v.setState(ElementState.FINISHED_AND_NOT_RELEVANT);
+		
+		for(Edge e : mGraph.getEdges())
+			e.setState(ElementState.FINISHED_AND_NOT_RELEVANT);
+		
+		if(mDestVertexID != -1) {
+			Vertex v = mGraph.getVertexById(mDestVertexID);
+			Vertex prev = mDistAndPrev.get(v).getL();
+			while(prev != null) {
+				v.setState(ElementState.FINISHED_AND_RELEVANT);
+				
+				Edge e = getRelevantEdge(prev, v);
+				if(e != null)
+					e.setState(ElementState.FINISHED_AND_RELEVANT);
+				
+				v = prev;
+				prev = mDistAndPrev.get(v).getL();
+			}
+			v.setState(ElementState.FINISHED_AND_RELEVANT);
+		}
+		else {
+			for(Vertex v : mGraph.getVertices()) {
+				v.setState(ElementState.FINISHED_AND_RELEVANT);
+				Vertex prev = mDistAndPrev.get(v).getL();
+				if(prev != null) {
+					Edge e = getRelevantEdge(prev, v);
+					if(e != null)
+						e.setState(ElementState.FINISHED_AND_RELEVANT);
+				}
+			}
+		}
+	}
+	
+	
+	public Edge getRelevantEdge(Vertex start, Vertex end) {
+		
+		ArrayList<Edge> allEdgesBetween = mGraph.getEdgesFromTo(start, end);
+		
+		if(allEdgesBetween.isEmpty())
+			return null;
+		
+		Edge minDist = allEdgesBetween.get(0);
+		if(allEdgesBetween.size() > 1) {
+			for(Edge e : allEdgesBetween) {
+				if(e.getWeight() < minDist.getWeight())
+					minDist = e;
+			}
+		}
+		return minDist;
+	}
+	
+	
 }
+
+
