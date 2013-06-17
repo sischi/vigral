@@ -29,7 +29,7 @@ public class Vertex extends GraphElement {
 	 * constructs a vertex
 	 */
 	public Vertex() {
-		System.out.println("Vertex created! id= "+ mID);
+		//System.out.println("Vertex created! id= "+ mID);
 		mLabel = "";
 	}
 	
@@ -42,7 +42,7 @@ public class Vertex extends GraphElement {
 		mID = id;
 		mLabel = "V"+ mID;
 		mLocation = location;
-		System.out.println("Vertex created! id= "+ mID +", label="+ mLabel);
+		//System.out.println("Vertex created! id= "+ mID +", label="+ mLabel);
 	}
 	
 	/**
@@ -97,7 +97,7 @@ public class Vertex extends GraphElement {
 	 * @param p the new location
 	 */
 	public void updateLocation(Point2D p) {
-		System.out.println(mID +"= "+ p);
+		//System.out.println(mID +"= "+ p);
 		mLocation = p;
 	}
 	

@@ -257,16 +257,16 @@ public class VigralGUI extends JFrame {
 	 */
 	private void resizeComponents() {
 		
-		System.out.println("window = "+ getBounds());
+		//System.out.println("window = "+ getBounds());
 		
-		System.out.println("split pane = "+ mSplt_contentPane.getBounds());
+		//System.out.println("split pane = "+ mSplt_contentPane.getBounds());
 		
-		System.out.println("split divider = "+ mSplt_contentPane.getDividerSize());
+		//System.out.println("split divider = "+ mSplt_contentPane.getDividerSize());
 		
 		// get the rectangle of the contentPane
 		Rectangle spltPaneRect = mSplt_contentPane.getBounds();
 		Rectangle mainPanelRect = mPnl_mainPanel.getBounds();
-		System.out.println("main panel = "+ mainPanelRect);
+		//System.out.println("main panel = "+ mainPanelRect);
 		
 		/*
 		Dimension sidePanelDim = new Dimension(240, 0);
