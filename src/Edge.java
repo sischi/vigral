@@ -21,7 +21,7 @@ public class Edge extends GraphElement {
 	/**
 	 * the weight of the edge
 	 */
-	private int mWeight;
+	private double mWeight;
 	/**
 	 * the start vertex
 	 */
@@ -43,7 +43,7 @@ public class Edge extends GraphElement {
 	 * @param end the end vertex
 	 * @param directed true if it is an directed edge and false else
 	 */
-	public Edge(int id, int weight, Vertex start, Vertex end, boolean directed) {
+	public Edge(int id, double weight, Vertex start, Vertex end, boolean directed) {
 		this(id, weight, start, end, directed, ElementState.UNVISITED);
 	}
 	
@@ -56,7 +56,7 @@ public class Edge extends GraphElement {
 	 * @param directed true if it is an directed edge and false else
 	 * @param state the state of the edge
 	 */
-	public Edge(int id, int weight, Vertex start, Vertex end, boolean directed, ElementState state) {
+	public Edge(int id, double weight, Vertex start, Vertex end, boolean directed, ElementState state) {
 		super();
 		mID = id;
 		mWeight = weight;
@@ -92,7 +92,7 @@ public class Edge extends GraphElement {
 	 * getter for the weight
 	 * @return returns the weight as an integer
 	 */
-	public int getWeight() {
+	public double getWeight() {
 		return mWeight;
 	}
 	
@@ -100,7 +100,7 @@ public class Edge extends GraphElement {
 	 * setter for the weight
 	 * @param weight the integer representation of the weight
 	 */
-	public void setWeight(int weight) {
+	public void setWeight(double weight) {
 		mWeight = weight;
 	}
 	
@@ -194,7 +194,7 @@ public class Edge extends GraphElement {
 
 		@Override
 		public Edge create() {
-			return new Edge(IDCOUNT++, 1, (Vertex)mStartVertex, (Vertex)mEndVertex, mEdgeIsDirected);
+			return new Edge(IDCOUNT++, 1.0, (Vertex)mStartVertex, (Vertex)mEndVertex, mEdgeIsDirected);
 		}
 	}
 }
