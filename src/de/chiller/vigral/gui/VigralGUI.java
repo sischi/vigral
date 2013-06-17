@@ -7,6 +7,7 @@ import javax.swing.DefaultComboBoxModel;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
+import javax.swing.JMenuBar;
 import javax.swing.JPanel;
 import javax.swing.JSplitPane;
 import javax.swing.border.EmptyBorder;
@@ -18,6 +19,7 @@ import de.chiller.vigral.algorithm.AbstractAlgorithm;
 import de.chiller.vigral.algorithm.Dijkstra;
 import de.chiller.vigral.graph.ElementType;
 import de.chiller.vigral.graph.Graph;
+import de.chiller.vigral.graph.GraphBuilder;
 
 import java.awt.Color;
 import java.awt.event.ActionEvent;
@@ -42,6 +44,7 @@ public class VigralGUI extends JFrame {
 	
 	private int mMode;
 	
+	private MenuBar mMenuBar = new MenuBar(this);
 	private JComboBox mCb_graphType = new JComboBox();
 	private JComboBox mCb_algorithm = new JComboBox();
 	private JSplitPane mSplt_contentPane = new JSplitPane();
@@ -63,17 +66,18 @@ public class VigralGUI extends JFrame {
 	private ActionListener mCreationListener = new ActionListener() {
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			
-			final Graph graph = Graph.parseGraph(mGraphBuilder.getGraph());
-			mChosenAlgorithm = mAvailableAlgorithms.get(mCb_algorithm.getSelectedIndex()); 
-			ArrayList<Pair<ElementType, String>> require = mChosenAlgorithm.getRequirements();
-			if(require != null) {
-				RequirementDialog dialog = new RequirementDialog(mMainWindow, require, graph, mChosenAlgorithm);
-				dialog.setModal(true);
-				dialog.show();
-			}
-			else {
-				requirementsApplied();
+			if(mGraphBuilder.getGraph().getVertexCount() != 0) {
+				final Graph graph = Graph.parseGraph(mGraphBuilder.getGraph());
+				mChosenAlgorithm = mAvailableAlgorithms.get(mCb_algorithm.getSelectedIndex()); 
+				ArrayList<Pair<ElementType, String>> require = mChosenAlgorithm.getRequirements();
+				if(require != null) {
+					RequirementDialog dialog = new RequirementDialog(mMainWindow, require, graph, mChosenAlgorithm);
+					dialog.setModal(true);
+					dialog.show();
+				}
+				else {
+					requirementsApplied();
+				}
 			}
 		}
 	};
@@ -166,6 +170,8 @@ public class VigralGUI extends JFrame {
 	 * initializes the components
 	 */
 	private void initComponents() {
+		setJMenuBar(mMenuBar);
+		
 		mPnl_mainPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(mSplt_contentPane);
 		mPnl_mainPanel.setLayout(null);

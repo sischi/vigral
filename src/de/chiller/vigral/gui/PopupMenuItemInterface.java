@@ -1,4 +1,4 @@
-package de.chiller.vigral.jung;
+package de.chiller.vigral.gui;
 import edu.uci.ics.jung.visualization.VisualizationViewer;
 
 

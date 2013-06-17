@@ -2,7 +2,7 @@ package de.chiller.vigral;
 import java.awt.Dimension;
 import java.awt.EventQueue;
 
-import de.chiller.vigral.gui.GraphBuilder;
+import de.chiller.vigral.graph.GraphBuilder;
 import de.chiller.vigral.gui.VigralGUI;
 
 
@@ -29,7 +29,7 @@ public class Vigral {
 		// without initially resizing the frame, the editing panel of the JUNG framework is not shown
 		Dimension dim = mfrm_graphCreation.getSize();
 		dim.height++;
-		mfrm_graphCreation.resize(dim);
+		//mfrm_graphCreation.resize(dim);
 		
 		mfrm_graphCreation.setVisible(true);
 	}
