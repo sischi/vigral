@@ -60,13 +60,14 @@ public class MyModalGraphMouse<V,E> extends AbstractModalGraphMouse implements M
 	}
 
 	public void addEditingFunctionality() {
-		add(editingPlugin);
 		add(popupEditingPlugin);
+		add(editingPlugin);
+		editingPlugin.startEditing();
 	}
 	
 	public void removeEditingFunctionality() {
-		remove(editingPlugin);
 		remove(popupEditingPlugin);
+		editingPlugin.stopEditing();
 	}
 
 	/**
