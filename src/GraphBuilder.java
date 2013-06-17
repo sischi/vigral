@@ -45,7 +45,14 @@ public class GraphBuilder {
 	/**
 	 * responsible for the GraphMousePlugins (Drawing with the mouse and context menus)
 	 */
-	private MyModalGraphMouse<Vertex, Edge> mGraphMouse; 
+	private MyModalGraphMouse<Vertex, Edge> mGraphMouse;
+	
+	private Transformer<Vertex, Paint> mVertexLineTransformer = new Transformer<Vertex, Paint>() {
+		@Override
+		public Paint transform(Vertex arg0) {
+			return MyColor.LIGHT_GRAY;
+		}
+	};
 	
 	private Transformer<Vertex, Shape> mVertexShapeTransformer = new Transformer<Vertex, Shape>() {
 		@Override
@@ -62,22 +69,7 @@ public class GraphBuilder {
 			if(v.getCustomColor() != null)
 				return v.getCustomColor();
 			
-			switch(v.getState()) {
-			case UNVISITED:
-				return Color.WHITE;
-			case ACTIVE:
-				return Color.PINK;
-			case VISITED:
-				return Color.CYAN;
-			case FINISHED_AND_NOT_RELEVANT:
-				return Color.LIGHT_GRAY;
-			case FINISHED_AND_RELEVANT:
-				return Color.RED;
-			case PICKED:
-				return Color.YELLOW;
-			default:
-				return Color.BLACK;
-			}
+			return checkStateForColor(v.getState());
 		}
 	};
 	
@@ -87,24 +79,29 @@ public class GraphBuilder {
 			if(e.getCustomColor() != null)
 				return e.getCustomColor();
 			
-			switch(e.getState()) {
-			case UNVISITED:
-				return Color.LIGHT_GRAY;
-			case ACTIVE:
-				return Color.BLUE;
-			case VISITED:
-				return Color.CYAN;
-			case FINISHED_AND_NOT_RELEVANT:
-				return Color.LIGHT_GRAY;
-			case FINISHED_AND_RELEVANT:
-				return Color.RED;
-			case PICKED:
-				return Color.YELLOW;
-			default:
-				return Color.BLACK;
-			}
+			return checkStateForColor(e.getState());
 		}
 	};
+	
+	
+	public Paint checkStateForColor(ElementState state) {
+		switch(state) {
+		case UNVISITED:
+			return MyColor.LIGHT_CYAN;
+		case ACTIVE:
+			return MyColor.LIGHT_ORANGE;
+		case VISITED:
+			return new Color(0xFF4444);
+		case FINISHED_AND_NOT_RELEVANT:
+			return MyColor.LIGHT_GRAY;
+		case FINISHED_AND_RELEVANT:
+			return MyColor.LIGHT_GREEN;
+		case PICKED:
+			return MyColor.YELLOW;
+		default:
+			return Color.BLACK;
+		}
+	}
 	
 	
 	public GraphBuilder() {
@@ -137,6 +134,7 @@ public class GraphBuilder {
 		mVViewer.getRenderContext().setVertexLabelTransformer(new ToStringLabeller());
 		mVViewer.getRenderContext().setVertexShapeTransformer(mVertexShapeTransformer);
 		mVViewer.getRenderContext().setVertexFillPaintTransformer(mVertexPaintTransformer);
+		mVViewer.getRenderContext().setVertexDrawPaintTransformer(mVertexLineTransformer);
 		mVViewer.getRenderContext().setEdgeDrawPaintTransformer(mEdgePaintTransformer);
 		//mVViewer.getRenderContext().setEdgeFillPaintTransformer(mEdgePaintTransformer);
 		mVViewer.getRenderContext().setEdgeStrokeTransformer(new ConstantTransformer(new BasicStroke(3.0f)));
@@ -145,6 +143,7 @@ public class GraphBuilder {
 		//mVViewer.getRenderContext().setEdgeShapeTransformer(mEdgeShapeTransformer);
 
 		mVViewer.getRenderer().getVertexLabelRenderer().setPosition(Renderer.VertexLabel.Position.CNTR);
+
 	}
 	
 	/**
