@@ -29,6 +29,7 @@ public class Vertex extends GraphElement {
 	 * constructs a vertex
 	 */
 	public Vertex() {
+		super();
 		//System.out.println("Vertex created! id= "+ mID);
 		mLabel = "";
 	}
@@ -39,6 +40,7 @@ public class Vertex extends GraphElement {
 	 * @param location the location
 	 */
 	public Vertex(int id, Point2D location) {
+		super();
 		mID = id;
 		mLabel = "V"+ mID;
 		mLocation = location;
@@ -122,7 +124,6 @@ public class Vertex extends GraphElement {
 		return "V"+ getId() +" is at Location "+ getLocation().toString();
 	}
 
-	
 	
 	
 	// singleton factory to create a vertex

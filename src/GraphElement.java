@@ -6,14 +6,17 @@ public abstract class GraphElement {
 
 	protected ElementState mState;
 	protected Paint mCustomColor;
+	protected boolean mIsPicked;
 	
 	public GraphElement(){
+		mIsPicked = false;
 		mState = ElementState.UNVISITED;
 	}
 	
 	public GraphElement(GraphElement ge) {
 		mState = ge.getState();
 		mCustomColor = ge.getCustomColor();
+		mIsPicked = ge.isPicked();
 	}
 	
 	public Paint getCustomColor() {
@@ -34,5 +37,13 @@ public abstract class GraphElement {
 	
 	public ElementState getState() {
 		return mState;
+	}
+	
+	public boolean isPicked() {
+		return mIsPicked;
+	}
+	
+	public void setPicked(boolean picked) {
+		mIsPicked = picked;
 	}
 }
