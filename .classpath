@@ -12,5 +12,6 @@
 	<classpathentry kind="lib" path="libs/jung2-2_0_1/jung-jai-2.0.1.jar"/>
 	<classpathentry kind="lib" path="libs/jung2-2_0_1/jung-jai-samples-2.0.1.jar"/>
 	<classpathentry kind="lib" path="libs/jung2-2_0_1/jung-samples-2.0.1.jar"/>
+	<classpathentry kind="lib" path="libs/opencsv2_3/opencsv-2.3.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
