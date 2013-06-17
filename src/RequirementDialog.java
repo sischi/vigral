@@ -38,32 +38,48 @@ public class RequirementDialog extends JDialog {
 		mGraph = graph;
 		ArrayList<Vertex> vertices = graph.getVertices();
 		ArrayList<Edge> edges = graph.getEdges();
-		
-		String[] vertexLabels = new String[vertices.size()];
-		String[] edgeLabels = new String[edges.size()];
+		ArrayList<String> vertexLabels = new ArrayList<String>();
+		ArrayList<String> edgeLabels = new ArrayList<String>();
 		
 		for(int i = 0; i < vertices.size(); i++)
-			vertexLabels[i] = vertices.get(i).getLabel();
+			vertexLabels.add(i, vertices.get(i).getLabel());
 		
 		for(int i = 0; i < edges.size(); i++)
-			edgeLabels[i] = edges.get(i).toString();
+			edgeLabels.add(i, edges.get(i).toString());
 		
 		for(int i = 0; i < requirements.size(); i++) {
 			
 			// TODO handle optional requirements
 			JLabel lbl = new JLabel();
-			lbl.setText(requirements.get(i).getR());
+			ElementType type = requirements.get(i).getL();
+			String name = requirements.get(i).getR();
+			
+			if(type == ElementType.VERTEX || type == ElementType.EDGE)
+				lbl.setText(name);
+			else
+				lbl.setText(name +" (optional)");
+			
 			lbl.setMaximumSize(MAX_LABEL_DIMENSION);
 			int x = MARGIN;
 			int y = i * (MAX_LABEL_DIMENSION.height + MARGIN);
 			lbl.setBounds(x, y, lbl.getPreferredSize().width, lbl.getPreferredSize().height);
 			
 			JComboBox box = new JComboBox();
-			DefaultComboBoxModel model;
-			if(requirements.get(i).getL() == ElementType.VERTEX)
-				model = new DefaultComboBoxModel(vertexLabels);
-			else
-				model = new DefaultComboBoxModel(edgeLabels);
+			DefaultComboBoxModel model = null;
+			if(type == ElementType.VERTEX)
+				model = new DefaultComboBoxModel(vertexLabels.toArray());
+			else if(type == ElementType.EDGE)
+				model = new DefaultComboBoxModel(edgeLabels.toArray());
+			else if(type == ElementType.OPTIONAL_VERTEX) {
+				vertexLabels.add(0, "--");
+				model = new DefaultComboBoxModel(vertexLabels.toArray());
+				vertexLabels.remove(0);
+			}
+			else if(type == ElementType.OPTIONAL_EDGE) {
+				edgeLabels.add(0, "--");
+				model = new DefaultComboBoxModel(edgeLabels.toArray());
+				edgeLabels.remove(0);
+			}
 			
 			box.setModel(model);
 			x = 250;
@@ -94,10 +110,14 @@ public class RequirementDialog extends JDialog {
 						
 						ArrayList<Integer> require = new ArrayList<Integer>();
 						for(Pair<JLabel, JComboBox> p : mComboBoxes) {
-							String vertexLbl = (String) p.getR().getSelectedItem();
-							for(Vertex v : mGraph.getVertices()) {
-								if(v.getLabel() == vertexLbl)
-									require.add(v.getId());
+							String lbl = (String) p.getR().getSelectedItem();
+							if(lbl.equals("--"))
+								require.add(-1);
+							else {
+								for(Vertex v : mGraph.getVertices()) {
+									if(v.getLabel() == lbl)
+										require.add(v.getId());
+								}
 							}
 						}
 						

@@ -130,7 +130,7 @@ public class Graph {
 			}
 		}
 		*/
-		System.out.println(g.toString());
+		System.out.println(g.getAllOutEdgesPerVertex());
 		return g;
 	}
 	
@@ -202,7 +202,16 @@ public class Graph {
 		for(Vertex v : mVertices)
 			v.setState(ElementState.UNVISITED);
 	}
-	
+
+	public ArrayList<Edge> getEdgesFromTo(Vertex v1, Vertex v2) {
+		ArrayList<Edge> edges = new ArrayList<Edge>();
+		
+		for(Edge e : getOutEdges(v1))
+			if(e.getOtherEnd(v1) == v2)
+				edges.add(e);
+		
+		return edges;
+	}
 	
 	
 	public String toString() {
