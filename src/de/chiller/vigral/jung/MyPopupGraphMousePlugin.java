@@ -1,6 +1,12 @@
+package de.chiller.vigral.jung;
+
 import java.awt.event.MouseEvent;
 import java.awt.geom.Point2D;
 import javax.swing.JPopupMenu;
+
+import de.chiller.vigral.gui.ElementPopupMenu;
+import de.chiller.vigral.gui.ElementPopupMenu.PopupMenu;
+
 
 import edu.uci.ics.jung.algorithms.layout.GraphElementAccessor;
 import edu.uci.ics.jung.visualization.VisualizationViewer;

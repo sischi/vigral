@@ -1,4 +1,10 @@
+package de.chiller.vigral.algorithm;
+
 import java.util.ArrayList;
+
+import de.chiller.vigral.Pair;
+import de.chiller.vigral.graph.ElementType;
+import de.chiller.vigral.graph.Graph;
 
 import edu.uci.ics.jung.graph.SparseMultigraph;
 

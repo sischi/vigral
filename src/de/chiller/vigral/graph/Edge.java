@@ -1,6 +1,9 @@
+package de.chiller.vigral.graph;
+
 import java.awt.Paint;
 
 import org.apache.commons.collections15.Factory;
+
 
 
 

@@ -1,3 +1,5 @@
+package de.chiller.vigral.algorithm;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -5,6 +7,13 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Map;
 import java.util.Queue;
+
+import de.chiller.vigral.Pair;
+import de.chiller.vigral.graph.Edge;
+import de.chiller.vigral.graph.ElementState;
+import de.chiller.vigral.graph.ElementType;
+import de.chiller.vigral.graph.Graph;
+import de.chiller.vigral.graph.Vertex;
 
 
 public class Dijkstra extends AbstractAlgorithm {

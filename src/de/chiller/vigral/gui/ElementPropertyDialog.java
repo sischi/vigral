@@ -1,3 +1,4 @@
+package de.chiller.vigral.gui;
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
@@ -12,6 +13,9 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
+
+import de.chiller.vigral.graph.Edge;
+import de.chiller.vigral.graph.Vertex;
 
 
 public class ElementPropertyDialog<GE> extends JDialog {

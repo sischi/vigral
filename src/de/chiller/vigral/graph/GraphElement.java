@@ -1,3 +1,5 @@
+package de.chiller.vigral.graph;
+
 import java.awt.Paint;
 
 
@@ -16,7 +18,6 @@ public abstract class GraphElement {
 	public GraphElement(GraphElement ge) {
 		mState = ge.getState();
 		mCustomColor = ge.getCustomColor();
-		mIsPicked = ge.isPicked();
 	}
 	
 	public Paint getCustomColor() {

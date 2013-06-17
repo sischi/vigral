@@ -1,3 +1,4 @@
+package de.chiller.vigral.graph;
 
 /**
  * enumeration of the different states an edge or a vertex can apply to

@@ -1,3 +1,5 @@
+package de.chiller.vigral.graph;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;

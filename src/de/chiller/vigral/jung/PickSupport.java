@@ -1,3 +1,5 @@
+package de.chiller.vigral.jung;
+
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -5,6 +7,9 @@ import java.awt.event.MouseEvent;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.util.Collection;
+
+import de.chiller.vigral.graph.GraphElement;
+import de.chiller.vigral.graph.Vertex;
 
 
 import edu.uci.ics.jung.algorithms.layout.GraphElementAccessor;

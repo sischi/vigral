@@ -1,4 +1,8 @@
+package de.chiller.vigral.algorithm;
+
 import java.util.ArrayList;
+
+import de.chiller.vigral.graph.Graph;
 
 
 /**

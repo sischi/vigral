@@ -1,3 +1,5 @@
+package de.chiller.vigral.gui;
+
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
@@ -5,6 +7,9 @@ import java.awt.event.WindowEvent;
 import javax.swing.JFrame;
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
+
+import de.chiller.vigral.graph.Edge;
+import de.chiller.vigral.graph.Vertex;
 
 import edu.uci.ics.jung.visualization.VisualizationViewer;
 

@@ -1,3 +1,4 @@
+package de.chiller.vigral.gui;
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -11,6 +12,13 @@ import javax.swing.JPanel;
 
 import org.apache.commons.collections15.Transformer;
 import org.apache.commons.collections15.functors.ConstantTransformer;
+
+import de.chiller.vigral.graph.Edge;
+import de.chiller.vigral.graph.ElementState;
+import de.chiller.vigral.graph.Graph;
+import de.chiller.vigral.graph.Vertex;
+import de.chiller.vigral.jung.MyColor;
+import de.chiller.vigral.jung.MyModalGraphMouse;
 
 import edu.uci.ics.jung.algorithms.layout.Layout;
 import edu.uci.ics.jung.algorithms.layout.StaticLayout;

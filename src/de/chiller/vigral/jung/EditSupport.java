@@ -1,3 +1,5 @@
+package de.chiller.vigral.jung;
+
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -6,6 +8,12 @@ import java.awt.event.MouseEvent;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.CubicCurve2D;
 import java.awt.geom.Point2D;
+
+import de.chiller.vigral.graph.Edge;
+import de.chiller.vigral.graph.Vertex;
+import de.chiller.vigral.graph.Edge.EdgeFactory;
+import de.chiller.vigral.graph.Vertex.VertexFactory;
+
 
 import edu.uci.ics.jung.algorithms.layout.GraphElementAccessor;
 import edu.uci.ics.jung.algorithms.layout.Layout;

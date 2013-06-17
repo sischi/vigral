@@ -1,3 +1,5 @@
+package de.chiller.vigral.jung;
+
 import java.awt.Component;
 import java.awt.Cursor;
 import java.awt.Dimension;
@@ -16,6 +18,7 @@ import javax.swing.JRadioButtonMenuItem;
 import javax.swing.plaf.basic.BasicIconFactory;
 
 import org.apache.commons.collections15.Factory;
+
 import edu.uci.ics.jung.visualization.control.*;
 import edu.uci.ics.jung.visualization.annotations.AnnotatingGraphMousePlugin;
 import edu.uci.ics.jung.visualization.MultiLayerTransformer;

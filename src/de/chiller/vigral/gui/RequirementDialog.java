@@ -1,3 +1,5 @@
+package de.chiller.vigral.gui;
+
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
@@ -16,6 +18,13 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
+
+import de.chiller.vigral.Pair;
+import de.chiller.vigral.algorithm.AbstractAlgorithm;
+import de.chiller.vigral.graph.Edge;
+import de.chiller.vigral.graph.ElementType;
+import de.chiller.vigral.graph.Graph;
+import de.chiller.vigral.graph.Vertex;
 
 
 public class RequirementDialog extends JDialog {

@@ -1,5 +1,9 @@
+package de.chiller.vigral;
 import java.awt.Dimension;
 import java.awt.EventQueue;
+
+import de.chiller.vigral.gui.GraphBuilder;
+import de.chiller.vigral.gui.VigralGUI;
 
 
 public class Vigral {

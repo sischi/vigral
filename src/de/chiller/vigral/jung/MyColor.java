@@ -1,3 +1,4 @@
+package de.chiller.vigral.jung;
 import java.awt.Color;
 import java.awt.Paint;
 

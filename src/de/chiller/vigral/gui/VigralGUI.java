@@ -1,3 +1,5 @@
+package de.chiller.vigral.gui;
+
 import java.awt.Dimension;
 import java.awt.Rectangle;
 
@@ -10,6 +12,13 @@ import javax.swing.JSplitPane;
 import javax.swing.border.EmptyBorder;
 import javax.swing.JComboBox;
 import javax.swing.JButton;
+
+import de.chiller.vigral.Pair;
+import de.chiller.vigral.algorithm.AbstractAlgorithm;
+import de.chiller.vigral.algorithm.Dijkstra;
+import de.chiller.vigral.graph.ElementType;
+import de.chiller.vigral.graph.Graph;
+
 import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
