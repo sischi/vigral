@@ -8,6 +8,8 @@ import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 
+import de.chiller.vigral.menubar.FileOperator;
+
 public class MenuBar extends JMenuBar {
 	
 	private JFrame mMainWindow;
@@ -22,7 +24,8 @@ public class MenuBar extends JMenuBar {
 	private ActionListener onSave = new ActionListener() {
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			
+			FileOperator fo = new FileOperator(mMainWindow);
+			fo.saveGraphToFile(null);
 		}
 	};
 	
@@ -51,5 +54,6 @@ public class MenuBar extends JMenuBar {
 		add(helpMenu);
 		
 		file_exit.addActionListener(onExit);
+		file_save.addActionListener(onSave);
 	}
 }
