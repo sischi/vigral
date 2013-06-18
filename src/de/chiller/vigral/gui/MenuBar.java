@@ -34,6 +34,18 @@ public class MenuBar extends JMenuBar {
 		}
 	};
 	
+	private ActionListener onOpen = new ActionListener() {
+		@Override
+		public void actionPerformed(ActionEvent arg0) {
+			FileOperator fo = new FileOperator(mMainWindow);
+			Graph g = fo.readGraphFromFile();	
+			if(g != null)
+				((VigralGUI) mMainWindow).getGraphBuilder().setGraph(g);
+			
+			// TODO think about behaviour of opening in visualisation mode
+		}
+	};
+	
 	public MenuBar(JFrame mainWindow, Graph g) {
 		super();
 		
@@ -61,5 +73,6 @@ public class MenuBar extends JMenuBar {
 		
 		file_exit.addActionListener(onExit);
 		file_save.addActionListener(onSave);
+		file_open.addActionListener(onOpen);
 	}
 }

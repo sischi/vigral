@@ -101,14 +101,11 @@ public class VigralGUI extends JFrame {
 		}
 
 		@Override
-		public void componentHidden(ComponentEvent e) {
-		}
+		public void componentHidden(ComponentEvent e) {}
 		@Override
-		public void componentMoved(ComponentEvent e) {
-		}
+		public void componentMoved(ComponentEvent e) {}
 		@Override
-		public void componentShown(ComponentEvent e) {
-		}
+		public void componentShown(ComponentEvent e) {}
 	};
 	
 	
@@ -379,6 +376,13 @@ public class VigralGUI extends JFrame {
 		mPnl_sidePanel.setMinimumSize(sidePanelDim);
 		mPnl_sidePanel.setPreferredSize(sidePanelDim);
 	}
+	
+	
+	public GraphBuilder getGraphBuilder() {
+		return mGraphBuilder;
+	}
+	
+	
 	
 	
 }

@@ -13,9 +13,8 @@ import au.com.bytecode.opencsv.CSVReader;
 import au.com.bytecode.opencsv.CSVWriter;
 
 import de.chiller.vigral.graph.Edge;
+import de.chiller.vigral.graph.Graph;
 import de.chiller.vigral.graph.Vertex;
-
-import edu.uci.ics.jung.graph.SparseMultigraph;
 
 public class FileOperator {
 	
@@ -30,7 +29,7 @@ public class FileOperator {
 	}
 	
 	
-	public boolean saveGraphToFile(final SparseMultigraph<Vertex, Edge> g) {
+	public boolean saveGraphToFile(final Graph g) {
 		if(!showFileDialog(SAVE_DIALOG)) {
 			System.out.println("File has not been saved!!");
 			return false;
@@ -46,13 +45,14 @@ public class FileOperator {
 		return true;
 	}
 	
-	public SparseMultigraph<Vertex, Edge> readGraphFromFile() {
+	public Graph readGraphFromFile() {
 		if(!showFileDialog(OPEN_DIALOG)) {
 			System.out.println("File was not loaded!!");
 			return null;
 		}
 		
-		SparseMultigraph<Vertex, Edge> graph = new SparseMultigraph<Vertex, Edge>();
+		// TODO unzip the two files
+				
 		List<String[]> strVertices;
 		List<String[]> strEdges;
 		
@@ -71,11 +71,7 @@ public class FileOperator {
 			return null;
 		}
 		
-		for(String[] strVertex : strVertices)
-			graph.addVertex(Vertex.parseVertex(strVertex));
-		
-		
-		
+		Graph graph = Graph.parseGraph(strVertices, strEdges);
 		
 		return graph;
 	}
@@ -100,7 +96,7 @@ public class FileOperator {
 	}
 	
 	
-	private boolean writeToFile(final SparseMultigraph<Vertex, Edge> g) {
+	private boolean writeToFile(final Graph g) {
 		
 		try {
 			CSVWriter writer = new CSVWriter(new FileWriter(mFile.getParent() +"\\Vertices"));
@@ -117,6 +113,8 @@ public class FileOperator {
 			e.printStackTrace();
 			return false;
 		}
+		
+		// TODO make one file out of the two (zipping?)
 		
 		return true;
 	}

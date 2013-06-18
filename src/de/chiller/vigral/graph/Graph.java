@@ -2,6 +2,7 @@ package de.chiller.vigral.graph;
 
 
 import java.util.ArrayList;
+import java.util.List;
 
 import edu.uci.ics.jung.graph.SparseMultigraph;
 import edu.uci.ics.jung.graph.util.EdgeType;
@@ -71,4 +72,45 @@ public class Graph extends SparseMultigraph<Vertex, Edge> {
 		
 		return null;
 	}
+	
+	
+	public static Graph parseGraph(List<String[]> strVertices, List<String[]> strEdges) {
+		Graph g = new Graph();
+		
+		for(String[] strVertex : strVertices)
+			g.addVertex(Vertex.parseVertex(strVertex));
+		
+		for(String[] strEdge : strEdges) {
+			int startId = Integer.parseInt(strEdge[2]);
+			int endId = Integer.parseInt(strEdge[3]);
+			Vertex startVertex = null, endVertex = null;
+			
+			for(Vertex v : g.getVertices()) {
+				if(v.getId() == startId)
+					startVertex = v;
+				if(v.getId() == endId)
+					endVertex = v;
+				if(startVertex != null && endVertex != null)
+					break;
+			}
+			
+			Edge newEdge = new Edge(Integer.parseInt(strEdge[0]), Double.parseDouble(strEdge[1]), startVertex, endVertex, Boolean.parseBoolean(strEdge[4]), ElementState.UNVISITED);
+			if(newEdge.isDirected())
+				g.addEdge(newEdge, newEdge.getStartVertex(), newEdge.getEndVertex(), EdgeType.DIRECTED);
+			else
+				g.addEdge(newEdge, newEdge.getStartVertex(), newEdge.getEndVertex(), EdgeType.UNDIRECTED);
+		}
+		
+		return g;
+	}
 }
+
+
+
+
+
+
+
+
+
+

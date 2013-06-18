@@ -288,21 +288,23 @@ public class GraphBuilder {
 	
 	private void showOriginGraph() {
 		mLayout.setGraph(mGraph);
+		updateLocations();
 		mVViewer.repaint();
 	}
 	
 	private void showResultGraph() {
 		mLayout.setGraph(mResultGraph);
+		updateLocations();
 		mVViewer.repaint();
 	}
 	
 	public void updateLocations() {
-		for(Vertex v : mResultGraph.getVertices()) {
+		for(Vertex v : mVViewer.getGraphLayout().getGraph().getVertices()) {
 			//mLayout.setLocation(v, v.getLocation());
 			Point2D p = mLayout.transform(v);
 			p.setLocation(v.getLocation());
 		}
-		modifyLocationsIfOutOfBounds(mResultGraph);
+		modifyLocationsIfOutOfBounds((Graph) mVViewer.getGraphLayout().getGraph());
 	}
 	
 	public void setMode(int mode) {
@@ -321,4 +323,12 @@ public class GraphBuilder {
 		for(Vertex v : mGraph.getVertices())
 			v.setState(ElementState.UNVISITED);
 	}
+	
+	
+	public void setGraph(Graph g) {
+		mGraph = g;
+		showOriginGraph();
+	}
+	
+	
 }

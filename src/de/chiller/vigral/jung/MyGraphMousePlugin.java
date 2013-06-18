@@ -17,9 +17,9 @@ import edu.uci.ics.jung.visualization.VisualizationViewer;
 import edu.uci.ics.jung.visualization.control.*;
 
 /**
- * A plugin that can create vertices, undirected edges and directed edges.
- * Further this Plugin can pick and move one or more vertices
- * by using the mouse in combination with modifier keys (SHIFT, CTRL) 
+ * A plugin that can create vertices, undirected edges (CTRL) and directed edges (SHIFT + CTRL).
+ * Further this Plugin can pick and move one (LEFTMOUSE) or more vertices (SHIFT + DRAG_LEFTMOUSE)
+ * by using the mouse in combination with modifier keys
  * 
  */
 public class MyGraphMousePlugin<V,E> extends AbstractGraphMousePlugin implements MouseListener, MouseMotionListener {
@@ -28,12 +28,8 @@ public class MyGraphMousePlugin<V,E> extends AbstractGraphMousePlugin implements
 	private final int EDITING_MODE = 0;
 	private final int PICKING_MODE = 1;
 	
-	
-	private PickSupport<V,E> mPicking;
+	private PickSupport<V, E> mPicking;
 	private EditSupport<V, E> mEditing;
-	
-	private Factory<V> mVertexFactory;
-	private Factory<E> mEdgeFactory;
 	
 	private boolean mEditingPossible = true;
 	
@@ -63,16 +59,6 @@ public class MyGraphMousePlugin<V,E> extends AbstractGraphMousePlugin implements
 		mEditing = new EditSupport<V,E>();
 		mMode = EDITING_MODE;
 		
-    }
-    
-    /**
-     * Overridden to be more flexible, and pass events with
-     * key combinations. The default responds to both ButtonOne
-     * and ButtonOne+Shift
-     */
-    @Override
-    public boolean checkModifiers(MouseEvent e) {
-        return (e.getModifiers() & modifiers) != 0;
     }
     
 
@@ -136,14 +122,7 @@ public class MyGraphMousePlugin<V,E> extends AbstractGraphMousePlugin implements
     	}
     }
 
-    
-    /**
-     * If startVertex is non-null, and the mouse is released over an
-     * existing vertex, create an undirected edge from startVertex to
-     * the vertex under the mouse pointer. If shift was also pressed,
-     * create a directed edge instead.
-     */
-    
+   
     
     
     @SuppressWarnings("unchecked")
