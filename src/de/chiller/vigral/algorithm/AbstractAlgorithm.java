@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import de.chiller.vigral.graph.Graph;
 
 
+
+
 /**
  * abstract implementation of the algorithm interface. this class should be extended when implementing new algorithms
  * @author Timmae
@@ -83,5 +85,11 @@ public abstract class AbstractAlgorithm implements Algorithm {
 		System.out.println("get step "+ mActualStep);
 		return mSteps.get(mActualStep);
 	}
+	
+	
+	public void addStep() {
+		mSteps.add(new Graph(mGraph));
+	}
+	
 
 }

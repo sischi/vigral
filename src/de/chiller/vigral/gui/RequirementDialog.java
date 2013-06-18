@@ -45,8 +45,8 @@ public class RequirementDialog extends JDialog {
 		
 		mAlgorithm = algorithm;
 		mGraph = graph;
-		ArrayList<Vertex> vertices = graph.getVertices();
-		ArrayList<Edge> edges = graph.getEdges();
+		ArrayList<Vertex> vertices = new ArrayList<Vertex>(graph.getVertices());
+		ArrayList<Edge> edges = new ArrayList<Edge>(graph.getEdges());
 		ArrayList<String> vertexLabels = new ArrayList<String>();
 		ArrayList<String> edgeLabels = new ArrayList<String>();
 		

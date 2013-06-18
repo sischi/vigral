@@ -17,7 +17,7 @@ import edu.uci.ics.jung.graph.SparseMultigraph;
 public class MenuBar extends JMenuBar {
 	
 	private JFrame mMainWindow;
-	private final SparseMultigraph<Vertex, Edge> mGraph;
+	private final Graph mGraph;
 	
 	private ActionListener onExit = new ActionListener() {
 		@Override
@@ -34,7 +34,7 @@ public class MenuBar extends JMenuBar {
 		}
 	};
 	
-	public MenuBar(JFrame mainWindow, SparseMultigraph<Vertex, Edge> g) {
+	public MenuBar(JFrame mainWindow, Graph g) {
 		super();
 		
 		mMainWindow = mainWindow;

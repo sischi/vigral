@@ -42,8 +42,8 @@ public class GraphBuilder {
 	/**
 	 * the graph, that inherits the vertices and egdes
 	 */
-	private SparseMultigraph<Vertex, Edge> mGraph;
-	private SparseMultigraph<Vertex, Edge> mResultGraph;
+	private Graph mGraph;
+	private Graph mResultGraph;
 	/**
 	 * responsible for the visualization of the graph
 	 */
@@ -116,7 +116,7 @@ public class GraphBuilder {
 		System.out.println("GraphBuilder Creation");
 		
 		// create a graph
-		mGraph = new SparseMultigraph<Vertex, Edge>();
+		mGraph = new Graph();
 		mResultGraph = mGraph;
 		// add the graph to the layout
 		mLayout = new StaticLayout<Vertex, Edge>(mGraph);
@@ -187,7 +187,7 @@ public class GraphBuilder {
 	 * be modified to avoid disappearing of some vertices. This will ensure, that the complete graph
 	 * is visible all the time.
 	 */
-	public void modifyLocationsIfOutOfBounds(SparseMultigraph<Vertex, Edge> graph) {
+	public void modifyLocationsIfOutOfBounds(Graph graph) {
 		
 		if(!graph.getVertices().isEmpty()) {
 			Dimension dimen = mVViewer.getSize();
@@ -269,12 +269,12 @@ public class GraphBuilder {
 			return null;
 	}
 	
-	public SparseMultigraph<Vertex, Edge> getGraph() {
+	public Graph getGraph() {
 		return mGraph;
 	}
 	
 	public void setResultingGraph(Graph g) {
-		mResultGraph = g.toSparseMultiGraph();
+		mResultGraph = new Graph(g);
 		mLayout.setGraph(mResultGraph);
 		updateLocations();
 

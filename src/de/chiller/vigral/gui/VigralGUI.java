@@ -19,6 +19,7 @@ import de.chiller.vigral.algorithm.AbstractAlgorithm;
 import de.chiller.vigral.algorithm.Dijkstra;
 import de.chiller.vigral.graph.ElementType;
 import de.chiller.vigral.graph.Graph;
+
 import de.chiller.vigral.graph.GraphBuilder;
 
 import java.awt.Color;
@@ -67,7 +68,7 @@ public class VigralGUI extends JFrame {
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			if(mGraphBuilder.getGraph().getVertexCount() != 0) {
-				final Graph graph = Graph.parseGraph(mGraphBuilder.getGraph());
+				final Graph graph = new Graph(mGraphBuilder.getGraph());
 				mChosenAlgorithm = mAvailableAlgorithms.get(mCb_algorithm.getSelectedIndex()); 
 				ArrayList<Pair<ElementType, String>> require = mChosenAlgorithm.getRequirements();
 				if(require != null) {
@@ -345,7 +346,7 @@ public class VigralGUI extends JFrame {
 		changeMode(Mode.VISUALISATION);
 		mBtn_changeMode.removeActionListener(mCreationListener);
 		mBtn_changeMode.addActionListener(mVisualisationListener);
-		mChosenAlgorithm.setGraph(Graph.parseGraph(mGraphBuilder.getGraph()));
+		mChosenAlgorithm.setGraph(new Graph(mGraphBuilder.getGraph()));
 		mChosenAlgorithm.perform();
 		mGraphBuilder.setResultingGraph(mChosenAlgorithm.getFirstStep());
 	}

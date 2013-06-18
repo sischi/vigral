@@ -1,6 +1,7 @@
 package de.chiller.vigral.graph;
 
 import java.awt.Paint;
+import java.util.ArrayList;
 
 import org.apache.commons.collections15.Factory;
 
@@ -152,6 +153,18 @@ public class Edge extends GraphElement {
 		return mID;
 	}
 	
+	
+	public String[] toStringArray() {
+		String[] list = new String[5];
+		
+		list[0] = ""+ mID;
+		list[1] = ""+ mWeight;
+		list[2] = ""+ mStart.getId();
+		list[3] = ""+ mEnd.getId();
+		list[4] = ""+ mIsDirected;
+		
+		return list;
+	}
 	
 	
 	

@@ -1,18 +1,13 @@
 package de.chiller.vigral.algorithm;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
-import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.Map;
-import java.util.Queue;
 
 import de.chiller.vigral.Pair;
 import de.chiller.vigral.graph.Edge;
 import de.chiller.vigral.graph.ElementState;
 import de.chiller.vigral.graph.ElementType;
-import de.chiller.vigral.graph.Graph;
 import de.chiller.vigral.graph.Vertex;
 
 
@@ -40,6 +35,7 @@ public class Dijkstra extends AbstractAlgorithm {
 		mSrcVertexID = (int) requiredIDs.get(0);
 		mDestVertexID = (int) requiredIDs.get(1);
 		
+		
 		System.out.println("start: "+ mSrcVertexID +", dest:"+ mDestVertexID);
 	}
 
@@ -53,12 +49,12 @@ public class Dijkstra extends AbstractAlgorithm {
 		initialize();
 		
 		while(!mQ.isEmpty()) {
-			mSteps.add(new Graph(mGraph));
+			addStep();
 			
 			Vertex u = extractMinDist();
 			u.setState(ElementState.VISITED);
 			
-			mSteps.add(new Graph(mGraph));
+			addStep();
 			
 			for(Edge e : mGraph.getOutEdges(u)) {
 				e.setState(ElementState.ACTIVE);
@@ -67,23 +63,23 @@ public class Dijkstra extends AbstractAlgorithm {
 				if(mQ.contains(v)) {
 					v.setState(ElementState.ACTIVE);
 					
-					mSteps.add(new Graph(mGraph));
+					addStep();
 					
 					if(updateDistance(u, v, e.getWeight()))
-						mSteps.add(new Graph(mGraph));
+						addStep();
 					
 					v.setState(ElementState.UNVISITED);
 				}
 				else
-					mSteps.add(new Graph(mGraph));
+					addStep();
 					
 				e.setState(ElementState.UNVISITED);
 			}
 		}
 		
-		mSteps.add(new Graph(mGraph));
+		addStep();
 		showShortestPath();
-		mSteps.add(new Graph(mGraph));
+		addStep();
 		
 		System.out.println("FINISHED!");
 	}

@@ -2,6 +2,9 @@ package de.chiller.vigral.graph;
 import java.awt.Paint;
 import java.awt.Point;
 import java.awt.geom.Point2D;
+import java.util.ArrayList;
+
+import javax.vecmath.Point2d;
 
 import org.apache.commons.collections15.Factory;
 
@@ -119,6 +122,30 @@ public class Vertex extends GraphElement {
 	 */
 	public int getId() {
 		return mID;
+	}
+	
+	
+	public String[] toStringArray() {
+		String[] values = new String[4];
+		
+		values[0] = ""+ mID;
+		values[1] = mLabel;
+		values[2] = ""+ mLocation.getX();
+		values[3] = ""+ mLocation.getY();
+		
+		return values;
+	}
+	
+	
+	public static Vertex parseVertex(String[] values) {
+		Vertex v = new Vertex();
+		
+		v.mID = Integer.parseInt(values[0]);
+		v.mLabel = values[1];
+		Point2D p = new Point2D.Double(Double.parseDouble(values[2]), Double.parseDouble(values[3]));
+		v.mLocation = p;
+		
+		return v;
 	}
 	
 	
