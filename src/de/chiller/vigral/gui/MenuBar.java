@@ -8,11 +8,16 @@ import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 
+import de.chiller.vigral.graph.Edge;
+import de.chiller.vigral.graph.Graph;
+import de.chiller.vigral.graph.Vertex;
 import de.chiller.vigral.menubar.FileOperator;
+import edu.uci.ics.jung.graph.SparseMultigraph;
 
 public class MenuBar extends JMenuBar {
 	
 	private JFrame mMainWindow;
+	private final SparseMultigraph<Vertex, Edge> mGraph;
 	
 	private ActionListener onExit = new ActionListener() {
 		@Override
@@ -25,14 +30,15 @@ public class MenuBar extends JMenuBar {
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			FileOperator fo = new FileOperator(mMainWindow);
-			fo.saveGraphToFile(null);
+			fo.saveGraphToFile(mGraph);
 		}
 	};
 	
-	public MenuBar(JFrame mainWindow) {
+	public MenuBar(JFrame mainWindow, SparseMultigraph<Vertex, Edge> g) {
 		super();
 		
 		mMainWindow = mainWindow;
+		mGraph = g;
 		
 		JMenu fileMenu = new JMenu("File");
 		JMenu pluginMenu = new JMenu("PlugIn");

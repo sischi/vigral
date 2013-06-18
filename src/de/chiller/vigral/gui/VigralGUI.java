@@ -44,7 +44,7 @@ public class VigralGUI extends JFrame {
 	
 	private int mMode;
 	
-	private MenuBar mMenuBar = new MenuBar(this);
+	private MenuBar mMenuBar;
 	private JComboBox mCb_graphType = new JComboBox();
 	private JComboBox mCb_algorithm = new JComboBox();
 	private JSplitPane mSplt_contentPane = new JSplitPane();
@@ -146,6 +146,9 @@ public class VigralGUI extends JFrame {
 	 * Create
 	 */
 	public VigralGUI(GraphBuilder gb) {
+		mGraphBuilder = gb;
+		mGraphBuilder.addToPanel(mPnl_graph);
+		
 		initAlgorithms();
 		
 		setTitle("ViGrAl - Graph Creation");
@@ -155,9 +158,6 @@ public class VigralGUI extends JFrame {
 		
 		initComponents();
 		resizeComponents();
-		
-		mGraphBuilder = gb;
-		mGraphBuilder.addToPanel(mPnl_graph);
 		
 		changeMode(Mode.GRAPHCREATION);
 		
@@ -170,6 +170,7 @@ public class VigralGUI extends JFrame {
 	 * initializes the components
 	 */
 	private void initComponents() {
+		mMenuBar = new MenuBar(this, mGraphBuilder.getGraph());
 		setJMenuBar(mMenuBar);
 		
 		mPnl_mainPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
