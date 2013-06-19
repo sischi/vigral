@@ -1,8 +1,5 @@
 package de.chiller.vigral.graph;
 
-import java.awt.Paint;
-import java.util.ArrayList;
-
 import org.apache.commons.collections15.Factory;
 
 
@@ -169,12 +166,12 @@ public class Edge extends GraphElement {
 	
 	
 	// singleton factory to create an edge
-	public static class EdgeFactory<V> implements Factory<Edge> {
+	public static class EdgeFactory implements Factory<Edge> {
 		
 		private static int IDCOUNT = 0;
 		private static EdgeFactory mInstance = new EdgeFactory();
-		private V mStartVertex;
-		private V mEndVertex;
+		private Vertex mStartVertex;
+		private Vertex mEndVertex;
 		private boolean mEdgeIsDirected;
 		
 		public static void resetIdCounter() {
@@ -199,7 +196,7 @@ public class Edge extends GraphElement {
 		 * @param start the start vertex
 		 * @param end the end vertex
 		 */
-		public void setStartAndEnd(V start, V end) {
+		public void setStartAndEnd(Vertex start, Vertex end) {
 			mStartVertex = start;
 			mEndVertex = end;
 		}

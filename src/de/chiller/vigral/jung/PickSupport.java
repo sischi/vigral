@@ -3,11 +3,11 @@ package de.chiller.vigral.jung;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.event.MouseEvent;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.util.Collection;
 
+import de.chiller.vigral.graph.Edge;
 import de.chiller.vigral.graph.GraphElement;
 import de.chiller.vigral.graph.Vertex;
 
@@ -17,15 +17,14 @@ import edu.uci.ics.jung.algorithms.layout.Layout;
 import edu.uci.ics.jung.visualization.Layer;
 import edu.uci.ics.jung.visualization.VisualizationViewer;
 import edu.uci.ics.jung.visualization.VisualizationServer.Paintable;
-import edu.uci.ics.jung.visualization.layout.PersistentLayout.Point;
 import edu.uci.ics.jung.visualization.picking.PickedState;
 
 
-public class PickSupport<V,E> {
+public class PickSupport {
 	
 	protected Rectangle2D mRect;
-    protected E mPickedEdge;
-    protected V mPickedVertex;
+    protected Edge mPickedEdge;
+    protected Vertex mPickedVertex;
     protected Point2D mDown;
     /**
      * the x distance from the picked vertex center to the mouse point
@@ -82,16 +81,16 @@ public class PickSupport<V,E> {
      * @param vertex the clicked vertex
      * @param p the clicked point
      */
-    public void pickVertex(VisualizationViewer vv, V vertex, Point2D p) {
+    public void pickVertex(VisualizationViewer<Vertex, Edge> vv, Vertex vertex, Point2D p) {
     	mPickedVertex = vertex;
     	mDown = p;
-        Layout<V,E> layout = vv.getGraphLayout();
+        Layout<Vertex,Edge> layout = vv.getGraphLayout();
     	
-        PickedState<V> pickedVertexState = vv.getPickedVertexState();
+        PickedState<Vertex> pickedVertexState = vv.getPickedVertexState();
     	if(pickedVertexState.isPicked(mPickedVertex) == false) {
         	pickedVertexState.clear();
         	clearPickedCollection(vv);
-        	((GraphElement) mPickedVertex).setPicked(true);
+        	mPickedVertex.setPicked(true);
         	pickedVertexState.pick(mPickedVertex, true);
         }
         
@@ -110,16 +109,14 @@ public class PickSupport<V,E> {
      * @param vv the visualisation viewer
      * @param p the start point of the rect
      */
-    public void prepareToDrawRect(VisualizationViewer vv, Point2D p) {
+    public void prepareToDrawRect(VisualizationViewer<Vertex, Edge> vv, Point2D p) {
     	mPickedVertex = null;
     	
     	mDown = p;
     	mRect.setFrameFromDiagonal(mDown,mDown);
     	
-    	GraphElementAccessor<V,E> pickSupport = vv.getPickSupport();
-    	
-        PickedState<V> pickedVertexState = vv.getPickedVertexState();
-        PickedState<E> pickedEdgeState = vv.getPickedEdgeState();
+    	PickedState<Vertex> pickedVertexState = vv.getPickedVertexState();
+        PickedState<Edge> pickedEdgeState = vv.getPickedEdgeState();
     	
     	vv.addPostRenderPaintable(mLensPaintable);
    	    pickedEdgeState.clear();
@@ -132,7 +129,7 @@ public class PickSupport<V,E> {
      * @param vv the visualisation viewer
      * @param p the actual position
      */
-    public void performDrag(VisualizationViewer vv, Point2D p) {
+    public void performDrag(VisualizationViewer<Vertex, Edge> vv, Point2D p) {
     	if(mPickedVertex != null)
     		moveVertex(vv, p);
     	else
@@ -146,7 +143,7 @@ public class PickSupport<V,E> {
      * @param vv the visualisation viewer
      * @param p the actual position
      */
-    public void updateRect(VisualizationViewer vv, Point2D p) {
+    public void updateRect(VisualizationViewer<Vertex, Edge> vv, Point2D p) {
     	if(mPickedVertex == null)
     		mRect.setFrameFromDiagonal(mDown, p);
     }
@@ -156,17 +153,17 @@ public class PickSupport<V,E> {
      * @param vv the visualisation viewer
      * @param p the actual position
      */
-    public void moveVertex(VisualizationViewer vv, Point2D p) {
+    public void moveVertex(VisualizationViewer<Vertex, Edge> vv, Point2D p) {
     	if(mPickedVertex != null) {
     		
 	        Point2D graphPoint = vv.getRenderContext().getMultiLayerTransformer().inverseTransform(p);
 	        Point2D graphDown = vv.getRenderContext().getMultiLayerTransformer().inverseTransform(mDown);
-	        Layout<V,E> layout = vv.getGraphLayout();
+	        Layout<Vertex,Edge> layout = vv.getGraphLayout();
 	        double dx = graphPoint.getX()-graphDown.getX();
 	        double dy = graphPoint.getY()-graphDown.getY();
-	        PickedState<V> pickedState = vv.getPickedVertexState();
+	        PickedState<Vertex> pickedState = vv.getPickedVertexState();
 	        
-	        for(V v : pickedState.getPicked()) {
+	        for(Vertex v : pickedState.getPicked()) {
 	            Point2D vertexPoint = layout.transform(v);
 	            ((Vertex)v).updateLocation(vertexPoint);
 	            vertexPoint.setLocation(vertexPoint.getX()+dx, vertexPoint.getY()+dy);
@@ -183,7 +180,7 @@ public class PickSupport<V,E> {
      * @param vv the visualisation viewer
      * @param p the end point of the rect
      */
-    public void pickVerticesInRect(VisualizationViewer vv, Point2D p) {
+    public void pickVerticesInRect(VisualizationViewer<Vertex, Edge> vv, Point2D p) {
     	if(mDown != null && mPickedVertex == null && heyThatsTooClose(mDown, p, 5) == false) {
     		pickContainedVertices(vv, mDown, p, true);
     	}
@@ -200,10 +197,10 @@ public class PickSupport<V,E> {
      * 'down' and 'out'
      *
      */
-    protected void pickContainedVertices(VisualizationViewer<V,E> vv, Point2D down, Point2D out, boolean clear) {
+    protected void pickContainedVertices(VisualizationViewer<Vertex,Edge> vv, Point2D down, Point2D out, boolean clear) {
         
-        Layout<V,E> layout = vv.getGraphLayout();
-        PickedState<V> pickedVertexState = vv.getPickedVertexState();
+        Layout<Vertex,Edge> layout = vv.getGraphLayout();
+        PickedState<Vertex> pickedVertexState = vv.getPickedVertexState();
         
         Rectangle2D pickRectangle = new Rectangle2D.Double();
         pickRectangle.setFrameFromDiagonal(down,out);
@@ -212,10 +209,10 @@ public class PickSupport<V,E> {
             if(clear) {
             	pickedVertexState.clear();
             }
-            GraphElementAccessor<V,E> pickSupport = vv.getPickSupport();
+            GraphElementAccessor<Vertex,Edge> pickSupport = vv.getPickSupport();
 
-            Collection<V> picked = pickSupport.getVertices(layout, pickRectangle);
-            for(V v : picked) {
+            Collection<Vertex> picked = pickSupport.getVertices(layout, pickRectangle);
+            for(Vertex v : picked) {
             	pickedVertexState.pick(v, true);
             	((GraphElement) v).setPicked(true);
             }
@@ -224,16 +221,16 @@ public class PickSupport<V,E> {
     
     
     
-    public void clearPickedCollection(VisualizationViewer<V, E> vv) {
+    public void clearPickedCollection(VisualizationViewer<Vertex, Edge> vv) {
     	vv.getPickedVertexState().clear();
-    	for(V v : vv.getGraphLayout().getGraph().getVertices())
+    	for(Vertex v : vv.getGraphLayout().getGraph().getVertices())
     		((GraphElement) v).setPicked(false);
         vv.getPickedEdgeState().clear();
     }
     
     
-    public void addToSelection(V v, VisualizationViewer<V, E> vv, Point2D p) {
-    	PickedState<V> pickedVertexState = vv.getPickedVertexState();
+    public void addToSelection(Vertex v, VisualizationViewer<Vertex, Edge> vv, Point2D p) {
+    	PickedState<Vertex> pickedVertexState = vv.getPickedVertexState();
     	mPickedVertex = v;
     	mDown = p;
     	

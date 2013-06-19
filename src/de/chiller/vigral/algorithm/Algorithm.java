@@ -6,8 +6,6 @@ import de.chiller.vigral.Pair;
 import de.chiller.vigral.graph.ElementType;
 import de.chiller.vigral.graph.Graph;
 
-import edu.uci.ics.jung.graph.SparseMultigraph;
-
 /**
  * Interface that have to implemented by all Algorithms
  * @author Timmae

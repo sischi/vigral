@@ -118,10 +118,10 @@ public class FileOperator {
 		mFile = fc.getSelectedFile();
 		mDialogPath = mFile.getParent();
 		mFileList.clear();
-		mFileList.add(new File(mFile.getParent() + mFile.separator +"Vertices"));
-		mFileList.add(new File(mFile.getParent() + mFile.separator +"Edges"));
+		mFileList.add(new File(mFile.getParent() + File.separator +"Vertices"));
+		mFileList.add(new File(mFile.getParent() + File.separator +"Edges"));
 		System.out.println("chosen filename: "+ mFile);
-		System.out.println("the path seperator: '"+ mFile.separator +"'");
+		System.out.println("the path seperator: '"+ File.separator +"'");
 		return true;
 	}
 	
@@ -149,8 +149,6 @@ public class FileOperator {
 	
 	
 	private boolean zipFiles() {
-		
-		ArrayList<String> fileList = new ArrayList<String>();
 		
 		byte[] buffer = new byte[1024];
 		
@@ -197,7 +195,7 @@ public class FileOperator {
 			while(entry != null) {
 				
 				String filename = entry.getName();
-				File f = new File(mFile.getParent() + mFile.separator + filename);
+				File f = new File(mFile.getParent() + File.separator + filename);
 				
 				FileOutputStream fos = new FileOutputStream(f);
 				

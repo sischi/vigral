@@ -14,16 +14,13 @@ import org.apache.commons.collections15.Transformer;
 import org.apache.commons.collections15.functors.ConstantTransformer;
 
 import de.chiller.vigral.gui.VigralGUI;
-import de.chiller.vigral.gui.VigralGUI.Mode;
 import de.chiller.vigral.jung.MyColor;
 import de.chiller.vigral.jung.MyModalGraphMouse;
 
 import edu.uci.ics.jung.algorithms.layout.Layout;
 import edu.uci.ics.jung.algorithms.layout.StaticLayout;
-import edu.uci.ics.jung.graph.SparseMultigraph;
 import edu.uci.ics.jung.visualization.VisualizationViewer;
 import edu.uci.ics.jung.visualization.control.ModalGraphMouse;
-import edu.uci.ics.jung.visualization.decorators.AbstractEdgeShapeTransformer;
 import edu.uci.ics.jung.visualization.decorators.ToStringLabeller;
 import edu.uci.ics.jung.visualization.renderers.Renderer;
 
@@ -51,7 +48,7 @@ public class GraphBuilder {
 	/**
 	 * responsible for the GraphMousePlugins (Drawing with the mouse and context menus)
 	 */
-	private MyModalGraphMouse<Vertex, Edge> mGraphMouse;
+	private MyModalGraphMouse mGraphMouse;
 	
 	private Transformer<Vertex, Paint> mVertexLineTransformer = new Transformer<Vertex, Paint>() {
 		@Override
@@ -125,7 +122,7 @@ public class GraphBuilder {
 		
 		System.out.println("layout: "+ mLayout.getSize());
 		
-		mGraphMouse = new MyModalGraphMouse<Vertex, Edge>(mVViewer.getRenderContext());
+		mGraphMouse = new MyModalGraphMouse(mVViewer.getRenderContext());
 		mVViewer.setGraphMouse(mGraphMouse);
 		mGraphMouse.setMode(ModalGraphMouse.Mode.EDITING);		
 		
@@ -139,7 +136,7 @@ public class GraphBuilder {
 		mVViewer.setBackground(Color.WHITE);
 		mVViewer.getRenderContext().getEdgeLabelRenderer().setRotateEdgeLabels(false);
 		
-		mVViewer.getRenderContext().setVertexLabelTransformer(new ToStringLabeller());
+		mVViewer.getRenderContext().setVertexLabelTransformer(new ToStringLabeller<Vertex>());
 		mVViewer.getRenderContext().setVertexShapeTransformer(mVertexShapeTransformer);
 		mVViewer.getRenderContext().setVertexFillPaintTransformer(mVertexPaintTransformer);
 		mVViewer.getRenderContext().setVertexDrawPaintTransformer(mVertexLineTransformer);

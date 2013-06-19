@@ -20,6 +20,11 @@ import de.chiller.vigral.graph.Vertex;
 
 public class ElementPropertyDialog<GE> extends JDialog {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	private GE mElement;
 	
 	private static final int MAXIMUMDIGITS = 7;

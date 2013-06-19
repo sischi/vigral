@@ -8,7 +8,8 @@ import java.awt.event.MouseMotionListener;
 import java.awt.geom.Point2D;
 import javax.swing.JComponent;
 
-import org.apache.commons.collections15.Factory;
+import de.chiller.vigral.graph.Edge;
+import de.chiller.vigral.graph.Vertex;
 
 import edu.uci.ics.jung.algorithms.layout.GraphElementAccessor;
 import edu.uci.ics.jung.algorithms.layout.Layout;
@@ -22,14 +23,14 @@ import edu.uci.ics.jung.visualization.control.*;
  * by using the mouse in combination with modifier keys
  * 
  */
-public class MyGraphMousePlugin<V,E> extends AbstractGraphMousePlugin implements MouseListener, MouseMotionListener {
+public class MyGraphMousePlugin extends AbstractGraphMousePlugin implements MouseListener, MouseMotionListener {
     
 	
 	private final int EDITING_MODE = 0;
 	private final int PICKING_MODE = 1;
 	
-	private PickSupport<V, E> mPicking;
-	private EditSupport<V, E> mEditing;
+	private PickSupport mPicking;
+	private EditSupport mEditing;
 	
 	private boolean mEditingPossible = true;
 	
@@ -55,8 +56,8 @@ public class MyGraphMousePlugin<V,E> extends AbstractGraphMousePlugin implements
         
 		this.cursor = Cursor.getPredefinedCursor(Cursor.CROSSHAIR_CURSOR);
 		
-		mPicking = new PickSupport<V,E>();
-		mEditing = new EditSupport<V,E>();
+		mPicking = new PickSupport();
+		mEditing = new EditSupport();
 		mMode = EDITING_MODE;
 		
     }
@@ -67,13 +68,13 @@ public class MyGraphMousePlugin<V,E> extends AbstractGraphMousePlugin implements
     	// on left mouse press
     	if((e.getModifiers() & MouseEvent.BUTTON1_MASK) != 0) {
     		// get the clicked vv and the coordinates
-        	final VisualizationViewer<V,E> vv = (VisualizationViewer<V,E>)e.getSource();
+        	final VisualizationViewer<Vertex, Edge> vv = (VisualizationViewer<Vertex, Edge>)e.getSource();
             final Point2D p = e.getPoint();
             
             // get an instance of the graphelementaccessor
-            GraphElementAccessor<V,E> pickSupport = vv.getPickSupport();
+            GraphElementAccessor<Vertex, Edge> pickSupport = vv.getPickSupport();
             if(pickSupport != null) {
-            	final V vertex = pickSupport.getVertex(vv.getModel().getGraphLayout(), p.getX(), p.getY());
+            	final Vertex vertex = (Vertex) pickSupport.getVertex(vv.getModel().getGraphLayout(), p.getX(), p.getY());
             	
             	// edge drawing
             	if((e.getModifiers() & MouseEvent.CTRL_MASK) != 0 && vertex != null) {
@@ -129,7 +130,7 @@ public class MyGraphMousePlugin<V,E> extends AbstractGraphMousePlugin implements
     public void mouseDragged(MouseEvent e) {
     	
     	if((e.getModifiers() & MouseEvent.BUTTON1_MASK) != 0) {
-	    	final VisualizationViewer<V,E> vv = (VisualizationViewer<V,E>)e.getSource();
+	    	final VisualizationViewer<Vertex, Edge> vv = (VisualizationViewer<Vertex, Edge>)e.getSource();
 	        final Point2D p = e.getPoint();
 	        
 	        if(mMode == EDITING_MODE)
@@ -144,14 +145,14 @@ public class MyGraphMousePlugin<V,E> extends AbstractGraphMousePlugin implements
     @SuppressWarnings("unchecked")
     public void mouseReleased(MouseEvent e) {
     	if((e.getModifiers() & MouseEvent.BUTTON1_MASK) != 0) {
-    		final VisualizationViewer<V,E> vv = (VisualizationViewer<V,E>)e.getSource();
+    		final VisualizationViewer<Vertex, Edge> vv = (VisualizationViewer<Vertex, Edge>) e.getSource();
             final Point2D p = e.getPoint();
-            Layout<V,E> layout = vv.getModel().getGraphLayout();
-            GraphElementAccessor<V,E> pickSupport = vv.getPickSupport();
+            Layout<Vertex, Edge> layout = vv.getModel().getGraphLayout();
+            GraphElementAccessor<Vertex, Edge> pickSupport = vv.getPickSupport();
             
             if(pickSupport != null) {
             	if(mMode == EDITING_MODE) {
-            		final V vertex = pickSupport.getVertex(layout, p.getX(), p.getY());
+            		final Vertex vertex = (Vertex) pickSupport.getVertex(layout, p.getX(), p.getY());
 	                mEditing.addEdge(e, p, vertex, vv);
             	}
             	else if(mMode == PICKING_MODE)

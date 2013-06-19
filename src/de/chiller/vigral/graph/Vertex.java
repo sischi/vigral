@@ -1,11 +1,5 @@
 package de.chiller.vigral.graph;
-import java.awt.Paint;
-import java.awt.Point;
 import java.awt.geom.Point2D;
-import java.util.ArrayList;
-
-import javax.vecmath.Point2d;
-
 import org.apache.commons.collections15.Factory;
 
 

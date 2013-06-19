@@ -5,8 +5,6 @@ import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
 import java.util.ArrayList;
 
 import javax.swing.DefaultComboBoxModel;
@@ -16,7 +14,6 @@ import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 
 import de.chiller.vigral.Pair;
@@ -29,6 +26,10 @@ import de.chiller.vigral.graph.Vertex;
 
 public class RequirementDialog extends JDialog {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private static final int MARGIN = 20;
 	private static final Dimension MAX_LABEL_DIMENSION = new Dimension(500, 25);
 	
@@ -74,19 +75,19 @@ public class RequirementDialog extends JDialog {
 			lbl.setBounds(x, y, lbl.getPreferredSize().width, lbl.getPreferredSize().height);
 			
 			JComboBox box = new JComboBox();
-			DefaultComboBoxModel model = null;
+			DefaultComboBoxModel<?> model = null;
 			if(type == ElementType.VERTEX)
-				model = new DefaultComboBoxModel(vertexLabels.toArray());
+				model = new DefaultComboBoxModel<Object>(vertexLabels.toArray());
 			else if(type == ElementType.EDGE)
-				model = new DefaultComboBoxModel(edgeLabels.toArray());
+				model = new DefaultComboBoxModel<Object>(edgeLabels.toArray());
 			else if(type == ElementType.OPTIONAL_VERTEX) {
 				vertexLabels.add(0, "--");
-				model = new DefaultComboBoxModel(vertexLabels.toArray());
+				model = new DefaultComboBoxModel<Object>(vertexLabels.toArray());
 				vertexLabels.remove(0);
 			}
 			else if(type == ElementType.OPTIONAL_EDGE) {
 				edgeLabels.add(0, "--");
-				model = new DefaultComboBoxModel(edgeLabels.toArray());
+				model = new DefaultComboBoxModel<Object>(edgeLabels.toArray());
 				edgeLabels.remove(0);
 			}
 			
@@ -94,7 +95,7 @@ public class RequirementDialog extends JDialog {
 			x = 250;
 			y = i * (box.getPreferredSize().height + MARGIN);
 			box.setBounds(x, y, box.getPreferredSize().width, box.getPreferredSize().height);
-			mComboBoxes.add(new Pair(lbl, box));
+			mComboBoxes.add(new Pair<JLabel, JComboBox>(lbl, box));
 			contentPanel.add(lbl);
 			contentPanel.add(box);
 		}

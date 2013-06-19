@@ -13,10 +13,13 @@ import de.chiller.vigral.graph.Edge;
 import de.chiller.vigral.graph.Graph;
 import de.chiller.vigral.graph.Vertex;
 import de.chiller.vigral.menubar.FileOperator;
-import edu.uci.ics.jung.graph.SparseMultigraph;
 
 public class MenuBar extends JMenuBar {
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private JFrame mMainWindow;
 	private final Graph mGraph;
 	

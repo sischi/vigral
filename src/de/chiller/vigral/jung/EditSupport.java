@@ -11,11 +11,8 @@ import java.awt.geom.Point2D;
 
 import de.chiller.vigral.graph.Edge;
 import de.chiller.vigral.graph.Vertex;
-import de.chiller.vigral.graph.Edge.EdgeFactory;
-import de.chiller.vigral.graph.Vertex.VertexFactory;
 
 
-import edu.uci.ics.jung.algorithms.layout.GraphElementAccessor;
 import edu.uci.ics.jung.algorithms.layout.Layout;
 import edu.uci.ics.jung.graph.Graph;
 import edu.uci.ics.jung.graph.util.EdgeType;
@@ -24,9 +21,9 @@ import edu.uci.ics.jung.visualization.VisualizationViewer;
 import edu.uci.ics.jung.visualization.util.ArrowFactory;
 
 
-public class EditSupport<V,E> {
+public class EditSupport {
 	
-	protected V mStartVertex;
+	protected Vertex mStartVertex;
     protected Point2D mDown;
     
     protected CubicCurve2D mRawEdge = new CubicCurve2D.Float();
@@ -94,16 +91,13 @@ public class EditSupport<V,E> {
 	 * @param vertex the start vertex of the edge
 	 * @param directed true if it is an directed edge and false otherwise
 	 */
-	public void startEdge(MouseEvent e, V vertex, EdgeType directed) {
+	public void startEdge(MouseEvent e, Vertex vertex, EdgeType directed) {
 		
 		mEdgeIsDirected = directed;
 		
 		// get the clicked vv and the coordinates
-    	final VisualizationViewer<V,E> vv = (VisualizationViewer<V,E>)e.getSource();
-        final Point2D p = e.getPoint();
-        
-        // get an instance of the graphelementaccessor
-        GraphElementAccessor<V,E> pickSupport = vv.getPickSupport();
+    	@SuppressWarnings("unchecked")
+		final VisualizationViewer<Vertex, Edge> vv = (VisualizationViewer<Vertex, Edge>)e.getSource();
         
         mStartVertex = vertex;
         mDown = e.getPoint();
@@ -127,7 +121,8 @@ public class EditSupport<V,E> {
                 transformArrowShape(mDown, e.getPoint());
 
         }
-        VisualizationViewer<V,E> vv = (VisualizationViewer<V,E>)e.getSource();
+        @SuppressWarnings("unchecked")
+		VisualizationViewer<Vertex, Edge> vv = (VisualizationViewer<Vertex, Edge>)e.getSource();
         vv.repaint();
 	}
 
@@ -136,15 +131,15 @@ public class EditSupport<V,E> {
 	 * @param e the mouse event
 	 * @param vv the visualisation viewer
 	 */
-	public void addVertex(MouseEvent e, VisualizationViewer<V, E> vv) {
+	public void addVertex(MouseEvent e, VisualizationViewer<Vertex, Edge> vv) {
 		
 		// get the graph
-    	Graph<V,E> graph = vv.getModel().getGraphLayout().getGraph();
+    	Graph<Vertex, Edge> graph = vv.getModel().getGraphLayout().getGraph();
 		
     	Vertex.VertexFactory.getInstance().setLocation(e.getPoint());
-		V newVertex = (V) Vertex.VertexFactory.getInstance().create();
+		Vertex newVertex = Vertex.VertexFactory.getInstance().create();
 		
-        Layout<V,E> layout = vv.getModel().getGraphLayout();
+        Layout<Vertex, Edge> layout = vv.getModel().getGraphLayout();
         graph.addVertex(newVertex);
         layout.setLocation(newVertex, vv.getRenderContext().getMultiLayerTransformer().inverseTransform(e.getPoint()));
 		
@@ -158,17 +153,17 @@ public class EditSupport<V,E> {
 	 * @param vertex the end vertex
 	 * @param vv the visualisation viewer
 	 */
-	public void addEdge(MouseEvent e, Point2D p, V vertex, VisualizationViewer vv) {
+	public void addEdge(MouseEvent e, Point2D p, Vertex vertex, VisualizationViewer<Vertex, Edge> vv) {
 		
 		if((vertex != null) && (mStartVertex != null)) {
 			if(!(mDown.getX() == p.getX() && mDown.getY() == p.getY())) {
-	    		Graph<V,E> graph = vv.getGraphLayout().getGraph();
+	    		Graph<Vertex, Edge> graph = vv.getGraphLayout().getGraph();
 	    		Edge.EdgeFactory.getInstance().setStartAndEnd(mStartVertex, vertex);
 	    		if(mEdgeIsDirected == EdgeType.DIRECTED)
 	    			Edge.EdgeFactory.getInstance().setDirected(true);
 	    		else
 	    			Edge.EdgeFactory.getInstance().setDirected(false);
-	    		graph.addEdge((E) Edge.EdgeFactory.getInstance().create(), mStartVertex, vertex, mEdgeIsDirected);
+	    		graph.addEdge(Edge.EdgeFactory.getInstance().create(), mStartVertex, vertex, mEdgeIsDirected);
 	    	}
 		}
         vv.repaint();

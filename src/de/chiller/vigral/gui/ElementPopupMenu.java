@@ -9,6 +9,7 @@ import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
 
 import de.chiller.vigral.graph.Edge;
+import de.chiller.vigral.graph.GraphElement;
 import de.chiller.vigral.graph.Vertex;
 
 import edu.uci.ics.jung.visualization.VisualizationViewer;
@@ -20,21 +21,26 @@ public class ElementPopupMenu {
 	public static final int EDGEMENU = 0b10;
 	
 	private static int mMenuMode;
-	private static VisualizationViewer mVViewer;
+	private static VisualizationViewer<Vertex, Edge> mVViewer;
 	private static Vertex mVertex;
 	private static Edge mEdge;
 	
 	
-	public static <V, E> void setMode(int mode, V v, E e, VisualizationViewer vv) {
+	public static void setMode(int mode, Vertex v, Edge e, VisualizationViewer<Vertex, Edge> vv) {
 		mMenuMode = mode;
-		mVertex = (Vertex)v;
-		mEdge = (Edge)e;
+		mVertex = v;
+		mEdge = e;
 		mVViewer = vv;
 	}
 	
 
 	public static class PopupMenu extends JPopupMenu {
-        // private JFrame frame; 
+        /**
+		 * 
+		 */
+		private static final long serialVersionUID = 1L;
+
+		// private JFrame frame; 
         public PopupMenu(final JFrame frame) {
             super("Context Menu");
             // this.frame = frame;
@@ -49,6 +55,11 @@ public class ElementPopupMenu {
 	public static class ElementPropertyItem extends JMenuItem {
 		
 		
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = 1L;
+
 		public ElementPropertyItem(final JFrame frame) {
 			super();
 			
@@ -60,12 +71,12 @@ public class ElementPopupMenu {
 		    addActionListener(new ActionListener() {
 		    	@Override
 		        public void actionPerformed(ActionEvent e) {
-		    		ElementPropertyDialog dialog;
+		    		ElementPropertyDialog<GraphElement> dialog;
 		    		
 					if(mMenuMode == VERTEXMENU)
-		    			dialog = new ElementPropertyDialog(frame, mVertex);
+		    			dialog = new ElementPropertyDialog<GraphElement>(frame, mVertex);
 					else // edge menu is called
-						dialog = new ElementPropertyDialog(frame, mEdge);
+						dialog = new ElementPropertyDialog<GraphElement>(frame, mEdge);
 					
 					dialog.addWindowListener(new WindowAdapter() {
 						@Override
@@ -83,6 +94,11 @@ public class ElementPopupMenu {
 	
 	public static class PropertyDisplay extends JMenuItem {
 		
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = 1L;
+
 		public PropertyDisplay() {
 			super();
 			if(mMenuMode == VERTEXMENU)
@@ -94,6 +110,11 @@ public class ElementPopupMenu {
 	
 	public static class DeleteElementMenuItem extends JMenuItem {
 		
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = 1L;
+
 		public DeleteElementMenuItem() {
 	        super();
 	        

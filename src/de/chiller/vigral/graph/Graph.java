@@ -10,6 +10,12 @@ import edu.uci.ics.jung.graph.util.EdgeType;
 
 public class Graph extends SparseMultigraph<Vertex, Edge> {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+
 	public Graph() {
 		super();
 	}
