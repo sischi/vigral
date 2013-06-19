@@ -1,6 +1,7 @@
 package de.chiller.vigral.gui;
 
 import java.awt.Dimension;
+import java.awt.EventQueue;
 import java.awt.Rectangle;
 
 import javax.swing.DefaultComboBoxModel;
@@ -143,8 +144,8 @@ public class VigralGUI extends JFrame {
 	/**
 	 * Create
 	 */
-	public VigralGUI(GraphBuilder gb) {
-		mGraphBuilder = gb;
+	public VigralGUI() {
+		mGraphBuilder = new GraphBuilder(this);
 		mGraphBuilder.addToPanel(mPnl_graph);
 		
 		initAlgorithms();
@@ -159,7 +160,7 @@ public class VigralGUI extends JFrame {
 		
 		changeMode(Mode.GRAPHCREATION);
 		
-		
+		setVisible(true);
 		//initSizes();
 	}
 	
@@ -385,4 +386,20 @@ public class VigralGUI extends JFrame {
 	
 	
 	
+	
+	/**
+	 * Launch the application.
+	 */
+	public static void main(String[] args) {
+		EventQueue.invokeLater(new Runnable() {
+			public void run() {
+				try {
+					// start the program
+					VigralGUI vigral = new VigralGUI();
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		});
+	}
 }

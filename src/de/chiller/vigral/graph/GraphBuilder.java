@@ -8,6 +8,8 @@ import java.awt.Rectangle;
 import java.awt.Shape;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.Point2D;
+
+import javax.swing.JFrame;
 import javax.swing.JPanel;
 
 import org.apache.commons.collections15.Transformer;
@@ -49,6 +51,9 @@ public class GraphBuilder {
 	 * responsible for the GraphMousePlugins (Drawing with the mouse and context menus)
 	 */
 	private MyModalGraphMouse mGraphMouse;
+	
+	private JFrame mMainWindow;
+	
 	
 	private Transformer<Vertex, Paint> mVertexLineTransformer = new Transformer<Vertex, Paint>() {
 		@Override
@@ -109,9 +114,9 @@ public class GraphBuilder {
 	}
 	
 	
-	public GraphBuilder() {
+	public GraphBuilder(JFrame frame) {
 		System.out.println("GraphBuilder Creation");
-		
+		mMainWindow = frame;
 		// create a graph
 		mGraph = new Graph();
 		mResultGraph = mGraph;
@@ -122,7 +127,7 @@ public class GraphBuilder {
 		
 		System.out.println("layout: "+ mLayout.getSize());
 		
-		mGraphMouse = new MyModalGraphMouse(mVViewer.getRenderContext());
+		mGraphMouse = new MyModalGraphMouse(mVViewer.getRenderContext(), mMainWindow);
 		mVViewer.setGraphMouse(mGraphMouse);
 		mGraphMouse.setMode(ModalGraphMouse.Mode.EDITING);		
 		

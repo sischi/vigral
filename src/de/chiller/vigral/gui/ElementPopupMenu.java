@@ -48,7 +48,7 @@ public class ElementPopupMenu {
             addSeparator();
             add(new PropertyDisplay());
             addSeparator();
-            add(new ElementPropertyItem(frame));   
+            add(new ElementPropertyItem(frame));
         }
     }
 	

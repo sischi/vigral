@@ -1,6 +1,9 @@
 package de.chiller.vigral.jung;
 
 import java.awt.ItemSelectable;
+
+import javax.swing.JFrame;
+
 import de.chiller.vigral.graph.Edge;
 import de.chiller.vigral.graph.Vertex;
 
@@ -14,13 +17,14 @@ public class MyModalGraphMouse extends AbstractModalGraphMouse implements ModalG
 	protected MyPopupGraphMousePlugin popupEditingPlugin;
 	protected MultiLayerTransformer basicTransformer;
 	protected RenderContext<Vertex,Edge> rc;
+	private JFrame mParent;
 
 	/**
 	 * create an instance with default values
 	 *
 	 */
-	public MyModalGraphMouse(RenderContext<Vertex,Edge> rc) {
-		this(rc, 1.1f, 1/1.1f);
+	public MyModalGraphMouse(RenderContext<Vertex,Edge> rc, JFrame frame) {
+		this(rc, 1.1f, 1/1.1f, frame);
 	}
 
 	/**
@@ -28,11 +32,12 @@ public class MyModalGraphMouse extends AbstractModalGraphMouse implements ModalG
 	 * @param in override value for scale in
 	 * @param out override value for scale out
 	 */
-	public MyModalGraphMouse(RenderContext<Vertex,Edge> rc, float in, float out) {
+	public MyModalGraphMouse(RenderContext<Vertex,Edge> rc, float in, float out, JFrame frame) {
 		super(in,out);
-		this.rc = rc;
-		this.basicTransformer = rc.getMultiLayerTransformer();
+		rc = rc;
+		basicTransformer = rc.getMultiLayerTransformer();
 		loadPlugins();
+		mParent = frame;
 	}
 
 	/**
@@ -42,7 +47,7 @@ public class MyModalGraphMouse extends AbstractModalGraphMouse implements ModalG
 	@Override
     protected void loadPlugins() {
 		editingPlugin = new MyGraphMousePlugin();
-		popupEditingPlugin = new MyPopupGraphMousePlugin();
+		popupEditingPlugin = new MyPopupGraphMousePlugin(mParent);
 		addEditingFunctionality();
 	}
 

@@ -2,6 +2,8 @@ package de.chiller.vigral.jung;
 
 import java.awt.event.MouseEvent;
 import java.awt.geom.Point2D;
+
+import javax.swing.JFrame;
 import javax.swing.JPopupMenu;
 
 import de.chiller.vigral.graph.Edge;
@@ -21,13 +23,16 @@ import edu.uci.ics.jung.visualization.control.AbstractPopupGraphMousePlugin;
 public class MyPopupGraphMousePlugin extends AbstractPopupGraphMousePlugin {
     
     protected JPopupMenu popup = new JPopupMenu();
+    
+    private JFrame mParent;
 
-    public MyPopupGraphMousePlugin() {
-    	this(MouseEvent.BUTTON3_MASK);
+    public MyPopupGraphMousePlugin(JFrame frame) {
+    	this(MouseEvent.BUTTON3_MASK, frame);
     }
     
-    public MyPopupGraphMousePlugin(int modifiers) {
+    public MyPopupGraphMousePlugin(int modifiers, JFrame frame) {
     	super(modifiers);
+    	mParent = frame;
     }
     
     
@@ -43,13 +48,13 @@ public class MyPopupGraphMousePlugin extends AbstractPopupGraphMousePlugin {
             final Vertex vertex = pickSupport.getVertex(vv.getGraphLayout(), p.getX(), p.getY());
             if(vertex != null) {
             	ElementPopupMenu.setMode(ElementPopupMenu.VERTEXMENU, vertex, null, vv);
-            	new ElementPopupMenu.PopupMenu(null).show(vv, e.getX(), e.getY());
+            	new ElementPopupMenu.PopupMenu(mParent).show(vv, e.getX(), e.getY());
             } 
             else {
                 final Edge edge = pickSupport.getEdge(vv.getGraphLayout(), p.getX(), p.getY());
                 if(edge != null) {
                 	ElementPopupMenu.setMode(ElementPopupMenu.EDGEMENU, null, edge, vv);
-                	new ElementPopupMenu.PopupMenu(null).show(vv, e.getX(), e.getY());
+                	new ElementPopupMenu.PopupMenu(mParent).show(vv, e.getX(), e.getY());
                 }
             }
         }
