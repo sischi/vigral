@@ -29,7 +29,7 @@ public class MenuBar extends JMenuBar {
 	private ActionListener onSave = new ActionListener() {
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			FileOperator fo = new FileOperator(mMainWindow);
+			FileOperator fo = FileOperator.getInstance(mMainWindow);
 			fo.saveGraphToFile(mGraph);
 		}
 	};
@@ -37,7 +37,7 @@ public class MenuBar extends JMenuBar {
 	private ActionListener onOpen = new ActionListener() {
 		@Override
 		public void actionPerformed(ActionEvent arg0) {
-			FileOperator fo = new FileOperator(mMainWindow);
+			FileOperator fo = FileOperator.getInstance(mMainWindow);
 			Graph g = fo.readGraphFromFile();	
 			if(g != null)
 				((VigralGUI) mMainWindow).getGraphBuilder().setGraph(g);
