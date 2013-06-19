@@ -7,6 +7,7 @@ import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 
 import de.chiller.vigral.graph.Edge;
 import de.chiller.vigral.graph.Graph;
@@ -38,11 +39,36 @@ public class MenuBar extends JMenuBar {
 		@Override
 		public void actionPerformed(ActionEvent arg0) {
 			FileOperator fo = FileOperator.getInstance(mMainWindow);
-			Graph g = fo.readGraphFromFile();	
+			Graph g = fo.readGraphFromFile();
 			if(g != null)
 				((VigralGUI) mMainWindow).getGraphBuilder().setGraph(g);
 			
 			// TODO think about behaviour of opening in visualisation mode
+		}
+	};
+	
+	private ActionListener onNew = new ActionListener() {
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			int choice = JOptionPane.showConfirmDialog(mMainWindow, "Save before Closing", "Do you want to save your work?", JOptionPane.YES_NO_CANCEL_OPTION);
+			switch (choice) {
+			case JOptionPane.CANCEL_OPTION:
+				break;
+			case JOptionPane.NO_OPTION:
+				((VigralGUI) mMainWindow).getGraphBuilder().resetGraph();
+				Vertex.VertexFactory.resetIdCounter();
+				Edge.EdgeFactory.resetIdCounter();
+				break;
+			case JOptionPane.YES_OPTION:
+				FileOperator fo = FileOperator.getInstance(mMainWindow);
+				fo.saveGraphToFile(mGraph);
+				((VigralGUI) mMainWindow).getGraphBuilder().resetGraph();
+				Vertex.VertexFactory.resetIdCounter();
+				Edge.EdgeFactory.resetIdCounter();
+				break;
+			default:
+				break;
+			}
 		}
 	};
 	
@@ -74,5 +100,6 @@ public class MenuBar extends JMenuBar {
 		file_exit.addActionListener(onExit);
 		file_save.addActionListener(onSave);
 		file_open.addActionListener(onOpen);
+		file_new.addActionListener(onNew);
 	}
 }

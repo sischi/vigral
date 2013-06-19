@@ -177,6 +177,10 @@ public class Edge extends GraphElement {
 		private V mEndVertex;
 		private boolean mEdgeIsDirected;
 		
+		public static void resetIdCounter() {
+			IDCOUNT = 0;
+		}
+		
 		/**
 		 * switched the constructor off
 		 */

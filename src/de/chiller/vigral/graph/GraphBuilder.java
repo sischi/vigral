@@ -330,5 +330,11 @@ public class GraphBuilder {
 		showOriginGraph();
 	}
 	
+	public void resetGraph() {
+		mGraph = new Graph();
+		mLayout.setGraph(mGraph);
+		mVViewer.repaint();
+	}
+	
 	
 }

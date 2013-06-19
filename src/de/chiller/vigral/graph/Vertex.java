@@ -162,6 +162,10 @@ public class Vertex extends GraphElement {
 		private static VertexFactory mInstance = new VertexFactory();
 		private Point2D mPoint;
 		
+		public static void resetIdCounter() {
+			IDCOUNT = 0;
+		}
+		
 		/**
 		 * turn the constructor off
 		 */
