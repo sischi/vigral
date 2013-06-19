@@ -58,11 +58,11 @@ public class FileOperator {
 		
 		try {
 			
-			CSVReader reader = new CSVReader(new FileReader(mFile.getParent() +"\\Vertices"));
+			CSVReader reader = new CSVReader(new FileReader(mFile.getParent() + mFile.separator +"Vertices"));
 			strVertices = reader.readAll();
 			reader.close();
 			
-			reader = new CSVReader(new FileReader(mFile.getParent() +"\\Edges"));
+			reader = new CSVReader(new FileReader(mFile.getParent() + mFile.separator +"Edges"));
 			strEdges = reader.readAll();
 			reader.close();
 			
@@ -92,6 +92,7 @@ public class FileOperator {
 		}
 		mFile = fc.getSelectedFile();
 		System.out.println("chosen filename: "+ mFile);
+		System.out.println("the path seperator: '"+ mFile.separator +"'");
 		return true;
 	}
 	
@@ -99,12 +100,12 @@ public class FileOperator {
 	private boolean writeToFile(final Graph g) {
 		
 		try {
-			CSVWriter writer = new CSVWriter(new FileWriter(mFile.getParent() +"\\Vertices"));
+			CSVWriter writer = new CSVWriter(new FileWriter(mFile.getParent() + mFile.separator +"Vertices"));
 			for(Vertex v : g.getVertices())
 				writer.writeNext(v.toStringArray());
 			writer.close();
 			
-			writer = new CSVWriter(new FileWriter(mFile.getParent() +"\\Edges"));
+			writer = new CSVWriter(new FileWriter(mFile.getParent() + mFile.separator +"Edges"));
 			for(Edge e : g.getEdges())
 				writer.writeNext(e.toStringArray());
 			writer.close();
