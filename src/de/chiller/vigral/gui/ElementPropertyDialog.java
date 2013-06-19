@@ -33,12 +33,14 @@ public class ElementPropertyDialog<GE> extends JDialog {
 
 	private final JPanel contentPanel = new JPanel();
 	private JTextField txt_field;
+	private JFrame mMainWindow;
 
 	/**
 	 * Create the dialog.
 	 */
 	public ElementPropertyDialog(JFrame parent, GE elem) {
 		mElement = elem;
+		mMainWindow = parent;
 		
 		setBounds(100, 100, 300, 115);
 		getContentPane().setLayout(new BorderLayout());
@@ -97,8 +99,18 @@ public class ElementPropertyDialog<GE> extends JDialog {
 				JButton okButton = new JButton("OK");
 				okButton.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
-						if(mElement instanceof Vertex)
-							((Vertex) mElement).setLabel(txt_field.getText().toString().trim());
+						if(mElement instanceof Vertex) {
+							String newLabel = txt_field.getText().toString().trim();
+							boolean alreadyUsed = false;
+							for(Vertex v : ((VigralGUI) mMainWindow).getGraphBuilder().getGraph().getVertices()) {
+								if(v.getLabel().equals(newLabel) || v.getIdentifier().equals(newLabel)) {
+									alreadyUsed = true;
+									break;
+								}
+							}
+							if(!alreadyUsed)
+								((Vertex) mElement).setLabel(newLabel);
+						}
 						else { // it is an Edge
 							String in = txt_field.getText().toString().trim();
 							if(in.equals(""))
