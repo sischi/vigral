@@ -3,6 +3,8 @@ import java.awt.BorderLayout;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
@@ -74,6 +76,16 @@ public class ElementPropertyDialog<GE> extends JDialog {
 			lbl_propName.setText("Label");
 		else // it is an edge
 			lbl_propName.setText("Weight (1 - 9.999.999)");
+		
+		txt_field.addFocusListener(new FocusListener() {
+			@Override
+			public void focusLost(FocusEvent e) {}
+			
+			@Override
+			public void focusGained(FocusEvent e) {
+				txt_field.selectAll();
+			}
+		});
 		
 		lbl_propName.setBounds(12, 14, 130, 15);
 		contentPanel.add(lbl_propName);
