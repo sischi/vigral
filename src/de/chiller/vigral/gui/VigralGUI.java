@@ -67,8 +67,8 @@ public class VigralGUI extends JFrame {
 	private ActionListener mCreationListener = new ActionListener() {
 		@Override
 		public void actionPerformed(ActionEvent e) {
+			Graph graph = mGraphBuilder.getGraph();
 			if(mGraphBuilder.getGraph().getVertexCount() != 0) {
-				final Graph graph = new Graph(mGraphBuilder.getGraph());
 				mChosenAlgorithm = mAvailableAlgorithms.get(mCb_algorithm.getSelectedIndex()); 
 				ArrayList<Pair<ElementType, String>> require = mChosenAlgorithm.getRequirements();
 				if(require != null) {
@@ -168,7 +168,7 @@ public class VigralGUI extends JFrame {
 	 * initializes the components
 	 */
 	private void initComponents() {
-		mMenuBar = new MenuBar(this, mGraphBuilder.getGraph());
+		mMenuBar = new MenuBar(this);
 		setJMenuBar(mMenuBar);
 		
 		mPnl_mainPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -343,7 +343,7 @@ public class VigralGUI extends JFrame {
 		changeMode(Mode.VISUALISATION);
 		mBtn_changeMode.removeActionListener(mCreationListener);
 		mBtn_changeMode.addActionListener(mVisualisationListener);
-		mChosenAlgorithm.setGraph(new Graph(mGraphBuilder.getGraph()));
+		mChosenAlgorithm.setGraph(mGraphBuilder.getGraph());
 		mChosenAlgorithm.perform();
 		mGraphBuilder.setResultingGraph(mChosenAlgorithm.getFirstStep());
 	}

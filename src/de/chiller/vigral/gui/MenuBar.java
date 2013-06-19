@@ -20,8 +20,7 @@ public class MenuBar extends JMenuBar {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	private JFrame mMainWindow;
-	private final Graph mGraph;
+	private VigralGUI mMainWindow;
 	
 	private ActionListener onExit = new ActionListener() {
 		@Override
@@ -34,7 +33,7 @@ public class MenuBar extends JMenuBar {
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			FileOperator fo = FileOperator.getInstance(mMainWindow);
-			fo.saveGraphToFile(mGraph);
+			fo.saveGraphToFile(mMainWindow.getGraphBuilder().getGraph());
 		}
 	};
 	
@@ -64,7 +63,7 @@ public class MenuBar extends JMenuBar {
 				break;
 			case JOptionPane.YES_OPTION:
 				FileOperator fo = FileOperator.getInstance(mMainWindow);
-				fo.saveGraphToFile(mGraph);
+				fo.saveGraphToFile(mMainWindow.getGraphBuilder().getGraph());
 				((VigralGUI) mMainWindow).getGraphBuilder().resetGraph();
 				Vertex.VertexFactory.resetIdCounter();
 				Edge.EdgeFactory.resetIdCounter();
@@ -75,11 +74,10 @@ public class MenuBar extends JMenuBar {
 		}
 	};
 	
-	public MenuBar(JFrame mainWindow, Graph g) {
+	public MenuBar(VigralGUI mainWindow) {
 		super();
 		
 		mMainWindow = mainWindow;
-		mGraph = g;
 		
 		JMenu fileMenu = new JMenu("File");
 		JMenu pluginMenu = new JMenu("PlugIn");

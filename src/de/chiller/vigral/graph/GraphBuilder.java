@@ -184,7 +184,7 @@ public class GraphBuilder {
 	 * be modified to avoid disappearing of some vertices. This will ensure, that the complete graph
 	 * is visible all the time.
 	 */
-	public void modifyLocationsIfOutOfBounds(Graph graph) {
+	private void modifyLocationsIfOutOfBounds(Graph graph) {
 		
 		if(!graph.getVertices().isEmpty()) {
 			Dimension dimen = mVViewer.getSize();
@@ -227,7 +227,7 @@ public class GraphBuilder {
 	 * calculates the rectangle of the drawed graph
 	 * @return the rectangle of the graph or null, if no vertex is present
 	 */
-	public Rectangle getGraphRect() {
+	private Rectangle getGraphRect() {
 		if(!mGraph.getVertices().isEmpty()) {
 			double minX = 0;
 			double maxX = 0;
@@ -266,9 +266,11 @@ public class GraphBuilder {
 			return null;
 	}
 	
+	
 	public Graph getGraph() {
-		return mGraph;
+		return new Graph(mGraph);
 	}
+	
 	
 	public void setResultingGraph(Graph g) {
 		mResultGraph = new Graph(g);
@@ -295,7 +297,7 @@ public class GraphBuilder {
 		mVViewer.repaint();
 	}
 	
-	public void updateLocations() {
+	private void updateLocations() {
 		for(Vertex v : mVViewer.getGraphLayout().getGraph().getVertices()) {
 			//mLayout.setLocation(v, v.getLocation());
 			Point2D p = mLayout.transform(v);
@@ -323,7 +325,7 @@ public class GraphBuilder {
 	
 	
 	public void setGraph(Graph g) {
-		mGraph = g;
+		mGraph = new Graph(g);
 		showOriginGraph();
 	}
 	
