@@ -211,7 +211,7 @@ public class Edge extends GraphElement {
 
 		@Override
 		public Edge create() {
-			return new Edge(IDCOUNT++, 1.0, (Vertex)mStartVertex, (Vertex)mEndVertex, mEdgeIsDirected);
+			return new Edge(IDCOUNT++, 1.0, mStartVertex, mEndVertex, mEdgeIsDirected);
 		}
 	}
 }
