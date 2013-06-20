@@ -47,7 +47,6 @@ public class VigralGUI extends JFrame {
 	private int mMode;
 	
 	private MenuBar mMenuBar;
-	private JComboBox mCb_graphType = new JComboBox();
 	private JComboBox mCb_algorithm = new JComboBox();
 	private JSplitPane mSplt_contentPane = new JSplitPane();
 	private JButton mBtn_changeMode = new JButton();
@@ -182,9 +181,6 @@ public class VigralGUI extends JFrame {
 		mPnl_mainPanel.setLayout(null);
 		mPnl_mainPanel.addComponentListener(resizeListener);
 		
-		mCb_graphType.setBackground(Color.WHITE);
-		mPnl_mainPanel.add(mCb_graphType);
-		
 		mCb_algorithm.setBackground(Color.WHITE);
 		initAlgorithmBox();
 		mPnl_mainPanel.add(mCb_algorithm);
@@ -265,7 +261,6 @@ public class VigralGUI extends JFrame {
 	
 	public void initSizes() {
 		setBounds(100, 100, 600, 400);
-		mCb_graphType.setBounds(10, 10, 150, 25);
 		mCb_algorithm.setBounds(430, 10, 150, 25);
 		mPnl_graph.setBounds(10, 45, 380, 175);
 		mBtn_changeMode.setBounds(410, 345, 160, 25);
@@ -306,19 +301,19 @@ public class VigralGUI extends JFrame {
 		int y = 10;
 		int w = 150;
 		int h = 25;
-		mCb_graphType.setBounds(x, y, w, h);
-		
-		w = 150;
-		h = 25;
-		x = mainPanelRect.width - w - 10;
-		y = mainPanelRect.y + 10;
-		mCb_algorithm.setBounds(x, y, w, h);
 		
 		w = 160;
 		h = 25;
 		x = mainPanelRect.width - w - 10;
 		y = mainPanelRect.height - h - 10;
 		mBtn_changeMode.setBounds(x, y, w, h);
+		
+		mCb_algorithm.setSize(mCb_algorithm.getPreferredSize());
+		w = mCb_algorithm.getWidth();
+		h = 25;
+		x = mainPanelRect.width - w - 10;
+		y = mBtn_changeMode.getBounds().y - mCb_algorithm.getHeight() - 10;
+		mCb_algorithm.setBounds(x, y, w, h);
 		
 		w = 5 * mBtn_play.getBounds().width + 4 * 10;
 		h = mBtn_play.getBounds().height + 10;
@@ -327,9 +322,9 @@ public class VigralGUI extends JFrame {
 		mPnl_buttonBar.setBounds(x, y, w, h);
 		
 		x = mainPanelRect.x + 10;
-		y = mCb_graphType.getBounds().y + mCb_graphType.getBounds().height + 10;
+		y = mainPanelRect.y + 10;
 		w = mainPanelRect.width - 20;
-		h = mPnl_buttonBar.getBounds().y - 10 - mCb_graphType.getBounds().y - mCb_graphType.getBounds().height - 10;
+		h = mCb_algorithm.getBounds().y - 20;
 		mPnl_graph.setBounds(x, y, w, h);
 	}
 	
@@ -365,7 +360,6 @@ public class VigralGUI extends JFrame {
 			sidePanelDim = new Dimension(0, 0);
 			mSplt_contentPane.setDividerLocation(1.0d);
 			mCb_algorithm.setEnabled(true);
-			mCb_graphType.setEnabled(true);
 			mBtn_changeMode.setText("Visualisation");
 			mPnl_buttonBar.setVisible(false);
 		}
@@ -373,7 +367,6 @@ public class VigralGUI extends JFrame {
 			sidePanelDim = new Dimension(240, 0);
 			mSplt_contentPane.setDividerLocation(mSplt_contentPane.getWidth() - sidePanelDim.width - mSplt_contentPane.getDividerSize());
 			mCb_algorithm.setEnabled(false);
-			mCb_graphType.setEnabled(false);
 			mBtn_changeMode.setText("Graph Creation");
 			mPnl_buttonBar.setVisible(true);
 		}

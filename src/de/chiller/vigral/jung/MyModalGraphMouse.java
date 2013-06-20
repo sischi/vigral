@@ -39,14 +39,15 @@ public class MyModalGraphMouse extends AbstractModalGraphMouse implements ModalG
 	}
 
 	/**
-	 * create the plugins, and load the plugins for TRANSFORMING mode
+	 * create the plugins, and load the plugins
 	 *
 	 */
 	@Override
     protected void loadPlugins() {
 		editingPlugin = new MyGraphMousePlugin();
 		popupEditingPlugin = new MyPopupGraphMousePlugin();
-		addEditingFunctionality();
+		add(popupEditingPlugin);
+		add(editingPlugin);
 	}
 
 	public void addEditingFunctionality() {

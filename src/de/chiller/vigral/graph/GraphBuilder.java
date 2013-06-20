@@ -336,5 +336,9 @@ public class GraphBuilder {
 		mVViewer.repaint();
 	}
 	
+	public VisualizationViewer<Vertex, Edge> getVisualizationViewer() {
+		return mVViewer;
+	}
+	
 	
 }

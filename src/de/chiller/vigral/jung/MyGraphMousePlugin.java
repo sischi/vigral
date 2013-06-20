@@ -10,6 +10,7 @@ import javax.swing.JComponent;
 
 import de.chiller.vigral.graph.Edge;
 import de.chiller.vigral.graph.Vertex;
+import de.chiller.vigral.gui.VigralGUI;
 
 import edu.uci.ics.jung.algorithms.layout.GraphElementAccessor;
 import edu.uci.ics.jung.algorithms.layout.Layout;
@@ -174,10 +175,14 @@ public class MyGraphMousePlugin extends AbstractGraphMousePlugin implements Mous
     
     public void stopEditing() {
     	mEditingPossible = false;
+    	mMode = EDITING_MODE;
+    	mPicking.clearPickedCollection(VigralGUI.getInstance().getGraphBuilder().getVisualizationViewer());
     }
     
     public void startEditing() {
     	mEditingPossible = true;
+    	mMode = EDITING_MODE;
+    	mPicking.clearPickedCollection(VigralGUI.getInstance().getGraphBuilder().getVisualizationViewer());
     }
     
     
