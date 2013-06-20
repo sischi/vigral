@@ -38,7 +38,7 @@ public class Vertex extends GraphElement {
 	 * @param id the id
 	 * @param location the location
 	 */
-	public Vertex(int id, Point2D location) {
+	private Vertex(int id, Point2D location) {
 		super();
 		mID = id;
 		mLabel = "V"+ mID;
@@ -135,6 +135,7 @@ public class Vertex extends GraphElement {
 		Vertex v = new Vertex();
 		
 		v.mID = Integer.parseInt(values[0]);
+		VertexFactory.checkIdCount(v.getId());
 		v.mLabel = values[1];
 		Point2D p = new Point2D.Double(Double.parseDouble(values[2]), Double.parseDouble(values[3]));
 		v.mLocation = p;
@@ -184,6 +185,11 @@ public class Vertex extends GraphElement {
 		@Override
 		public Vertex create() {
 			return new Vertex(IDCOUNT++, mPoint);
+		}
+		
+		public static void checkIdCount(int id) {
+			if(id >= IDCOUNT)
+				IDCOUNT = id+1;
 		}
 	}
 }
