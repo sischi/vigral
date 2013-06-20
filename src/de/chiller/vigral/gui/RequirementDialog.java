@@ -28,10 +28,7 @@ import de.chiller.vigral.graph.Vertex;
 
 public class RequirementDialog extends JDialog {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
+	
 	private static final int MARGIN = 20;
 	private static final Dimension MAX_LABEL_DIMENSION = new Dimension(500, 25);
 	
@@ -74,7 +71,7 @@ public class RequirementDialog extends JDialog {
 		for(int i = 0; i < mEdges.size(); i++)
 			edgeLabels.add(i, mEdges.get(i).toString());
 		
-		
+		// build the label-combobox combination
 		for(int i = 0; i < mRequirements.size(); i++) {
 			
 			// init the label
@@ -95,19 +92,30 @@ public class RequirementDialog extends JDialog {
 			// init the combobox
 			JComboBox box = new JComboBox();
 			DefaultComboBoxModel<?> model = null;
-			if(type == ElementType.VERTEX)
+			switch (type) {
+			case VERTEX:
 				model = new DefaultComboBoxModel<Object>(vertexLabels.toArray());
-			else if(type == ElementType.EDGE)
+				break;
+				
+			case EDGE:
 				model = new DefaultComboBoxModel<Object>(edgeLabels.toArray());
-			else if(type == ElementType.OPTIONAL_VERTEX) {
+				break;
+				
+			// for all optional types a new choice will be added, to indicate 'nothing selected'
+			case OPTIONAL_VERTEX:
 				vertexLabels.add(0, "--");
 				model = new DefaultComboBoxModel<Object>(vertexLabels.toArray());
 				vertexLabels.remove(0);
-			}
-			else if(type == ElementType.OPTIONAL_EDGE) {
+				break;
+			
+			case OPTIONAL_EDGE:
 				edgeLabels.add(0, "--");
 				model = new DefaultComboBoxModel<Object>(edgeLabels.toArray());
 				edgeLabels.remove(0);
+				break;
+
+			default:
+				break;
 			}
 			
 			// set size of combobox
@@ -139,20 +147,28 @@ public class RequirementDialog extends JDialog {
 				JButton okButton = new JButton("OK");
 				okButton.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
-
+						// onOK:
+						
+						// create an array for the required ids
 						ArrayList<Integer> required = new ArrayList<Integer>();
+						
+						// take the choices of the dialog
 						for(int i = 0; i < mComboBoxes.size(); i++) {
+							// get the label-combobox combination
 							Pair<JLabel, JComboBox> pair = mComboBoxes.get(i);
 							String lbl = (String) pair.getR().getSelectedItem();
 							ElementType requiredType = mRequirements.get(i).getL();
+							
+							// add the id of the chosen element
 							switch (requiredType) {
 							
 							case OPTIONAL_VERTEX:
+								// if the user has chosen 'nothing selected' (the first entry) return -1
 								if(lbl.equals("--"))
 									required.add(-1);
-								else {
+								// else add the appropriate id
+								else
 									required.add(mVertices.get(pair.getR().getSelectedIndex() - 1).getId());
-								}
 								break;
 							
 							case OPTIONAL_EDGE:
@@ -175,10 +191,13 @@ public class RequirementDialog extends JDialog {
 							}
 						}
 						
+						// pass the required ids and the to the algorithm
 						mAlgorithm.setRequirements(required);
 						mAlgorithm.setGraph(mGraph);
+						// and tell the gui, that all requirements have been applied
 						VigralGUI.getInstance().requirementsApplied();
 						
+						// close this dialog
 						dispose();
 					}
 				});
@@ -190,7 +209,7 @@ public class RequirementDialog extends JDialog {
 				JButton cancelButton = new JButton("Cancel");
 				cancelButton.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
-						
+						// onCancel: close this dialog
 						dispose();
 					}
 				});
