@@ -34,7 +34,7 @@ import java.util.ArrayList;
 public class VigralGUI extends JFrame {
 
 	
-	private JFrame mMainWindow = this;
+	private static VigralGUI mMainWindow;
 	
 	public static class Mode {
 		public static final int GRAPHCREATION = 0;
@@ -65,6 +65,10 @@ public class VigralGUI extends JFrame {
 	private GraphBuilder mGraphBuilder;
 	
 	
+	public static VigralGUI getMainWindow() {
+		return mMainWindow;
+	}
+	
 	private ActionListener mCreationListener = new ActionListener() {
 		@Override
 		public void actionPerformed(ActionEvent e) {
@@ -73,7 +77,7 @@ public class VigralGUI extends JFrame {
 				mChosenAlgorithm = mAvailableAlgorithms.get(mCb_algorithm.getSelectedIndex()); 
 				ArrayList<Pair<ElementType, String>> require = mChosenAlgorithm.getRequirements();
 				if(require != null) {
-					RequirementDialog dialog = new RequirementDialog(mMainWindow, require, graph, mChosenAlgorithm);
+					RequirementDialog dialog = new RequirementDialog(require, graph, mChosenAlgorithm);
 					dialog.setModal(true);
 					dialog.show();
 				}
@@ -145,7 +149,9 @@ public class VigralGUI extends JFrame {
 	 * Create
 	 */
 	public VigralGUI() {
-		mGraphBuilder = new GraphBuilder(this);
+		mMainWindow = this;
+		
+		mGraphBuilder = new GraphBuilder();
 		mGraphBuilder.addToPanel(mPnl_graph);
 		
 		initAlgorithms();
@@ -157,7 +163,6 @@ public class VigralGUI extends JFrame {
 		
 		initComponents();
 		resizeComponents();
-		
 		changeMode(Mode.GRAPHCREATION);
 		
 		setVisible(true);

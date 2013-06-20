@@ -1,6 +1,8 @@
 package de.chiller.vigral.gui;
 import java.awt.BorderLayout;
+import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusEvent;
@@ -33,16 +35,15 @@ public class ElementPropertyDialog<GE> extends JDialog {
 
 	private final JPanel contentPanel = new JPanel();
 	private JTextField txt_field;
-	private JFrame mMainWindow;
 
 	/**
 	 * Create the dialog.
 	 */
-	public ElementPropertyDialog(JFrame parent, GE elem) {
+	public ElementPropertyDialog(GE elem) {
 		mElement = elem;
-		mMainWindow = parent;
 		
-		setBounds(100, 100, 300, 115);
+		Rectangle rect = VigralGUI.getMainWindow().getBounds();
+		setBounds(rect.x + 100, rect.y + 100, 300, 115);
 		getContentPane().setLayout(new BorderLayout());
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
 		getContentPane().add(contentPanel, BorderLayout.CENTER);
@@ -102,7 +103,7 @@ public class ElementPropertyDialog<GE> extends JDialog {
 						if(mElement instanceof Vertex) {
 							String newLabel = txt_field.getText().toString().trim();
 							boolean alreadyUsed = false;
-							for(Vertex v : ((VigralGUI) mMainWindow).getGraphBuilder().getGraph().getVertices()) {
+							for(Vertex v : VigralGUI.getMainWindow().getGraphBuilder().getGraph().getVertices()) {
 								if(v.getLabel().equals(newLabel) || v.getIdentifier().equals(newLabel)) {
 									alreadyUsed = true;
 									break;

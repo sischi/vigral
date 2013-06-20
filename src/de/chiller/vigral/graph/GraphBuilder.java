@@ -52,9 +52,6 @@ public class GraphBuilder {
 	 */
 	private MyModalGraphMouse mGraphMouse;
 	
-	private JFrame mMainWindow;
-	
-	
 	private Transformer<Vertex, Paint> mVertexLineTransformer = new Transformer<Vertex, Paint>() {
 		@Override
 		public Paint transform(Vertex arg0) {
@@ -114,9 +111,8 @@ public class GraphBuilder {
 	}
 	
 	
-	public GraphBuilder(JFrame frame) {
+	public GraphBuilder() {
 		System.out.println("GraphBuilder Creation");
-		mMainWindow = frame;
 		// create a graph
 		mGraph = new Graph();
 		mResultGraph = mGraph;
@@ -127,7 +123,7 @@ public class GraphBuilder {
 		
 		System.out.println("layout: "+ mLayout.getSize());
 		
-		mGraphMouse = new MyModalGraphMouse(mVViewer.getRenderContext(), mMainWindow);
+		mGraphMouse = new MyModalGraphMouse(mVViewer.getRenderContext());
 		mVViewer.setGraphMouse(mGraphMouse);
 		mGraphMouse.setMode(ModalGraphMouse.Mode.EDITING);		
 		

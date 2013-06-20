@@ -42,7 +42,7 @@ public class RequirementDialog extends JDialog {
 	/**
 	 * Create the dialog.
 	 */
-	public RequirementDialog(final JFrame parent, ArrayList<Pair<ElementType, String>> requirements, Graph graph, AbstractAlgorithm algorithm) {
+	public RequirementDialog(ArrayList<Pair<ElementType, String>> requirements, Graph graph, AbstractAlgorithm algorithm) {
 		
 		mAlgorithm = algorithm;
 		mGraph = graph;
@@ -100,7 +100,7 @@ public class RequirementDialog extends JDialog {
 			contentPanel.add(box);
 		}
 		
-		setBounds(parent.getX() + 100, parent.getY() + 100, 350, 300);
+		setBounds(VigralGUI.getMainWindow().getX() + 100, VigralGUI.getMainWindow().getY() + 100, 350, 300);
 		
 		
 		
@@ -133,7 +133,7 @@ public class RequirementDialog extends JDialog {
 						
 						mAlgorithm.setRequirements(require);
 						mAlgorithm.setGraph(mGraph);
-						((VigralGUI) parent).requirementsApplied();
+						VigralGUI.getMainWindow().requirementsApplied();
 						
 						dispose();
 					}

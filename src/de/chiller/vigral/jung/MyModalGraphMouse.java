@@ -17,14 +17,13 @@ public class MyModalGraphMouse extends AbstractModalGraphMouse implements ModalG
 	protected MyPopupGraphMousePlugin popupEditingPlugin;
 	protected MultiLayerTransformer basicTransformer;
 	protected RenderContext<Vertex,Edge> rc;
-	private JFrame mParent;
 
 	/**
 	 * create an instance with default values
 	 *
 	 */
-	public MyModalGraphMouse(RenderContext<Vertex,Edge> rc, JFrame frame) {
-		this(rc, 1.1f, 1/1.1f, frame);
+	public MyModalGraphMouse(RenderContext<Vertex,Edge> rc) {
+		this(rc, 1.1f, 1/1.1f);
 	}
 
 	/**
@@ -32,12 +31,11 @@ public class MyModalGraphMouse extends AbstractModalGraphMouse implements ModalG
 	 * @param in override value for scale in
 	 * @param out override value for scale out
 	 */
-	public MyModalGraphMouse(RenderContext<Vertex,Edge> rc, float in, float out, JFrame frame) {
+	public MyModalGraphMouse(RenderContext<Vertex,Edge> rc, float in, float out) {
 		super(in,out);
 		rc = rc;
 		basicTransformer = rc.getMultiLayerTransformer();
 		loadPlugins();
-		mParent = frame;
 	}
 
 	/**
@@ -47,7 +45,7 @@ public class MyModalGraphMouse extends AbstractModalGraphMouse implements ModalG
 	@Override
     protected void loadPlugins() {
 		editingPlugin = new MyGraphMousePlugin();
-		popupEditingPlugin = new MyPopupGraphMousePlugin(mParent);
+		popupEditingPlugin = new MyPopupGraphMousePlugin();
 		addEditingFunctionality();
 	}
 

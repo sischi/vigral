@@ -23,16 +23,13 @@ import edu.uci.ics.jung.visualization.control.AbstractPopupGraphMousePlugin;
 public class MyPopupGraphMousePlugin extends AbstractPopupGraphMousePlugin {
     
     protected JPopupMenu popup = new JPopupMenu();
-    
-    private JFrame mParent;
 
-    public MyPopupGraphMousePlugin(JFrame frame) {
-    	this(MouseEvent.BUTTON3_MASK, frame);
+    public MyPopupGraphMousePlugin() {
+    	this(MouseEvent.BUTTON3_MASK);
     }
     
-    public MyPopupGraphMousePlugin(int modifiers, JFrame frame) {
+    public MyPopupGraphMousePlugin(int modifiers) {
     	super(modifiers);
-    	mParent = frame;
     }
     
     
@@ -48,13 +45,13 @@ public class MyPopupGraphMousePlugin extends AbstractPopupGraphMousePlugin {
             final Vertex vertex = pickSupport.getVertex(vv.getGraphLayout(), p.getX(), p.getY());
             if(vertex != null) {
             	ElementPopupMenu.setMode(ElementPopupMenu.VERTEXMENU, vertex, null, vv);
-            	new ElementPopupMenu.PopupMenu(mParent).show(vv, e.getX(), e.getY());
+            	new ElementPopupMenu.PopupMenu().show(vv, e.getX(), e.getY());
             } 
             else {
                 final Edge edge = pickSupport.getEdge(vv.getGraphLayout(), p.getX(), p.getY());
                 if(edge != null) {
                 	ElementPopupMenu.setMode(ElementPopupMenu.EDGEMENU, null, edge, vv);
-                	new ElementPopupMenu.PopupMenu(mParent).show(vv, e.getX(), e.getY());
+                	new ElementPopupMenu.PopupMenu().show(vv, e.getX(), e.getY());
                 }
             }
         }

@@ -40,15 +40,13 @@ public class ElementPopupMenu {
 		 */
 		private static final long serialVersionUID = 1L;
 
-		// private JFrame frame; 
-        public PopupMenu(final JFrame frame) {
+        public PopupMenu() {
             super("Context Menu");
-            // this.frame = frame;
             add(new DeleteElementMenuItem());
             addSeparator();
             add(new PropertyDisplay());
             addSeparator();
-            add(new ElementPropertyItem(frame));
+            add(new ElementPropertyItem());
         }
     }
 	
@@ -60,7 +58,7 @@ public class ElementPopupMenu {
 		 */
 		private static final long serialVersionUID = 1L;
 
-		public ElementPropertyItem(final JFrame frame) {
+		public ElementPropertyItem() {
 			super();
 			
 			if(mMenuMode == VERTEXMENU)
@@ -74,9 +72,9 @@ public class ElementPopupMenu {
 		    		ElementPropertyDialog<GraphElement> dialog;
 		    		
 					if(mMenuMode == VERTEXMENU)
-		    			dialog = new ElementPropertyDialog<GraphElement>(frame, mVertex);
+		    			dialog = new ElementPropertyDialog<GraphElement>(mVertex);
 					else // edge menu is called
-						dialog = new ElementPropertyDialog<GraphElement>(frame, mEdge);
+						dialog = new ElementPropertyDialog<GraphElement>(mEdge);
 					
 					dialog.addWindowListener(new WindowAdapter() {
 						@Override
