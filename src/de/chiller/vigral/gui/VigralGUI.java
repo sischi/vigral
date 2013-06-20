@@ -22,6 +22,7 @@ import de.chiller.vigral.graph.ElementType;
 import de.chiller.vigral.graph.Graph;
 
 import de.chiller.vigral.graph.GraphBuilder;
+import de.chiller.vigral.plugins.PluginLoader;
 
 import java.awt.Color;
 import java.awt.event.ActionEvent;
@@ -41,7 +42,7 @@ public class VigralGUI extends JFrame {
 		public static final int VISUALISATION = 1;
 	}
 	
-	private ArrayList<AbstractAlgorithm> mAvailableAlgorithms;
+	private ArrayList<AbstractAlgorithm> mAvailableAlgorithms = null;
 	private AbstractAlgorithm mChosenAlgorithm;
 	
 	private int mMode;
@@ -149,7 +150,6 @@ public class VigralGUI extends JFrame {
 	 */
 	private VigralGUI() {
 		mMainWindow = this;
-		
 		mGraphBuilder = new GraphBuilder();
 		mGraphBuilder.addToPanel(mPnl_graph);
 		
@@ -233,8 +233,10 @@ public class VigralGUI extends JFrame {
 	}
 	
 	public void initAlgorithms() {
-		mAvailableAlgorithms = new ArrayList<AbstractAlgorithm>();
-		mAvailableAlgorithms.add(new Dijkstra());
+//		mAvailableAlgorithms = new ArrayList<AbstractAlgorithm>();
+//		mAvailableAlgorithms.add(new Dijkstra());
+		
+		mAvailableAlgorithms = PluginLoader.getInstance().loadPlugins();
 	}
 	
 	
@@ -330,13 +332,15 @@ public class VigralGUI extends JFrame {
 	
 
 	private void initAlgorithmBox() {
-		String[] entries = new String[mAvailableAlgorithms.size()];
-		
-		for(int i = 0; i < mAvailableAlgorithms.size(); i++)
-			entries[i] = mAvailableAlgorithms.get(i).getAlgorithmName();
-		
-		DefaultComboBoxModel model = new DefaultComboBoxModel(entries);
-		mCb_algorithm.setModel(model);
+		if(mAvailableAlgorithms != null) {
+			String[] entries = new String[mAvailableAlgorithms.size()];
+			
+			for(int i = 0; i < mAvailableAlgorithms.size(); i++)
+				entries[i] = mAvailableAlgorithms.get(i).getAlgorithmName();
+			
+			DefaultComboBoxModel model = new DefaultComboBoxModel(entries);
+			mCb_algorithm.setModel(model);
+		}
 	}
 	
 	
