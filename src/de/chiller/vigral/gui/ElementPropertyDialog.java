@@ -42,7 +42,7 @@ public class ElementPropertyDialog<GE> extends JDialog {
 	public ElementPropertyDialog(GE elem) {
 		mElement = elem;
 		
-		Rectangle rect = VigralGUI.getMainWindow().getBounds();
+		Rectangle rect = VigralGUI.getInstance().getBounds();
 		setBounds(rect.x + 100, rect.y + 100, 300, 115);
 		getContentPane().setLayout(new BorderLayout());
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -103,7 +103,7 @@ public class ElementPropertyDialog<GE> extends JDialog {
 						if(mElement instanceof Vertex) {
 							String newLabel = txt_field.getText().toString().trim();
 							boolean alreadyUsed = false;
-							for(Vertex v : VigralGUI.getMainWindow().getGraphBuilder().getGraph().getVertices()) {
+							for(Vertex v : VigralGUI.getInstance().getGraphBuilder().getGraph().getVertices()) {
 								if(v.getLabel().equals(newLabel) || v.getIdentifier().equals(newLabel)) {
 									alreadyUsed = true;
 									break;

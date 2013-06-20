@@ -100,7 +100,7 @@ public class RequirementDialog extends JDialog {
 			contentPanel.add(box);
 		}
 		
-		setBounds(VigralGUI.getMainWindow().getX() + 100, VigralGUI.getMainWindow().getY() + 100, 350, 300);
+		setBounds(VigralGUI.getInstance().getX() + 100, VigralGUI.getInstance().getY() + 100, 350, 300);
 		
 		
 		
@@ -133,7 +133,7 @@ public class RequirementDialog extends JDialog {
 						
 						mAlgorithm.setRequirements(require);
 						mAlgorithm.setGraph(mGraph);
-						VigralGUI.getMainWindow().requirementsApplied();
+						VigralGUI.getInstance().requirementsApplied();
 						
 						dispose();
 					}

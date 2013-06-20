@@ -34,7 +34,7 @@ import java.util.ArrayList;
 public class VigralGUI extends JFrame {
 
 	
-	private static VigralGUI mMainWindow;
+	private static VigralGUI mMainWindow = new VigralGUI();
 	
 	public static class Mode {
 		public static final int GRAPHCREATION = 0;
@@ -65,7 +65,7 @@ public class VigralGUI extends JFrame {
 	private GraphBuilder mGraphBuilder;
 	
 	
-	public static VigralGUI getMainWindow() {
+	public static VigralGUI getInstance() {
 		return mMainWindow;
 	}
 	
@@ -148,7 +148,7 @@ public class VigralGUI extends JFrame {
 	/**
 	 * Create
 	 */
-	public VigralGUI() {
+	private VigralGUI() {
 		mMainWindow = this;
 		
 		mGraphBuilder = new GraphBuilder();
@@ -400,7 +400,7 @@ public class VigralGUI extends JFrame {
 			public void run() {
 				try {
 					// start the program
-					VigralGUI vigral = new VigralGUI();
+					VigralGUI vigral = VigralGUI.getInstance();
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
