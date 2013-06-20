@@ -6,6 +6,8 @@ import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
@@ -38,42 +40,59 @@ public class RequirementDialog extends JDialog {
 	
 	private final JPanel contentPanel = new JPanel();
 	private ArrayList<Pair<JLabel, JComboBox>> mComboBoxes = new ArrayList<Pair<JLabel, JComboBox>>();
+	private ArrayList<Pair<ElementType, String>> mRequirements;
+	
+	private ArrayList<Vertex> mVertices;
+	private ArrayList<Edge> mEdges;
+	
 	
 	/**
 	 * Create the dialog.
 	 */
 	public RequirementDialog(ArrayList<Pair<ElementType, String>> requirements, Graph graph, AbstractAlgorithm algorithm) {
-		
+		mRequirements = requirements;
 		mAlgorithm = algorithm;
 		mGraph = graph;
-		ArrayList<Vertex> vertices = new ArrayList<Vertex>(graph.getVertices());
-		ArrayList<Edge> edges = new ArrayList<Edge>(graph.getEdges());
+		
+		// get the vertices of the graph
+		mVertices = new ArrayList<Vertex>(graph.getVertices());
+		System.out.println("unsorted: "+ mVertices);
+		// sort the vertices (by label)
+		Collections.sort(mVertices);
+		System.out.println("sorted: "+ mVertices);
+		
+		// get the edges of the graph
+		mEdges = new ArrayList<Edge>(graph.getEdges());
+		// sort edges (by id)
+		Collections.sort(mEdges);
+		
+		// put the labels in lists
 		ArrayList<String> vertexLabels = new ArrayList<String>();
 		ArrayList<String> edgeLabels = new ArrayList<String>();
+		for(int i = 0; i < mVertices.size(); i++)
+			vertexLabels.add(i, mVertices.get(i).getLabel());
+		for(int i = 0; i < mEdges.size(); i++)
+			edgeLabels.add(i, mEdges.get(i).toString());
 		
-		for(int i = 0; i < vertices.size(); i++)
-			vertexLabels.add(i, vertices.get(i).getLabel());
 		
-		for(int i = 0; i < edges.size(); i++)
-			edgeLabels.add(i, edges.get(i).toString());
-		
-		for(int i = 0; i < requirements.size(); i++) {
+		for(int i = 0; i < mRequirements.size(); i++) {
 			
-			// TODO handle optional requirements
+			// init the label
 			JLabel lbl = new JLabel();
-			ElementType type = requirements.get(i).getL();
-			String name = requirements.get(i).getR();
-			
+			ElementType type = mRequirements.get(i).getL();
+			String name = mRequirements.get(i).getR();
 			if(type == ElementType.VERTEX || type == ElementType.EDGE)
 				lbl.setText(name);
 			else
 				lbl.setText(name +" (optional)");
 			
+			// set size of the label
 			lbl.setMaximumSize(MAX_LABEL_DIMENSION);
 			int x = MARGIN;
 			int y = i * (MAX_LABEL_DIMENSION.height + MARGIN);
 			lbl.setBounds(x, y, lbl.getPreferredSize().width, lbl.getPreferredSize().height);
 			
+			// init the combobox
 			JComboBox box = new JComboBox();
 			DefaultComboBoxModel<?> model = null;
 			if(type == ElementType.VERTEX)
@@ -91,11 +110,14 @@ public class RequirementDialog extends JDialog {
 				edgeLabels.remove(0);
 			}
 			
+			// set size of combobox
 			box.setModel(model);
 			x = 250;
 			y = i * (box.getPreferredSize().height + MARGIN);
 			box.setBounds(x, y, box.getPreferredSize().width, box.getPreferredSize().height);
-			mComboBoxes.add(new Pair<JLabel, JComboBox>(lbl, box));
+			
+			// add the label and combobox
+			mComboBoxes.add(i, new Pair<JLabel, JComboBox>(lbl, box));
 			contentPanel.add(lbl);
 			contentPanel.add(box);
 		}
@@ -117,21 +139,43 @@ public class RequirementDialog extends JDialog {
 				JButton okButton = new JButton("OK");
 				okButton.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
-						
-						ArrayList<Integer> require = new ArrayList<Integer>();
-						for(Pair<JLabel, JComboBox> p : mComboBoxes) {
-							String lbl = (String) p.getR().getSelectedItem();
-							if(lbl.equals("--"))
-								require.add(-1);
-							else {
-								for(Vertex v : mGraph.getVertices()) {
-									if(v.getLabel() == lbl)
-										require.add(v.getId());
+
+						ArrayList<Integer> required = new ArrayList<Integer>();
+						for(int i = 0; i < mComboBoxes.size(); i++) {
+							Pair<JLabel, JComboBox> pair = mComboBoxes.get(i);
+							String lbl = (String) pair.getR().getSelectedItem();
+							ElementType requiredType = mRequirements.get(i).getL();
+							switch (requiredType) {
+							
+							case OPTIONAL_VERTEX:
+								if(lbl.equals("--"))
+									required.add(-1);
+								else {
+									required.add(mVertices.get(pair.getR().getSelectedIndex() - 1).getId());
 								}
+								break;
+							
+							case OPTIONAL_EDGE:
+								if(lbl.equals("--"))
+									required.add(-1);
+								else
+									required.add(mEdges.get(pair.getR().getSelectedIndex() - 1).getId());
+								break;
+							
+							case EDGE:
+								required.add(mEdges.get(pair.getR().getSelectedIndex()).getId());
+								break;
+								
+							case VERTEX:
+								required.add(mVertices.get(pair.getR().getSelectedIndex()).getId());
+								break;
+							
+							default:
+								break;
 							}
 						}
 						
-						mAlgorithm.setRequirements(require);
+						mAlgorithm.setRequirements(required);
 						mAlgorithm.setGraph(mGraph);
 						VigralGUI.getInstance().requirementsApplied();
 						

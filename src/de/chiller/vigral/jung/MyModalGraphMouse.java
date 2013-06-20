@@ -13,10 +13,9 @@ import edu.uci.ics.jung.visualization.RenderContext;
 
 public class MyModalGraphMouse extends AbstractModalGraphMouse implements ModalGraphMouse, ItemSelectable {
 	
-	protected MyGraphMousePlugin editingPlugin;
-	protected MyPopupGraphMousePlugin popupEditingPlugin;
-	protected MultiLayerTransformer basicTransformer;
-	protected RenderContext<Vertex,Edge> rc;
+	protected MyGraphMousePlugin mEditingPlugin;
+	protected MyPopupGraphMousePlugin mPopupEditingPlugin;
+	protected MultiLayerTransformer mBasicTransformer;
 
 	/**
 	 * create an instance with default values
@@ -33,8 +32,7 @@ public class MyModalGraphMouse extends AbstractModalGraphMouse implements ModalG
 	 */
 	public MyModalGraphMouse(RenderContext<Vertex,Edge> rc, float in, float out) {
 		super(in,out);
-		rc = rc;
-		basicTransformer = rc.getMultiLayerTransformer();
+		mBasicTransformer = rc.getMultiLayerTransformer();
 		loadPlugins();
 	}
 
@@ -44,27 +42,28 @@ public class MyModalGraphMouse extends AbstractModalGraphMouse implements ModalG
 	 */
 	@Override
     protected void loadPlugins() {
-		editingPlugin = new MyGraphMousePlugin();
-		popupEditingPlugin = new MyPopupGraphMousePlugin();
-		add(popupEditingPlugin);
-		add(editingPlugin);
+		mEditingPlugin = new MyGraphMousePlugin();
+		mPopupEditingPlugin = new MyPopupGraphMousePlugin();
+		add(mPopupEditingPlugin);
+		add(mEditingPlugin);
 	}
 
 	public void addEditingFunctionality() {
-		add(popupEditingPlugin);
-		add(editingPlugin);
-		editingPlugin.startEditing();
+		add(mEditingPlugin);
+		// enables editing in the plugin itself
+		mEditingPlugin.startEditing();
 	}
 	
 	public void removeEditingFunctionality() {
-		remove(popupEditingPlugin);
-		editingPlugin.stopEditing();
+		remove(mPopupEditingPlugin);
+		// disable editing in the plugin itself
+		mEditingPlugin.stopEditing();
 	}
 
 	/**
-	 * @return the editingPlugin
+	 * @return returns the editingPlugin
 	 */
 	public MyGraphMousePlugin getEditingPlugin() {
-		return editingPlugin;
+		return mEditingPlugin;
 	}
 }

@@ -55,7 +55,7 @@ public class MyGraphMousePlugin extends AbstractGraphMousePlugin implements Mous
     public MyGraphMousePlugin(int modifiers) {
         super(modifiers);
         
-		this.cursor = Cursor.getPredefinedCursor(Cursor.CROSSHAIR_CURSOR);
+		cursor = Cursor.getPredefinedCursor(Cursor.CROSSHAIR_CURSOR);
 		
 		mPicking = new PickSupport();
 		mEditing = new EditSupport();

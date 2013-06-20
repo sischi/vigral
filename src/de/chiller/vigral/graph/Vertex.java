@@ -10,7 +10,7 @@ import org.apache.commons.collections15.Factory;
  * @author Timmae
  *
  */
-public class Vertex extends GraphElement {
+public class Vertex extends GraphElement implements Comparable<Vertex> {
 	
 	/**
 	 * a unique id for that vertex
@@ -191,5 +191,12 @@ public class Vertex extends GraphElement {
 			if(id >= IDCOUNT)
 				IDCOUNT = id+1;
 		}
+	}
+
+
+
+	@Override
+	public int compareTo(Vertex o) {
+		return getLabel().compareTo(o.getLabel());
 	}
 }
