@@ -65,7 +65,7 @@ public class Edge extends GraphElement implements Comparable<Edge> {
 		mEnd = end;
 		mIsDirected = directed;
 		mState = state;
-		System.out.println("Edge created! "+ this.toString());
+		//System.out.println("Edge created! "+ this.toString());
 	}
 	
 	/**

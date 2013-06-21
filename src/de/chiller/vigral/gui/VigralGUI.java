@@ -80,7 +80,7 @@ public class VigralGUI extends JFrame {
 					dialog.show();
 				}
 				else {
-					requirementsApplied();
+					requirementsApplied(graph);
 				}
 			}
 		}
@@ -342,11 +342,11 @@ public class VigralGUI extends JFrame {
 	}
 	
 	
-	public void requirementsApplied() {
+	public void requirementsApplied(Graph g) {
 		changeMode(Mode.VISUALISATION);
 		mBtn_changeMode.removeActionListener(mCreationListener);
 		mBtn_changeMode.addActionListener(mVisualisationListener);
-		mChosenAlgorithm.setGraph(mGraphBuilder.getGraph());
+		mChosenAlgorithm.setGraph(g);
 		mChosenAlgorithm.perform();
 		mGraphBuilder.setResultingGraph(mChosenAlgorithm.getFirstStep());
 	}

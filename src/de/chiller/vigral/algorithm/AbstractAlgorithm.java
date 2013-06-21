@@ -41,7 +41,7 @@ public abstract class AbstractAlgorithm implements Algorithm {
 	 * @param g the graph object
 	 */
 	public void setGraph(Graph g) {
-		mGraph = new Graph(g);
+		mGraph = g;
 		mGraph.resetStates();
 		mSteps.clear();
 		mSteps.add(new Graph(mGraph));

@@ -194,11 +194,11 @@ public class GraphBuilder {
 			Dimension dimen = mVViewer.getSize();
 			int i = 0;
 			
-			System.out.println("dimen: "+ dimen.toString());
+			//System.out.println("dimen: "+ dimen.toString());
 			for(Vertex v : graph.getVertices()) {
 				Point2D p = mLayout.transform(v);
 				p.setLocation(v.getLocation());
-				System.out.println("vertex "+ i++ +": ("+ p.getX() +", "+ p.getY() +")");
+				//System.out.println("vertex "+ i++ +": ("+ p.getX() +", "+ p.getY() +")");
 				double x = p.getX();
 				double y = p.getY();
 				double newX = x;

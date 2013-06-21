@@ -10,12 +10,6 @@ import edu.uci.ics.jung.graph.util.EdgeType;
 
 public class Graph extends SortedSparseMultigraph<Vertex, Edge> {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
-
-
 	public Graph() {
 		super();
 	}
@@ -43,6 +37,8 @@ public class Graph extends SortedSparseMultigraph<Vertex, Edge> {
 			else
 				addEdge(newEdge, newEdge.getStartVertex(), newEdge.getEndVertex(), EdgeType.UNDIRECTED);
 		}
+		
+		System.out.println("Graph copied!");
 	}
 	
 	public void resetStates() {
