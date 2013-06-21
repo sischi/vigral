@@ -4,11 +4,11 @@ package de.chiller.vigral.graph;
 import java.util.ArrayList;
 import java.util.List;
 
-import edu.uci.ics.jung.graph.SparseMultigraph;
+import edu.uci.ics.jung.graph.SortedSparseMultigraph;
 import edu.uci.ics.jung.graph.util.EdgeType;
 
 
-public class Graph extends SparseMultigraph<Vertex, Edge> {
+public class Graph extends SortedSparseMultigraph<Vertex, Edge> {
 
 	/**
 	 * 

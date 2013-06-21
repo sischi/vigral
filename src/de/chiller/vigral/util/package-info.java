@@ -5,4 +5,4 @@
  * @author timmae
  *
  */
-package de.chiller.vigral;
+package de.chiller.vigral.util;

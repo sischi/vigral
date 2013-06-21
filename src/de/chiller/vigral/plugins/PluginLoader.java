@@ -10,13 +10,15 @@ import java.util.ArrayList;
 
 import de.chiller.vigral.algorithm.AbstractAlgorithm;
 
+
+
 public class PluginLoader {
 
 	private File mPluginDir;
 	private static final PluginLoader mPluginLoader = new PluginLoader();
 	
 	private PluginLoader() {
-		mPluginDir = new File(System.getProperty("user.dir") + File.separator +"plugins"+ File.separator);
+		mPluginDir = new File(System.getProperty("user.dir") + File.separator + "plugins");
 	}
 	
 	public static PluginLoader getInstance() {
@@ -32,6 +34,10 @@ public class PluginLoader {
 			}
 		});
 		
+		String[] classes = new String[files.length];
+		for(int i = 0; i < files.length; i++)
+			classes[i] = files[i].substring(0, files[i].length() - 6);
+		
 		if(files.length == 0)
 			return null;
 		
@@ -46,15 +52,17 @@ public class PluginLoader {
 		System.out.println("urls: "+ urls);
 		ArrayList<AbstractAlgorithm> algorithms = new ArrayList<AbstractAlgorithm>();
 		ClassLoader loader = new URLClassLoader(urls);
-		
-		try {
-		for(String name : files) {
-			AbstractAlgorithm algo = (AbstractAlgorithm) loader.loadClass("Dijkstra");
-			if(algo instanceof AbstractAlgorithm)
-				algorithms.add((AbstractAlgorithm) algo);
-		}
-		} catch(Exception e) {
-			e.printStackTrace();
+		for(String name : classes) {
+			try {
+				System.out.println("name: "+ name);
+				Class clss = loader.loadClass(name);
+				Object o = clss.newInstance();
+				AbstractAlgorithm algo = (AbstractAlgorithm) o;
+				algorithms.add(algo);
+	
+			} catch(Exception e) {
+				e.printStackTrace();
+			}
 		}
 		
 		return algorithms;

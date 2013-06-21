@@ -15,14 +15,12 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.JComboBox;
 import javax.swing.JButton;
 
-import de.chiller.vigral.Pair;
 import de.chiller.vigral.algorithm.AbstractAlgorithm;
-import de.chiller.vigral.algorithm.Dijkstra;
 import de.chiller.vigral.graph.ElementType;
 import de.chiller.vigral.graph.Graph;
 
-import de.chiller.vigral.graph.GraphBuilder;
 import de.chiller.vigral.plugins.PluginLoader;
+import de.chiller.vigral.util.Pair;
 
 import java.awt.Color;
 import java.awt.event.ActionEvent;

@@ -18,12 +18,13 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
-import de.chiller.vigral.Pair;
+
 import de.chiller.vigral.algorithm.AbstractAlgorithm;
 import de.chiller.vigral.graph.Edge;
 import de.chiller.vigral.graph.ElementType;
 import de.chiller.vigral.graph.Graph;
 import de.chiller.vigral.graph.Vertex;
+import de.chiller.vigral.util.Pair;
 
 
 public class RequirementDialog extends JDialog {

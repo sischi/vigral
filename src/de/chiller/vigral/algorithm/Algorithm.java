@@ -2,9 +2,9 @@ package de.chiller.vigral.algorithm;
 
 import java.util.ArrayList;
 
-import de.chiller.vigral.Pair;
 import de.chiller.vigral.graph.ElementType;
 import de.chiller.vigral.graph.Graph;
+import de.chiller.vigral.util.Pair;
 
 /**
  * Interface that have to implemented by all Algorithms
