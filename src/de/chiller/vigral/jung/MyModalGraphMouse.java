@@ -50,6 +50,7 @@ public class MyModalGraphMouse extends AbstractModalGraphMouse implements ModalG
 
 	public void addEditingFunctionality() {
 		add(mEditingPlugin);
+		add(mPopupEditingPlugin);
 		// enables editing in the plugin itself
 		mEditingPlugin.startEditing();
 	}
