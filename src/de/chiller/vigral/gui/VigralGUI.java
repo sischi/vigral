@@ -71,7 +71,7 @@ public class VigralGUI extends JFrame {
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			Graph graph = mGraphBuilder.getGraph();
-			if(mGraphBuilder.getGraph().getVertexCount() != 0) {
+			if(graph.getVertexCount() != 0 && mAvailableAlgorithms != null) {
 				mChosenAlgorithm = mAvailableAlgorithms.get(mCb_algorithm.getSelectedIndex()); 
 				ArrayList<Pair<ElementType, String>> require = mChosenAlgorithm.getRequirements();
 				if(require != null) {
@@ -98,7 +98,6 @@ public class VigralGUI extends JFrame {
 	private ComponentListener resizeListener = new ComponentListener() {
 		@Override
 		public void componentResized(ComponentEvent e) {
-			System.out.println("resized!!");
 			resizeComponents();
 			mGraphBuilder.onResizePanel(mPnl_graph);
 		}

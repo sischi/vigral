@@ -27,6 +27,12 @@ public class PluginLoader {
 	
 	public ArrayList<AbstractAlgorithm> loadPlugins() {
 		System.out.println("plugin dir: "+ mPluginDir);
+		
+		if(!mPluginDir.exists()) {
+			System.out.println("plugin dir ("+ mPluginDir +") does not exist!");
+			return null;
+		}
+			
 		String[] files = mPluginDir.list(new FilenameFilter() {
 			@Override
 			public boolean accept(File dir, String name) {
@@ -59,7 +65,6 @@ public class PluginLoader {
 				Object o = clss.newInstance();
 				AbstractAlgorithm algo = (AbstractAlgorithm) o;
 				algorithms.add(algo);
-	
 			} catch(Exception e) {
 				e.printStackTrace();
 			}

@@ -51,6 +51,7 @@ public class RequirementDialog extends JDialog {
 			// onOK:
 			// create an array for the required ids
 			ArrayList<Integer> required = new ArrayList<Integer>();
+			boolean requirementsSetProperly = true;
 
 			// take the choices of the dialog
 			for (int i = 0; i < mComboBoxes.size(); i++) {
@@ -69,8 +70,7 @@ public class RequirementDialog extends JDialog {
 						required.add(-1);
 					// else add the appropriate id
 					else
-						required.add(mVertices.get(
-								pair.getR().getSelectedIndex() - 1).getId());
+						required.add(mVertices.get(pair.getR().getSelectedIndex() - 1).getId());
 					break;
 
 				case OPTIONAL_EDGE:
@@ -81,19 +81,29 @@ public class RequirementDialog extends JDialog {
 					break;
 
 				case EDGE:
-					required.add(mEdges.get(pair.getR().getSelectedIndex())
-							.getId());
+					if(mEdges.size() <= 0 || mEdges.get(pair.getR().getSelectedIndex()) == null)
+						requirementsSetProperly = false;
+					else
+						required.add(mEdges.get(pair.getR().getSelectedIndex()).getId());
 					break;
 
 				case VERTEX:
-					required.add(mVertices.get(pair.getR().getSelectedIndex())
-							.getId());
+					if(mVertices.size() <= 0 || mVertices.get(pair.getR().getSelectedIndex()) == null)
+						requirementsSetProperly = false;
+					else
+						required.add(mVertices.get(pair.getR().getSelectedIndex()).getId());
 					break;
 
 				default:
 					break;
 				}
 			}
+			
+			if(!requirementsSetProperly) {
+				dispose();
+				return;
+			}
+			
 			// pass the required ids and the to the algorithm
 			mAlgorithm.setRequirements(required);
 			mAlgorithm.setGraph(mGraph);
