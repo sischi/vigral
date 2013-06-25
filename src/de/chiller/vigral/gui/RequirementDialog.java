@@ -255,7 +255,7 @@ public class RequirementDialog extends JDialog {
 	private void adaptSizes(Rectangle rect) {
 		System.out.println("rect: "+ rect);
 		contentPanel.setPreferredSize(new Dimension(rect.width, rect.height));
-		//setBounds(VigralGUI.getInstance().getX() + 100, VigralGUI.getInstance().getY() + 100, rect.width, rect.height);
+		setBounds(VigralGUI.getInstance().getX() + 100, VigralGUI.getInstance().getY() + 100, rect.width, rect.height);
 	}
 
 }
