@@ -11,6 +11,7 @@ import javax.swing.JFrame;
 import javax.swing.JMenuBar;
 import javax.swing.JPanel;
 import javax.swing.JSplitPane;
+import javax.swing.JTextArea;
 import javax.swing.border.EmptyBorder;
 import javax.swing.plaf.basic.BasicSplitPaneUI;
 import javax.swing.JComboBox;
@@ -37,6 +38,7 @@ public class VigralGUI extends JFrame {
 
 	
 	private static VigralGUI mMainWindow = new VigralGUI();
+	private static final int MARGIN = 10;
 	
 	public static class Mode {
 		public static final int GRAPHCREATION = 0;
@@ -64,6 +66,8 @@ public class VigralGUI extends JFrame {
 	private JPanel mPnl_buttonBar = new JPanel();
 	private JPanel mPnl_mainPanel = new JPanel();
 	private JPanel mPnl_sidePanel = new JPanel();
+	private JTextArea mTxt_explanation = new JTextArea();
+	private JButton mBtn_clearExplanation = new JButton();
 	
 	private GraphBuilder mGraphBuilder;
 	
@@ -170,21 +174,14 @@ public class VigralGUI extends JFrame {
 		public void mouseClicked(MouseEvent e) {
 			if((e.getModifiers() & MouseEvent.BUTTON1_MASK) != 0) {
 				System.out.println("you have clicked the divider, HORST!!!");
-				Dimension sidePanelDim = null;
 				if(mSidePanelIsVisible) {
+					collapseSidePanel();
 					mSidePanelIsVisible = false;
-					sidePanelDim = new Dimension(0, 0);
-					mSplt_contentPane.setDividerLocation(1.0d);
 				}
 				else {
+					expandSidePanel();
 					mSidePanelIsVisible = true;
-					sidePanelDim = new Dimension(240, 0);
-					mSplt_contentPane.setDividerLocation(mSplt_contentPane.getWidth() - sidePanelDim.width - mSplt_contentPane.getDividerSize());
 				}
-				
-				mPnl_sidePanel.setMaximumSize(sidePanelDim);
-				mPnl_sidePanel.setMinimumSize(sidePanelDim);
-				mPnl_sidePanel.setPreferredSize(sidePanelDim);
 			}
 		}
 	};
@@ -240,16 +237,18 @@ public class VigralGUI extends JFrame {
 		initButtonBar();
 		mPnl_mainPanel.add(mPnl_buttonBar);
 		
+		mBtn_clearExplanation.setText("Clear");
+		mTxt_explanation.setLineWrap(true);
+		mTxt_explanation.setEditable(false);
+		
+		mPnl_sidePanel.setLayout(null);
+		mPnl_sidePanel.add(mTxt_explanation);
+		mPnl_sidePanel.add(mBtn_clearExplanation);
+		
 		mSplt_contentPane.setMinimumSize(new Dimension(740, 370));
 		mSplt_contentPane.setLeftComponent(mPnl_mainPanel);
 		mSplt_contentPane.setRightComponent(mPnl_sidePanel);
 		mSplt_contentPane.setResizeWeight(1.0);
-		
-		Dimension sidePanelDim = new Dimension(0, 0);
-		mPnl_sidePanel.setMaximumSize(sidePanelDim);
-		mPnl_sidePanel.setMinimumSize(sidePanelDim);
-		mPnl_sidePanel.setPreferredSize(sidePanelDim);
-		
 		
 		mBtn_play.addActionListener(new ActionListener() {
 			@Override
@@ -391,6 +390,11 @@ public class VigralGUI extends JFrame {
 		w = mainPanelRect.width - 20;
 		h = mCb_algorithm.getBounds().y - 20;
 		mPnl_graph.setBounds(x, y, w, h);
+		
+		
+		if(mSidePanelIsVisible)
+			expandSidePanel();
+		
 	}
 	
 	
@@ -409,13 +413,11 @@ public class VigralGUI extends JFrame {
 	
 	public void changeMode(int mode) {
 		mMode = mode;
-		mGraphBuilder.setMode(mMode);
-		Dimension sidePanelDim = null;
-		
+		mGraphBuilder.setMode(mMode);		
 		
 		if(mMode == Mode.GRAPHCREATION) {
 			((BasicSplitPaneUI) mSplt_contentPane.getUI()).getDivider().removeMouseListener(mSplitPaneDividerListener);
-			mSplt_contentPane.setDividerLocation(1.0d);
+			collapseSidePanel();
 			mSidePanelIsVisible = false;
 			mCb_algorithm.setEnabled(true);
 			mBtn_changeMode.setText("Visualisation");
@@ -438,6 +440,40 @@ public class VigralGUI extends JFrame {
 		return mGraphBuilder;
 	}
 	
+	
+	private void expandSidePanel() {
+		Dimension sidePanelDim = new Dimension(240, mSplt_contentPane.getBounds().height);
+		
+		if(!mSidePanelIsVisible) {
+			System.out.println("sidepaneldim: "+ sidePanelDim);
+			mSplt_contentPane.setDividerLocation(mSplt_contentPane.getWidth() - sidePanelDim.width - mSplt_contentPane.getDividerSize());
+			mPnl_sidePanel.setMaximumSize(sidePanelDim);
+			mPnl_sidePanel.setMinimumSize(sidePanelDim);
+			mPnl_sidePanel.setPreferredSize(sidePanelDim);
+		}
+		
+		int x = MARGIN;
+		int h = mBtn_clearExplanation.getPreferredSize().height;
+		int y = sidePanelDim.height - MARGIN - h;
+		int w = sidePanelDim.width - 2 * MARGIN;
+		mBtn_clearExplanation.setBounds(x, y, w, h);
+		System.out.println("button rect: "+ mBtn_clearExplanation.getBounds());
+		
+		x = MARGIN;
+		y = MARGIN;
+		w = sidePanelDim.width - 2 * MARGIN;
+		h = sidePanelDim.height - mBtn_clearExplanation.getBounds().height - 3 * MARGIN;
+		mTxt_explanation.setBounds(x, y, w, h);
+		System.out.println("textarea size: "+ mTxt_explanation.getBounds());
+	}
+	
+	private void collapseSidePanel() {
+		Dimension sidePanelDim = new Dimension(0, 0);
+		mSplt_contentPane.setDividerLocation(1.0d);
+		mPnl_sidePanel.setMaximumSize(sidePanelDim);
+		mPnl_sidePanel.setMinimumSize(sidePanelDim);
+		mPnl_sidePanel.setPreferredSize(sidePanelDim);
+	}
 	
 	
 	
