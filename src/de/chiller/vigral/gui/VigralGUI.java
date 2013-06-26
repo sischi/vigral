@@ -253,6 +253,7 @@ public class VigralGUI extends JFrame {
 		mAlgorithmBoxModel.removeAllElements();
 		
 		initAlgorithms();
+		resizeComponents();
 	}
 	
 	
