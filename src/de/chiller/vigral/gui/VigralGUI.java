@@ -12,6 +12,7 @@ import javax.swing.JMenuBar;
 import javax.swing.JPanel;
 import javax.swing.JSplitPane;
 import javax.swing.border.EmptyBorder;
+import javax.swing.plaf.basic.BasicSplitPaneUI;
 import javax.swing.JComboBox;
 import javax.swing.JButton;
 
@@ -27,6 +28,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.util.ArrayList;
 
 
@@ -44,6 +47,7 @@ public class VigralGUI extends JFrame {
 	private AbstractAlgorithm mChosenAlgorithm;
 	
 	private int mMode;
+	private boolean mSidePanelIsVisible = false;
 	
 	private MenuBar mMenuBar;
 	private JComboBox mCb_algorithm = new JComboBox();
@@ -149,6 +153,43 @@ public class VigralGUI extends JFrame {
 	};
 	
 	
+	private MouseListener mSplitPaneDividerListener = new MouseListener() {
+		@Override
+		public void mouseReleased(MouseEvent e) {}
+		
+		@Override
+		public void mousePressed(MouseEvent e) {}
+		
+		@Override
+		public void mouseExited(MouseEvent e) {}
+		
+		@Override
+		public void mouseEntered(MouseEvent e) {}
+		
+		@Override
+		public void mouseClicked(MouseEvent e) {
+			if((e.getModifiers() & MouseEvent.BUTTON1_MASK) != 0) {
+				System.out.println("you have clicked the divider, HORST!!!");
+				Dimension sidePanelDim = null;
+				if(mSidePanelIsVisible) {
+					mSidePanelIsVisible = false;
+					sidePanelDim = new Dimension(0, 0);
+					mSplt_contentPane.setDividerLocation(1.0d);
+				}
+				else {
+					mSidePanelIsVisible = true;
+					sidePanelDim = new Dimension(240, 0);
+					mSplt_contentPane.setDividerLocation(mSplt_contentPane.getWidth() - sidePanelDim.width - mSplt_contentPane.getDividerSize());
+				}
+				
+				mPnl_sidePanel.setMaximumSize(sidePanelDim);
+				mPnl_sidePanel.setMinimumSize(sidePanelDim);
+				mPnl_sidePanel.setPreferredSize(sidePanelDim);
+			}
+		}
+	};
+	
+	
 
 	
 	/**
@@ -203,6 +244,11 @@ public class VigralGUI extends JFrame {
 		mSplt_contentPane.setLeftComponent(mPnl_mainPanel);
 		mSplt_contentPane.setRightComponent(mPnl_sidePanel);
 		mSplt_contentPane.setResizeWeight(1.0);
+		
+		Dimension sidePanelDim = new Dimension(0, 0);
+		mPnl_sidePanel.setMaximumSize(sidePanelDim);
+		mPnl_sidePanel.setMinimumSize(sidePanelDim);
+		mPnl_sidePanel.setPreferredSize(sidePanelDim);
 		
 		
 		mBtn_play.addActionListener(new ActionListener() {
@@ -368,23 +414,23 @@ public class VigralGUI extends JFrame {
 		
 		
 		if(mMode == Mode.GRAPHCREATION) {
-			sidePanelDim = new Dimension(0, 0);
+			((BasicSplitPaneUI) mSplt_contentPane.getUI()).getDivider().removeMouseListener(mSplitPaneDividerListener);
 			mSplt_contentPane.setDividerLocation(1.0d);
+			mSidePanelIsVisible = false;
 			mCb_algorithm.setEnabled(true);
 			mBtn_changeMode.setText("Visualisation");
 			mPnl_buttonBar.setVisible(false);
 		}
 		else if(mMode == Mode.VISUALISATION) {
-			sidePanelDim = new Dimension(240, 0);
-			mSplt_contentPane.setDividerLocation(mSplt_contentPane.getWidth() - sidePanelDim.width - mSplt_contentPane.getDividerSize());
+			//sidePanelDim = new Dimension(240, 0);
+			//mSplt_contentPane.setDividerLocation(mSplt_contentPane.getWidth() - sidePanelDim.width - mSplt_contentPane.getDividerSize());
+			((BasicSplitPaneUI) mSplt_contentPane.getUI()).getDivider().addMouseListener(mSplitPaneDividerListener);
 			mCb_algorithm.setEnabled(false);
 			mBtn_changeMode.setText("Graph Creation");
 			mPnl_buttonBar.setVisible(true);
 		}
 		
-		mPnl_sidePanel.setMaximumSize(sidePanelDim);
-		mPnl_sidePanel.setMinimumSize(sidePanelDim);
-		mPnl_sidePanel.setPreferredSize(sidePanelDim);
+		
 	}
 	
 	
