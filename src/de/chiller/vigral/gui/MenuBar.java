@@ -20,30 +20,29 @@ public class MenuBar extends JMenuBar {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	private VigralGUI mMainWindow;
 	
 	private ActionListener onExit = new ActionListener() {
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			mMainWindow.dispose();
+			VigralGUI.getInstance().dispose();
 		}
 	};
 	
 	private ActionListener onSave = new ActionListener() {
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			FileOperator fo = FileOperator.getInstance(mMainWindow);
-			fo.saveGraphToFile(mMainWindow.getGraphBuilder().getGraph());
+			FileOperator fo = FileOperator.getInstance(VigralGUI.getInstance());
+			fo.saveGraphToFile(VigralGUI.getInstance().getGraphBuilder().getGraph());
 		}
 	};
 	
 	private ActionListener onOpen = new ActionListener() {
 		@Override
 		public void actionPerformed(ActionEvent arg0) {
-			FileOperator fo = FileOperator.getInstance(mMainWindow);
+			FileOperator fo = FileOperator.getInstance(VigralGUI.getInstance());
 			Graph g = fo.readGraphFromFile();
 			if(g != null)
-				((VigralGUI) mMainWindow).getGraphBuilder().setGraph(g);
+				VigralGUI.getInstance().getGraphBuilder().setGraph(g);
 			
 			// TODO think about behaviour of opening in visualisation mode
 		}
@@ -52,19 +51,19 @@ public class MenuBar extends JMenuBar {
 	private ActionListener onNew = new ActionListener() {
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			int choice = JOptionPane.showConfirmDialog(mMainWindow, "Save before Closing", "Do you want to save your work?", JOptionPane.YES_NO_CANCEL_OPTION);
+			int choice = JOptionPane.showConfirmDialog(VigralGUI.getInstance(), "Save before Closing", "Do you want to save your work?", JOptionPane.YES_NO_CANCEL_OPTION);
 			switch (choice) {
 			case JOptionPane.CANCEL_OPTION:
 				break;
 			case JOptionPane.NO_OPTION:
-				((VigralGUI) mMainWindow).getGraphBuilder().resetGraph();
+				VigralGUI.getInstance().getGraphBuilder().resetGraph();
 				Vertex.VertexFactory.resetIdCounter();
 				Edge.EdgeFactory.resetIdCounter();
 				break;
 			case JOptionPane.YES_OPTION:
-				FileOperator fo = FileOperator.getInstance(mMainWindow);
-				fo.saveGraphToFile(mMainWindow.getGraphBuilder().getGraph());
-				((VigralGUI) mMainWindow).getGraphBuilder().resetGraph();
+				FileOperator fo = FileOperator.getInstance(VigralGUI.getInstance());
+				fo.saveGraphToFile(VigralGUI.getInstance().getGraphBuilder().getGraph());
+				VigralGUI.getInstance().getGraphBuilder().resetGraph();
 				Vertex.VertexFactory.resetIdCounter();
 				Edge.EdgeFactory.resetIdCounter();
 				break;
@@ -74,10 +73,16 @@ public class MenuBar extends JMenuBar {
 		}
 	};
 	
+	
+	private ActionListener onPluginsReload = new ActionListener() {
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			VigralGUI.getInstance().updateAlgorithmBox();
+		}
+	};
+	
 	public MenuBar(VigralGUI mainWindow) {
 		super();
-		
-		mMainWindow = mainWindow;
 		
 		JMenu fileMenu = new JMenu("File");
 		JMenu pluginMenu = new JMenu("PlugIn");
@@ -94,6 +99,10 @@ public class MenuBar extends JMenuBar {
 		fileMenu.addSeparator();
 		fileMenu.add(file_exit);
 		
+		JMenuItem plugins_reload = new JMenuItem("Reload");
+		
+		pluginMenu.add(plugins_reload);
+		
 		add(fileMenu);
 		add(pluginMenu);
 		add(helpMenu);
@@ -102,5 +111,7 @@ public class MenuBar extends JMenuBar {
 		file_save.addActionListener(onSave);
 		file_open.addActionListener(onOpen);
 		file_new.addActionListener(onNew);
+		
+		plugins_reload.addActionListener(onPluginsReload);
 	}
 }

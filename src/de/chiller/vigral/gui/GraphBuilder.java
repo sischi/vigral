@@ -172,10 +172,10 @@ public class GraphBuilder {
 	public void onResizePanel(JPanel panel) {
 		Dimension dimen = new Dimension(panel.getBounds().width, panel.getBounds().height);
 		mVViewer.setPreferredSize(dimen);
-		//mVViewer.setSize(dimen);
+		mVViewer.setSize(dimen);
 		
 		// possible reason for the modifylocationifoutofbounds not functioning properly !!!!! handle with care!!!!!
-		mLayout.setSize(dimen);
+		//mLayout.setSize(dimen);
 		
 		//mVViewer.resize(dimen);
 		modifyLocationsIfOutOfBounds(mGraph);

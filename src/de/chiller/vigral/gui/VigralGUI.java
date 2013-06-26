@@ -47,6 +47,7 @@ public class VigralGUI extends JFrame {
 	
 	private MenuBar mMenuBar;
 	private JComboBox mCb_algorithm = new JComboBox();
+	private DefaultComboBoxModel mAlgorithmBoxModel = new DefaultComboBoxModel();
 	private JSplitPane mSplt_contentPane = new JSplitPane();
 	private JButton mBtn_changeMode = new JButton();
 	private JButton mBtn_play = new JButton();
@@ -114,28 +115,36 @@ public class VigralGUI extends JFrame {
 	private ActionListener mJumpStartListener = new ActionListener() {
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			mGraphBuilder.setResultingGraph(mChosenAlgorithm.getFirstStep());
+			Graph g = mChosenAlgorithm.getFirstStep();
+			if(g != null)
+				mGraphBuilder.setResultingGraph(g);
 		}
 	};
 	
 	private ActionListener mPreviousStepListener = new ActionListener() {
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			mGraphBuilder.setResultingGraph(mChosenAlgorithm.getPreviousStep());
+			Graph g = mChosenAlgorithm.getPreviousStep();
+			if(g != null)
+				mGraphBuilder.setResultingGraph(g);
 		}
 	};
 	
 	private ActionListener mNextStepListener = new ActionListener() {
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			mGraphBuilder.setResultingGraph(mChosenAlgorithm.getNextStep());
+			Graph g = mChosenAlgorithm.getNextStep();
+			if(g != null)
+				mGraphBuilder.setResultingGraph(g);
 		}
 	};
 	
 	private ActionListener mJumpEndListener = new ActionListener() {
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			mGraphBuilder.setResultingGraph(mChosenAlgorithm.getLastStep());
+			Graph g = mChosenAlgorithm.getLastStep();
+			if(g != null)
+				mGraphBuilder.setResultingGraph(g);
 		}
 	};
 	
@@ -149,9 +158,7 @@ public class VigralGUI extends JFrame {
 		mMainWindow = this;
 		mGraphBuilder = new GraphBuilder();
 		mGraphBuilder.addToPanel(mPnl_graph);
-		
-		initAlgorithms();
-		
+				
 		setTitle("ViGrAl - Graph Creation");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 650, 450);
@@ -179,7 +186,8 @@ public class VigralGUI extends JFrame {
 		mPnl_mainPanel.addComponentListener(resizeListener);
 		
 		mCb_algorithm.setBackground(Color.WHITE);
-		initAlgorithmBox();
+		initAlgorithms();
+		mCb_algorithm.setModel(mAlgorithmBoxModel);
 		mPnl_mainPanel.add(mCb_algorithm);
 		
 		mPnl_graph.setBackground(Color.WHITE);
@@ -229,11 +237,22 @@ public class VigralGUI extends JFrame {
 		mBtn_pause.setVisible(false);
 	}
 	
-	public void initAlgorithms() {
+	private void initAlgorithms() {
 //		mAvailableAlgorithms = new ArrayList<AbstractAlgorithm>();
 //		mAvailableAlgorithms.add(new Dijkstra());
 		
 		mAvailableAlgorithms = PluginLoader.getInstance().loadPlugins();
+		if(mAvailableAlgorithms != null) {
+			for(int i = 0; i < mAvailableAlgorithms.size(); i++)
+				mAlgorithmBoxModel.addElement(mAvailableAlgorithms.get(i).getAlgorithmName());
+		}
+	}
+	
+	public void updateAlgorithmBox() {
+		mAvailableAlgorithms.clear();
+		mAlgorithmBoxModel.removeAllElements();
+		
+		initAlgorithms();
 	}
 	
 	
@@ -327,18 +346,8 @@ public class VigralGUI extends JFrame {
 		mPnl_graph.setBounds(x, y, w, h);
 	}
 	
-
-	private void initAlgorithmBox() {
-		if(mAvailableAlgorithms != null) {
-			String[] entries = new String[mAvailableAlgorithms.size()];
-			
-			for(int i = 0; i < mAvailableAlgorithms.size(); i++)
-				entries[i] = mAvailableAlgorithms.get(i).getAlgorithmName();
-			
-			DefaultComboBoxModel model = new DefaultComboBoxModel(entries);
-			mCb_algorithm.setModel(model);
-		}
-	}
+	
+	
 	
 	
 	public void requirementsApplied(Graph g) {

@@ -33,7 +33,7 @@ public abstract class AbstractAlgorithm implements Algorithm {
 	 */
 	public AbstractAlgorithm() {
 		mSteps = new ArrayList<Graph>();
-		mActualStep = 0;
+		mActualStep = -1;
 	}
 	
 	/**
@@ -45,13 +45,15 @@ public abstract class AbstractAlgorithm implements Algorithm {
 		mGraph.resetStates();
 		mSteps.clear();
 		mSteps.add(new Graph(mGraph));
-		mActualStep = 0;
+		mActualStep = -1;
 	}
 	
 	/**
 	 * returns the first step of the algorithm as a graph object
 	 */
 	public Graph getFirstStep() {
+		if(mActualStep == 0)
+			return null;
 		mActualStep = 0;
 		System.out.println("get step "+ mActualStep);
 		return mSteps.get(mActualStep);
@@ -63,6 +65,8 @@ public abstract class AbstractAlgorithm implements Algorithm {
 	public Graph getPreviousStep() {
 		if(mActualStep > 0)
 			mActualStep--;
+		else
+			return null;
 		System.out.println("get step "+ mActualStep);
 		return mSteps.get(mActualStep);
 	}
@@ -73,6 +77,8 @@ public abstract class AbstractAlgorithm implements Algorithm {
 	public Graph getNextStep() {
 		if(mActualStep < mSteps.size() - 1)
 			mActualStep++;
+		else
+			return null;
 		System.out.println("get step "+ mActualStep);
 		return mSteps.get(mActualStep);	
 	}
@@ -81,6 +87,9 @@ public abstract class AbstractAlgorithm implements Algorithm {
 	 * returns the last step of the algorithm as a graph object
 	 */
 	public Graph getLastStep() {
+		if(mActualStep == mSteps.size()-1)
+			return null;
+			
 		mActualStep = mSteps.size()-1;
 		System.out.println("get step "+ mActualStep);
 		return mSteps.get(mActualStep);
