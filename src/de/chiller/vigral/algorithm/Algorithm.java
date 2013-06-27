@@ -32,10 +32,10 @@ public interface Algorithm {
 	 */
 	public void perform();
 	
-	public Graph getFirstStep();
-	public Graph getPreviousStep();
-	public Graph getNextStep();
-	public Graph getLastStep();
+	public Pair<Graph, String> getFirstStep();
+	public Pair<Graph, String> getPreviousStep();
+	public Pair<Graph, String> getNextStep();
+	public Pair<Graph, String> getLastStep();
 	
 	/**
 	 * @return returns a human readable string identifying this algorithm 

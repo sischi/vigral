@@ -3,6 +3,7 @@ package de.chiller.vigral.algorithm;
 import java.util.ArrayList;
 
 import de.chiller.vigral.graph.Graph;
+import de.chiller.vigral.util.Pair;
 
 
 
@@ -21,7 +22,7 @@ public abstract class AbstractAlgorithm implements Algorithm {
 	/**
 	 * a list of graphs that represent the single steps
 	 */
-	protected ArrayList<Graph> mSteps;
+	protected ArrayList<Pair<Graph, String>> mSteps;
 
 	/**
 	 * indicates the step actually at
@@ -32,7 +33,7 @@ public abstract class AbstractAlgorithm implements Algorithm {
 	 * constructor
 	 */
 	public AbstractAlgorithm() {
-		mSteps = new ArrayList<Graph>();
+		mSteps = new ArrayList<Pair<Graph, String>>();
 		mActualStep = -1;
 	}
 	
@@ -44,14 +45,14 @@ public abstract class AbstractAlgorithm implements Algorithm {
 		mGraph = g;
 		mGraph.resetStates();
 		mSteps.clear();
-		mSteps.add(new Graph(mGraph));
+		mSteps.add(new Pair<Graph, String>(new Graph(mGraph), "The initial Graph"));
 		mActualStep = -1;
 	}
 	
 	/**
 	 * returns the first step of the algorithm as a graph object
 	 */
-	public Graph getFirstStep() {
+	public Pair<Graph, String> getFirstStep() {
 		if(mActualStep == 0)
 			return null;
 		mActualStep = 0;
@@ -62,7 +63,7 @@ public abstract class AbstractAlgorithm implements Algorithm {
 	/**
 	 * returns the previous step of the algorithm as a graph object
 	 */
-	public Graph getPreviousStep() {
+	public Pair<Graph, String> getPreviousStep() {
 		if(mActualStep > 0)
 			mActualStep--;
 		else
@@ -74,7 +75,7 @@ public abstract class AbstractAlgorithm implements Algorithm {
 	/**
 	 * returns the next step of the algorithm as a graph object
 	 */
-	public Graph getNextStep() {
+	public Pair<Graph, String> getNextStep() {
 		if(mActualStep < mSteps.size() - 1)
 			mActualStep++;
 		else
@@ -86,7 +87,7 @@ public abstract class AbstractAlgorithm implements Algorithm {
 	/**
 	 * returns the last step of the algorithm as a graph object
 	 */
-	public Graph getLastStep() {
+	public Pair<Graph, String> getLastStep() {
 		if(mActualStep == mSteps.size()-1)
 			return null;
 			
@@ -95,9 +96,17 @@ public abstract class AbstractAlgorithm implements Algorithm {
 		return mSteps.get(mActualStep);
 	}
 	
-	
 	public void addStep() {
-		mSteps.add(new Graph(mGraph));
+		addStep("");
+	}
+	
+	public void addStep(String explanation) {
+		String tmp = "";
+		if(!mSteps.isEmpty()) 
+			tmp = mSteps.get(mSteps.size()-1).getR() +"\n\n";
+
+		tmp += explanation;
+		mSteps.add(new Pair<Graph, String>(new Graph(mGraph), tmp));
 	}
 	
 
