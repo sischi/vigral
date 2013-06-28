@@ -137,10 +137,16 @@ public class GraphBuilder {
 			}
 		});
 		
+		mVViewer.getRenderContext().setVertexLabelTransformer(new Transformer<Vertex, String>() {
+			@Override
+			public String transform(Vertex v) {
+				return "<html>"+ v.getLabel() +"<br />"+ v.getLabelAddition() +"</html>";
+			}
+		});
+		
 		mVViewer.setBackground(Color.WHITE);
 		mVViewer.getRenderContext().getEdgeLabelRenderer().setRotateEdgeLabels(false);
 		
-		mVViewer.getRenderContext().setVertexLabelTransformer(new ToStringLabeller<Vertex>());
 		mVViewer.getRenderContext().setVertexShapeTransformer(mVertexShapeTransformer);
 		mVViewer.getRenderContext().setVertexFillPaintTransformer(mVertexPaintTransformer);
 		mVViewer.getRenderContext().setVertexDrawPaintTransformer(mVertexLineTransformer);
