@@ -20,6 +20,7 @@ public class Vertex extends GraphElement implements Comparable<Vertex> {
 	 * an optional label of the vertex
 	 */
 	private String mLabel;
+	private String mLabelAddition;
 	
 	private Point2D mLocation;
 	
@@ -28,9 +29,7 @@ public class Vertex extends GraphElement implements Comparable<Vertex> {
 	 * constructs a vertex
 	 */
 	public Vertex() {
-		super();
-		//System.out.println("Vertex created! id= "+ mID);
-		mLabel = "";
+		this(-1, new Point2D.Double(0, 0));
 	}
 	
 	/**
@@ -41,8 +40,9 @@ public class Vertex extends GraphElement implements Comparable<Vertex> {
 	private Vertex(int id, Point2D location) {
 		super();
 		mID = id;
-		mLabel = "V"+ mID;
+		mLabel = getIdentifier();
 		mLocation = location;
+		mLabelAddition = "";
 		//System.out.println("Vertex created! id= "+ mID +", label="+ mLabel);
 	}
 	
@@ -55,6 +55,7 @@ public class Vertex extends GraphElement implements Comparable<Vertex> {
 		mID = v.getId();
 		mLabel = v.getLabel();
 		mLocation = (Point2D) v.getLocation().clone();
+		mLabelAddition = v.getLabelAddition();
 	}
 	
 	
@@ -74,15 +75,27 @@ public class Vertex extends GraphElement implements Comparable<Vertex> {
 		mLabel = label;
 	}
 	
+	public String getLabelAddition() {
+		return mLabelAddition;
+	}
+	
+	public void resetLabelAddition() {
+		mLabelAddition = "";
+	}
+	
+	public void setLabelAddition(String addition) {
+		mLabelAddition = addition;
+	}
+	
 	/**
 	 * returns a string representation of the vertex
 	 * @return returns the label if one is set, or the id with a leading "V" otherwise
 	 */
 	public String toString() {
-		if(mLabel == "")
-			return "V"+ mID;
-		else
+		if(!mLabel.equals(""))
 			return mLabel;
+		
+		return getIdentifier();
 	}
 	
 	/**
