@@ -173,6 +173,8 @@ public class RequirementDialog extends JDialog {
 		});
 		cancelButton.setActionCommand("Cancel");
 		buttonPane.add(cancelButton);
+		
+		setTitle("choose Parameter");
 	}
 
 	private Rectangle addRequiredUIElements() {
@@ -193,9 +195,10 @@ public class RequirementDialog extends JDialog {
 
 			// set size of the label
 			// lbl.setMaximumSize(MAX_LABEL_DIMENSION);
+			int h = 30;
 			int x = MARGIN;
-			int y = i * (MAX_LABEL_DIMENSION.height + MARGIN);
-			lbl.setBounds(x, y, lbl.getPreferredSize().width, lbl.getPreferredSize().height);
+			int y = MARGIN + i * (h + MARGIN);
+			lbl.setBounds(x, y, lbl.getPreferredSize().width, h);
 
 			// init the combobox
 			JComboBox box = new JComboBox();
@@ -229,14 +232,16 @@ public class RequirementDialog extends JDialog {
 
 			// set size of combobox
 			box.setModel(model);
+			h = 30;
 			x = MARGIN + lbl.getBounds().width + MARGIN;
-			y = i * (box.getPreferredSize().height + MARGIN);
-			box.setBounds(x, y, box.getPreferredSize().width, box.getPreferredSize().height);
+			y = lbl.getBounds().y;
+			box.setBounds(x, y, box.getPreferredSize().width, h);
 			int lineWidth = MARGIN + lbl.getBounds().width + MARGIN + box.getBounds().width + MARGIN;
 			if (lineWidth > maxLineWidth)
 				maxLineWidth = lineWidth;
 
-			height = box.getBounds().x + box.getBounds().height + MARGIN;
+			System.out.println("box.y: "+ box.getBounds().y);
+			height = box.getBounds().y + box.getBounds().height + MARGIN;
 
 			// add the label and combobox
 			mComboBoxes.add(i, new Pair<JLabel, JComboBox>(lbl, box));
@@ -254,7 +259,10 @@ public class RequirementDialog extends JDialog {
 	
 	private void adaptSizes(Rectangle rect) {
 		System.out.println("rect: "+ rect);
-		contentPanel.setPreferredSize(new Dimension(rect.width, rect.height));
+		Dimension d = new Dimension(rect.width, rect.height);
+		contentPanel.setPreferredSize(d);
+		contentPanel.setMinimumSize(d);
+		contentPanel.setMaximumSize(d);
 		setBounds(VigralGUI.getInstance().getX() + 100, VigralGUI.getInstance().getY() + 100, rect.width, rect.height);
 	}
 
