@@ -37,7 +37,10 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.sql.Time;
 import java.util.ArrayList;
+import java.util.Timer;
+import java.util.TimerTask;
 
 
 public class VigralGUI extends JFrame {
@@ -76,6 +79,8 @@ public class VigralGUI extends JFrame {
 	private JButton mBtn_clearExplanation = new JButton();
 	
 	private GraphBuilder mGraphBuilder;
+	
+	private Timer mPlayTimer;
 	
 	
 	public static VigralGUI getInstance() {
@@ -178,6 +183,37 @@ public class VigralGUI extends JFrame {
 		}
 	};
 	
+	private ActionListener mPlayListener = new ActionListener() {
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			mBtn_play.setVisible(false);
+			mBtn_pause.setVisible(true);
+			System.out.println("Start timer!");
+			mPlayTimer = new Timer();
+			mPlayTimer.scheduleAtFixedRate(new TimerTask() {
+				@Override
+				public void run() {
+					Pair p = mChosenAlgorithm.getNextStep();
+					if(p == null)
+						mBtn_pause.doClick();
+					else
+						update(p);
+				}
+			}, 
+			2000, 2000);
+		}
+	};
+	
+	private ActionListener mPauseListener = new ActionListener() {
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			mBtn_play.setVisible(true);
+			mBtn_pause.setVisible(false);
+			System.out.println("cancel timer!");
+			mPlayTimer.cancel();
+		}
+	};
+	
 	
 	
 	/**
@@ -187,8 +223,7 @@ public class VigralGUI extends JFrame {
 		mMainWindow = this;
 		mGraphBuilder = new GraphBuilder();
 		mGraphBuilder.addToPanel(mPnl_graph);
-				
-		setTitle("ViGrAl - Graph Creation");
+		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 650, 450);
 		setMinimumSize(new Dimension(750, 400));
@@ -197,6 +232,9 @@ public class VigralGUI extends JFrame {
 		initComponents();
 		changeMode(Mode.GRAPHCREATION);
 		resizeMainPanel();
+		
+		mSplt_contentPane.setDividerLocation(1.0d);
+		pack();
 	}
 	
 	
@@ -247,24 +285,6 @@ public class VigralGUI extends JFrame {
 		mSplt_contentPane.setResizeWeight(1.0d);
 		mSplt_contentPane.setOneTouchExpandable(true);
 		setContentPane(mSplt_contentPane);
-		mSplt_contentPane.setDividerLocation(1.0d);
-		
-		// TODO put this code in 'initButtonBar'
-		mBtn_play.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				mBtn_play.setVisible(false);
-				mBtn_pause.setVisible(true);
-			}
-		});
-		
-		mBtn_pause.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				mBtn_play.setVisible(true);
-				mBtn_pause.setVisible(false);
-			}
-		});
 	}
 	
 	
@@ -274,7 +294,9 @@ public class VigralGUI extends JFrame {
 		initButtonFromButtonBar(mBtn_stepBack, new ImageIcon("res/stepback_inactive.png"), new ImageIcon("res/stepback_active.png"), 1);
 		mBtn_stepBack.addActionListener(mPreviousStepListener);
 		initButtonFromButtonBar(mBtn_play, new ImageIcon("res/play_inactive.png"), new ImageIcon("res/play_active.png"), 2);
+		mBtn_play.addActionListener(mPlayListener);
 		initButtonFromButtonBar(mBtn_pause, new ImageIcon("res/pause_inactive.png"), new ImageIcon("res/pause_active.png"), 2);
+		mBtn_pause.addActionListener(mPauseListener);
 		initButtonFromButtonBar(mBtn_stepForward, new ImageIcon("res/stepforward_inactive.png"), new ImageIcon("res/stepforward_active.png"), 3);
 		mBtn_stepForward.addActionListener(mNextStepListener);
 		initButtonFromButtonBar(mBtn_jumpToEnd, new ImageIcon("res/jumptoend_inactive.png"), new ImageIcon("res/jumptoend_active.png"), 4);
@@ -387,14 +409,16 @@ public class VigralGUI extends JFrame {
 		
 		if(mMode == Mode.GRAPHCREATION) {
 			//((BasicSplitPaneUI) mSplt_contentPane.getUI()).getDivider().removeMouseListener(mSplitPaneDividerListener);
+			setTitle("ViGrAl - Graph Creation");
 			mCb_algorithm.setEnabled(true);
-			mBtn_changeMode.setText("Visualisation");
+			mBtn_changeMode.setText("Visualization");
 			mPnl_buttonBar.setVisible(false);
 		}
 		else if(mMode == Mode.VISUALISATION) {
 			//sidePanelDim = new Dimension(240, 0);
 			//mSplt_contentPane.setDividerLocation(mSplt_contentPane.getWidth() - sidePanelDim.width - mSplt_contentPane.getDividerSize());
 			//((BasicSplitPaneUI) mSplt_contentPane.getUI()).getDivider().addMouseListener(mSplitPaneDividerListener);
+			setTitle("ViGrAl - Visualization");
 			mCb_algorithm.setEnabled(false);
 			mBtn_changeMode.setText("Graph Creation");
 			mPnl_buttonBar.setVisible(true);
