@@ -63,6 +63,8 @@ public class PluginLoader {
 				System.out.println("name: "+ name);
 				Class clss = loader.loadClass(name);
 				Object o = clss.newInstance();
+				System.out.println("getclassname: "+ o.getClass().getName());
+				System.out.println("getsuperclass: "+ o.getClass().getSuperclass().getName());
 				AbstractAlgorithm algo = (AbstractAlgorithm) o;
 				algorithms.add(algo);
 			} catch(Exception e) {
