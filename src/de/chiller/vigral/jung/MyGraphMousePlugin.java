@@ -91,6 +91,7 @@ public class MyGraphMousePlugin extends AbstractGraphMousePlugin implements Mous
             		mPicking.clearPickedCollection(vv);
             		mMode = EDITING_MODE;
             		mEditing.startEdge(e, vertex, directed);
+            		System.out.println("Start edge at Vertex "+ vertex);
             	}
             	// picking mode
             	else if((e.getModifiers() & MouseEvent.SHIFT_MASK) != 0 && vertex != null) {
@@ -134,8 +135,10 @@ public class MyGraphMousePlugin extends AbstractGraphMousePlugin implements Mous
 	    	final VisualizationViewer<Vertex, Edge> vv = (VisualizationViewer<Vertex, Edge>)e.getSource();
 	        final Point2D p = e.getPoint();
 	        
-	        if(mMode == EDITING_MODE)
+	        if(mMode == EDITING_MODE) {
 	        	mEditing.drawEdge(e);
+	        	System.out.println("drawing edge");
+	        }
 	        else if(mMode == PICKING_MODE)
 	        	mPicking.performDrag(vv, p);
     	}
@@ -155,6 +158,7 @@ public class MyGraphMousePlugin extends AbstractGraphMousePlugin implements Mous
             	if(mMode == EDITING_MODE) {
             		final Vertex vertex = (Vertex) pickSupport.getVertex(layout, p.getX(), p.getY());
 	                mEditing.addEdge(e, p, vertex, vv);
+	                System.out.println("stop edge at Vertex "+ vertex);
             	}
             	else if(mMode == PICKING_MODE)
             		mPicking.pickVerticesInRect(vv, p);

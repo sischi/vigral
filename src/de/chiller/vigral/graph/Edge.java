@@ -132,7 +132,7 @@ public class Edge extends GraphElement implements Comparable<Edge> {
 		else if(mEnd == v)
 			return mStart;
 		
-		return null;	
+		return null;
 	}
 
 	/**

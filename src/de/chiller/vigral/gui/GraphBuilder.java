@@ -284,10 +284,7 @@ public class GraphBuilder {
 	
 	public void setResultingGraph(Graph g) {
 		mResultGraph = new Graph(g);
-		mLayout.setGraph(mResultGraph);
-		updateLocations();
-
-		mVViewer.repaint();
+		showResultGraph();
 	}
 	
 	public void resetResultGraph() {

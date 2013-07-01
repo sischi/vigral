@@ -4,6 +4,8 @@ package de.chiller.vigral.graph;
 import java.util.ArrayList;
 import java.util.List;
 
+import de.chiller.vigral.graph.Edge.EdgeFactory;
+
 import edu.uci.ics.jung.graph.SortedSparseMultigraph;
 import edu.uci.ics.jung.graph.util.EdgeType;
 
@@ -96,11 +98,21 @@ public class Graph extends SortedSparseMultigraph<Vertex, Edge> {
 					break;
 			}
 			
-			Edge newEdge = new Edge(Integer.parseInt(strEdge[0]), Double.parseDouble(strEdge[1]), startVertex, endVertex, Boolean.parseBoolean(strEdge[4]), ElementState.UNVISITED);
+			// unsure
+			Edge.EdgeFactory.getInstance().setStartAndEnd(startVertex, endVertex);
+   			Edge.EdgeFactory.getInstance().setDirected(Boolean.parseBoolean(strEdge[4]));
+   			Edge newEdge = EdgeFactory.getInstance().create();
 			if(newEdge.isDirected())
 				g.addEdge(newEdge, newEdge.getStartVertex(), newEdge.getEndVertex(), EdgeType.DIRECTED);
 			else
 				g.addEdge(newEdge, newEdge.getStartVertex(), newEdge.getEndVertex(), EdgeType.UNDIRECTED);
+			// unsure
+			
+//			Edge newEdge = new Edge(Integer.parseInt(strEdge[0]), Double.parseDouble(strEdge[1]), startVertex, endVertex, Boolean.parseBoolean(strEdge[4]), ElementState.UNVISITED);
+//			if(newEdge.isDirected())
+//				g.addEdge(newEdge, newEdge.getStartVertex(), newEdge.getEndVertex(), EdgeType.DIRECTED);
+//			else
+//				g.addEdge(newEdge, newEdge.getStartVertex(), newEdge.getEndVertex(), EdgeType.UNDIRECTED);
 		}
 		
 		return g;
