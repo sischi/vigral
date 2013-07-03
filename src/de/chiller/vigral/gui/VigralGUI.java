@@ -408,6 +408,11 @@ public class VigralGUI extends JFrame {
 	}
 	
 	
+	public int getActualMode() {
+		return mMode;
+	}
+	
+	
 	public void changeMode(int mode) {
 		mMode = mode;
 		mGraphBuilder.setMode(mMode);		

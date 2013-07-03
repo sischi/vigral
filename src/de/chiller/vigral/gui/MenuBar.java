@@ -39,31 +39,42 @@ public class MenuBar extends JMenuBar {
 	private ActionListener onOpen = new ActionListener() {
 		@Override
 		public void actionPerformed(ActionEvent arg0) {
-			FileOperator fo = FileOperator.getInstance(VigralGUI.getInstance());
-			Graph g = fo.readGraphFromFile();
-			if(g != null)
-				VigralGUI.getInstance().getGraphBuilder().setGraph(g);
+			VigralGUI mainInstance = VigralGUI.getInstance();
 			
-			// TODO think about behaviour of opening in visualisation mode
+			FileOperator fo = FileOperator.getInstance(mainInstance);
+			Graph g = fo.readGraphFromFile();
+			if(g != null) {
+				if(mainInstance.getActualMode() == VigralGUI.Mode.VISUALISATION)
+					mainInstance.changeMode(VigralGUI.Mode.GRAPHCREATION);
+				
+				mainInstance.getGraphBuilder().setGraph(g);
+			}
 		}
 	};
 	
 	private ActionListener onNew = new ActionListener() {
 		@Override
 		public void actionPerformed(ActionEvent e) {
+			VigralGUI mainInstance = VigralGUI.getInstance();
 			int choice = JOptionPane.showConfirmDialog(VigralGUI.getInstance(), "Save before Closing", "Do you want to save your work?", JOptionPane.YES_NO_CANCEL_OPTION);
 			switch (choice) {
 			case JOptionPane.CANCEL_OPTION:
 				break;
 			case JOptionPane.NO_OPTION:
-				VigralGUI.getInstance().getGraphBuilder().resetGraph();
+				if(mainInstance.getActualMode() == VigralGUI.Mode.VISUALISATION)
+					mainInstance.changeMode(VigralGUI.Mode.GRAPHCREATION);
+				
+				mainInstance.getGraphBuilder().resetGraph();
 				Vertex.VertexFactory.resetIdCounter();
 				Edge.EdgeFactory.resetIdCounter();
 				break;
 			case JOptionPane.YES_OPTION:
-				FileOperator fo = FileOperator.getInstance(VigralGUI.getInstance());
-				fo.saveGraphToFile(VigralGUI.getInstance().getGraphBuilder().getGraph());
-				VigralGUI.getInstance().getGraphBuilder().resetGraph();
+				if(mainInstance.getActualMode() == VigralGUI.Mode.VISUALISATION)
+					mainInstance.changeMode(VigralGUI.Mode.GRAPHCREATION);
+				
+				FileOperator fo = FileOperator.getInstance(mainInstance);
+				fo.saveGraphToFile(mainInstance.getGraphBuilder().getGraph());
+				mainInstance.getGraphBuilder().resetGraph();
 				Vertex.VertexFactory.resetIdCounter();
 				Edge.EdgeFactory.resetIdCounter();
 				break;
@@ -77,7 +88,11 @@ public class MenuBar extends JMenuBar {
 	private ActionListener onPluginsReload = new ActionListener() {
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			VigralGUI.getInstance().updateAlgorithmBox();
+			VigralGUI mainInstance = VigralGUI.getInstance();
+			if(mainInstance.getActualMode() == VigralGUI.Mode.VISUALISATION)
+				mainInstance.changeMode(VigralGUI.Mode.GRAPHCREATION);
+			
+			mainInstance.updateAlgorithmBox();
 		}
 	};
 	
