@@ -63,7 +63,7 @@ public class VigralGUI extends JFrame {
 	private MenuBar mMenuBar;
 	private JComboBox mCb_algorithm = new JComboBox();
 	private DefaultComboBoxModel mAlgorithmBoxModel = new DefaultComboBoxModel();
-	private JSplitPane mSplt_contentPane = new JSplitPane();
+	private JSplitPane mSplitPanel = new JSplitPane();
 	private JButton mBtn_changeMode = new JButton();
 	private JButton mBtn_play = new JButton();
 	private JButton mBtn_pause = new JButton();
@@ -71,14 +71,13 @@ public class VigralGUI extends JFrame {
 	private JButton mBtn_stepBack = new JButton();
 	private JButton mBtn_stepForward = new JButton();
 	private JButton mBtn_jumpToEnd = new JButton();
-	private JPanel mPnl_graph = new JPanel();
-	private JPanel mPnl_buttonBar = new JPanel();
-	private JPanel mPnl_mainPanel = new JPanel();
-	private JPanel mPnl_sidePanel = new JPanel();
+	private JPanel mGraphPanel = new JPanel();
+	private JPanel mButtonBar = new JPanel();
+	private JSplitPane mContentPanel = new JSplitPane();
+	private JPanel mButtonPanel = new JPanel();
 	private JTextArea mTxt_explanation = new JTextArea();
 	private DefaultCaret mDefCar;
 	private JScrollPane mScp_scrollPane = new JScrollPane(mTxt_explanation);
-	private JButton mBtn_clearExplanation = new JButton();
 	
 	private GraphBuilder mGraphBuilder;
 	
@@ -117,38 +116,14 @@ public class VigralGUI extends JFrame {
 		}
 	};
 	
-	private ComponentListener onResizeMainPanel = new ComponentListener() {
+	private ComponentListener onResizeGraphPanelListener = new ComponentListener() {
 		@Override
 		public void componentResized(ComponentEvent e) {
-			System.out.println("main panel resized");
-			System.out.println("main panel minimum size: "+ mPnl_mainPanel.getMinimumSize());
-			System.out.println("main panel size: "+ mPnl_mainPanel.getSize());
-			resizeMainPanel();
-			System.out.println("main panel size: "+ mPnl_mainPanel.getSize());
-			mGraphBuilder.onResizePanel(mPnl_graph);
+			if(mSplitPanel.getDividerLocation() < mGraphPanel.getMinimumSize().width)
+				mSplitPanel.setDividerLocation(mGraphPanel.getMinimumSize().width);
+			
+			mGraphBuilder.onResizePanel(mGraphPanel);
 		}
-
-		@Override
-		public void componentHidden(ComponentEvent e) {
-			System.out.println("main panel hidden!!");
-		}
-		@Override
-		public void componentMoved(ComponentEvent e) {
-			System.out.println("main panel moved!!");
-		}
-		@Override
-		public void componentShown(ComponentEvent e) {
-			System.out.println("main panel shown!!");
-		}
-	};
-	
-	private ComponentListener onResizeSidePanel = new ComponentListener() {
-		@Override
-		public void componentResized(ComponentEvent e) {
-			System.out.println("side panel resized");
-			resizeSidePanel();
-		}
-
 		@Override
 		public void componentHidden(ComponentEvent e) {}
 		@Override
@@ -156,6 +131,20 @@ public class VigralGUI extends JFrame {
 		@Override
 		public void componentShown(ComponentEvent e) {}
 	};
+		
+	private ComponentListener onResizeButtonPanelListener = new ComponentListener() {		
+		@Override
+		public void componentResized(ComponentEvent e) {
+			onResizeButtonPanel();
+		}
+		@Override
+		public void componentShown(ComponentEvent e) {}
+		@Override
+		public void componentMoved(ComponentEvent e) {}
+		@Override
+		public void componentHidden(ComponentEvent e) {}
+	};
+
 	
 	private ActionListener mJumpStartListener = new ActionListener() {
 		@Override
@@ -224,7 +213,7 @@ public class VigralGUI extends JFrame {
 	private VigralGUI() {
 		mMainWindow = this;
 		mGraphBuilder = new GraphBuilder();
-		mGraphBuilder.addToPanel(mPnl_graph);
+		mGraphBuilder.addToPanel(mGraphPanel);
 		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 650, 450);
@@ -233,9 +222,8 @@ public class VigralGUI extends JFrame {
 		
 		initComponents();
 		changeMode(Mode.GRAPHCREATION);
-		resizeMainPanel();
 		
-		mSplt_contentPane.setDividerLocation(1.0d);
+		mSplitPanel.setDividerLocation(1.0d);
 		pack();
 	}
 	
@@ -248,48 +236,51 @@ public class VigralGUI extends JFrame {
 		mMenuBar = new MenuBar(this);
 		setJMenuBar(mMenuBar);
 		
-		
-		// init the main panel
+		initButtonBar();
+		mButtonBar.setSize(mButtonBar.getPreferredSize());
+				
 		mCb_algorithm.setBackground(Color.WHITE);
 		initAlgorithms();
 		mCb_algorithm.setModel(mAlgorithmBoxModel);
-		mPnl_mainPanel.add(mCb_algorithm);
-		
-		mPnl_graph.setBackground(Color.WHITE);
-		mPnl_mainPanel.add(mPnl_graph);
+		mCb_algorithm.setSize(mCb_algorithm.getPreferredSize());
 		
 		mBtn_changeMode.addActionListener(mCreationListener);
-		mPnl_mainPanel.add(mBtn_changeMode);
+		mBtn_changeMode.setSize(new Dimension(200, 30));
 		
-		initButtonBar();
-		mPnl_mainPanel.add(mPnl_buttonBar);
+		mButtonPanel.setLayout(null);
+		mButtonPanel.add(mBtn_changeMode);
+		mButtonPanel.add(mButtonBar);
+		mButtonPanel.add(mCb_algorithm);
+		mButtonPanel.addComponentListener(onResizeButtonPanelListener);
 		
-		mPnl_mainPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
-		mPnl_mainPanel.setLayout(null);
-		mPnl_mainPanel.setMinimumSize(new Dimension(550, 400));
-		mPnl_mainPanel.addComponentListener(onResizeMainPanel);
+		mGraphPanel.setBackground(Color.WHITE);
+		mGraphPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
+		mGraphPanel.setLayout(null);
+		mGraphPanel.setMinimumSize(new Dimension(550, 200));
+		mGraphPanel.addComponentListener(onResizeGraphPanelListener);
 		
 		
 		// init the side panel
-		mBtn_clearExplanation.setText("Clear");
 		mTxt_explanation.setLineWrap(true);
 		mTxt_explanation.setEditable(false);
 		// used for automated scrolling
 		mDefCar = (DefaultCaret) mTxt_explanation.getCaret();
 		mDefCar.setUpdatePolicy(DefaultCaret.ALWAYS_UPDATE);
-		mPnl_sidePanel.setLayout(null);
-		mPnl_sidePanel.add(mScp_scrollPane);
-		mPnl_sidePanel.add(mBtn_clearExplanation);
-		mPnl_sidePanel.addComponentListener(onResizeSidePanel);
-		
 		
 		// init the split panel
-		mSplt_contentPane.setMinimumSize(new Dimension(740, 370));
-		mSplt_contentPane.setLeftComponent(mPnl_mainPanel);
-		mSplt_contentPane.setRightComponent(mPnl_sidePanel);
-		mSplt_contentPane.setResizeWeight(1.0d);
-		mSplt_contentPane.setOneTouchExpandable(true);
-		setContentPane(mSplt_contentPane);
+		mSplitPanel.setOrientation(JSplitPane.HORIZONTAL_SPLIT);
+		mSplitPanel.setLeftComponent(mGraphPanel);
+		mSplitPanel.setRightComponent(mScp_scrollPane);
+		mSplitPanel.setResizeWeight(1.0d);
+		mSplitPanel.setOneTouchExpandable(true);
+		
+		mContentPanel.setOrientation(JSplitPane.VERTICAL_SPLIT);
+		mContentPanel.setTopComponent(mSplitPanel);
+		mContentPanel.setBottomComponent(mButtonPanel);
+		mContentPanel.setResizeWeight(1.0d);
+		mContentPanel.setDividerLocation(getBounds().height - 200);
+		mContentPanel.setEnabled(false);
+		setContentPane(mContentPanel);
 	}
 	
 	
@@ -310,9 +301,7 @@ public class VigralGUI extends JFrame {
 	}
 	
 	private void initAlgorithms() {
-//		mAvailableAlgorithms = new ArrayList<AbstractAlgorithm>();
-//		mAvailableAlgorithms.add(new Dijkstra());
-		
+	
 		mAvailableAlgorithms = PluginLoader.getInstance().loadPlugins();
 		if(mAvailableAlgorithms != null) {
 			for(int i = 0; i < mAvailableAlgorithms.size(); i++)
@@ -325,7 +314,7 @@ public class VigralGUI extends JFrame {
 		mAlgorithmBoxModel.removeAllElements();
 		
 		initAlgorithms();
-		resizeMainPanel();
+		onResizeButtonPanel();
 	}
 	
 	
@@ -346,56 +335,30 @@ public class VigralGUI extends JFrame {
 		btn.setMaximumSize(d);
 		btn.setBounds(x, y, w, h);
 		btn.setBorderPainted(false);
-		mPnl_buttonBar.add(btn);
+		mButtonBar.add(btn);
 	}
 	
 	
-	/**
-	 * resize the components shown by the JFrame
-	 */
-	private void resizeMainPanel() {
+	private void onResizeButtonPanel() {
+		Rectangle rect = mButtonPanel.getBounds();
+		System.out.println("contentRect: "+ rect);
 		
-		if(mSplt_contentPane.getDividerLocation() < mPnl_mainPanel.getMinimumSize().width)
-			mSplt_contentPane.setDividerLocation(mPnl_mainPanel.getMinimumSize().width);
+		Rectangle buttonBarRect = mButtonBar.getBounds();
+		buttonBarRect.x = MARGIN;
+		buttonBarRect.y = MARGIN;
+		mButtonBar.setBounds(buttonBarRect);
 		
+		Rectangle buttonRect = mBtn_changeMode.getBounds();
+		buttonRect.x = rect.width - buttonRect.width - MARGIN;
+		buttonRect.y = rect.height - buttonRect.height - MARGIN;
+		mBtn_changeMode.setBounds(buttonRect);
 		
-		// get the rectangle of the mainPanel
-		Rectangle mainPanelRect = mPnl_mainPanel.getBounds();
+		Rectangle comboRect = mCb_algorithm.getBounds();
+		comboRect.x = rect.width - comboRect.width - MARGIN;
+		comboRect.y = MARGIN;
+		mCb_algorithm.setBounds(comboRect);
 		
-		// for each component: align the component relative to the contentPane rectangle and the other components
-		int x = 10;
-		int y = 10;
-		int w = 150;
-		int h = 25;
-		
-		w = 160;
-		h = 25;
-		x = mainPanelRect.width - w - 10;
-		y = mainPanelRect.height - h - 10;
-		mBtn_changeMode.setBounds(x, y, w, h);
-		
-		mCb_algorithm.setSize(mCb_algorithm.getPreferredSize());
-		w = mCb_algorithm.getWidth();
-		h = 25;
-		x = mainPanelRect.width - w - 10;
-		y = mBtn_changeMode.getBounds().y - mCb_algorithm.getHeight() - 10;
-		mCb_algorithm.setBounds(x, y, w, h);
-		
-		w = 5 * mBtn_play.getBounds().width + 4 * 10;
-		h = mBtn_play.getBounds().height + 10;
-		x = 0;
-		y = mainPanelRect.height - h - 5;
-		mPnl_buttonBar.setBounds(x, y, w, h);
-		
-		x = mainPanelRect.x + 10;
-		y = mainPanelRect.y + 10;
-		w = mainPanelRect.width - 20;
-		h = mCb_algorithm.getBounds().y - 20;
-		mPnl_graph.setBounds(x, y, w, h);
 	}
-	
-	
-	
 	
 	
 	public void requirementsApplied(Graph g) {
@@ -418,20 +381,16 @@ public class VigralGUI extends JFrame {
 		mGraphBuilder.setMode(mMode);		
 		
 		if(mMode == Mode.GRAPHCREATION) {
-			//((BasicSplitPaneUI) mSplt_contentPane.getUI()).getDivider().removeMouseListener(mSplitPaneDividerListener);
 			setTitle("ViGrAl - Graph Creation");
 			mCb_algorithm.setEnabled(true);
 			mBtn_changeMode.setText("Visualization");
-			mPnl_buttonBar.setVisible(false);
+			mButtonBar.setVisible(false);
 		}
 		else if(mMode == Mode.VISUALISATION) {
-			//sidePanelDim = new Dimension(240, 0);
-			//mSplt_contentPane.setDividerLocation(mSplt_contentPane.getWidth() - sidePanelDim.width - mSplt_contentPane.getDividerSize());
-			//((BasicSplitPaneUI) mSplt_contentPane.getUI()).getDivider().addMouseListener(mSplitPaneDividerListener);
 			setTitle("ViGrAl - Visualization");
 			mCb_algorithm.setEnabled(false);
 			mBtn_changeMode.setText("Graph Creation");
-			mPnl_buttonBar.setVisible(true);
+			mButtonBar.setVisible(true);
 		}
 		
 		
@@ -440,25 +399,6 @@ public class VigralGUI extends JFrame {
 	
 	public GraphBuilder getGraphBuilder() {
 		return mGraphBuilder;
-	}
-	
-	
-	private void resizeSidePanel() {
-		Dimension sidePanelDim = mPnl_sidePanel.getSize();
-		
-		int x = MARGIN;
-		int h = mBtn_clearExplanation.getPreferredSize().height;
-		int y = sidePanelDim.height - MARGIN - h;
-		int w = sidePanelDim.width - 2 * MARGIN;
-		mBtn_clearExplanation.setBounds(x, y, w, h);
-		
-		x = MARGIN;
-		y = MARGIN;
-		w = sidePanelDim.width - 2 * MARGIN;
-		h = sidePanelDim.height - mBtn_clearExplanation.getBounds().height - 3 * MARGIN;
-		mTxt_explanation.setBounds(0, 0, w, h);
-		
-		mScp_scrollPane.setBounds(x, y, w, h);
 	}
 	
 	
