@@ -16,6 +16,7 @@ import javax.swing.JTextArea;
 import javax.swing.border.EmptyBorder;
 import javax.swing.plaf.basic.BasicSplitPaneDivider;
 import javax.swing.plaf.basic.BasicSplitPaneUI;
+import javax.swing.text.DefaultCaret;
 import javax.swing.JComboBox;
 import javax.swing.JButton;
 
@@ -75,6 +76,7 @@ public class VigralGUI extends JFrame {
 	private JPanel mPnl_mainPanel = new JPanel();
 	private JPanel mPnl_sidePanel = new JPanel();
 	private JTextArea mTxt_explanation = new JTextArea();
+	private DefaultCaret mDefCar;
 	private JScrollPane mScp_scrollPane = new JScrollPane(mTxt_explanation);
 	private JButton mBtn_clearExplanation = new JButton();
 	
@@ -272,6 +274,9 @@ public class VigralGUI extends JFrame {
 		mBtn_clearExplanation.setText("Clear");
 		mTxt_explanation.setLineWrap(true);
 		mTxt_explanation.setEditable(false);
+		// used for automated scrolling
+		mDefCar = (DefaultCaret) mTxt_explanation.getCaret();
+		mDefCar.setUpdatePolicy(DefaultCaret.ALWAYS_UPDATE);
 		mPnl_sidePanel.setLayout(null);
 		mPnl_sidePanel.add(mScp_scrollPane);
 		mPnl_sidePanel.add(mBtn_clearExplanation);
