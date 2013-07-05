@@ -53,10 +53,7 @@ public class MyGraphMousePlugin extends AbstractGraphMousePlugin implements Mous
      * @param modifiers
      */
     public MyGraphMousePlugin(int modifiers) {
-        super(modifiers);
-        
-		cursor = Cursor.getPredefinedCursor(Cursor.CROSSHAIR_CURSOR);
-		
+        super(modifiers);		
 		mPicking = new PickSupport();
 		mEditing = new EditSupport();
 		mMode = EDITING_MODE;
@@ -66,6 +63,9 @@ public class MyGraphMousePlugin extends AbstractGraphMousePlugin implements Mous
 
     @SuppressWarnings("unchecked")
     public void mousePressed(MouseEvent e) {
+    	
+    	//TODO handle SHIFT+CTRL+DRAG with an vertex as starting point in visualization mode
+    	
     	// on left mouse press
     	if((e.getModifiers() & MouseEvent.BUTTON1_MASK) != 0) {
     		// get the clicked vv and the coordinates
@@ -191,13 +191,7 @@ public class MyGraphMousePlugin extends AbstractGraphMousePlugin implements Mous
     
     
     public void mouseClicked(MouseEvent e) {}
-    public void mouseEntered(MouseEvent e) {
-        JComponent c = (JComponent)e.getSource();
-        c.setCursor(cursor);
-    }
-    public void mouseExited(MouseEvent e) {
-        JComponent c = (JComponent)e.getSource();
-        c.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
-    }
+    public void mouseEntered(MouseEvent e) {}
+    public void mouseExited(MouseEvent e) {}
     public void mouseMoved(MouseEvent e) {}
 }

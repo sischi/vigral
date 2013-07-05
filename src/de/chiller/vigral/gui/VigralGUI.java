@@ -1,5 +1,6 @@
 package de.chiller.vigral.gui;
 
+import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.awt.Point;
@@ -312,11 +313,13 @@ public class VigralGUI extends JFrame {
 		mGraphPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
 		mGraphPanel.setLayout(null);
 		mGraphPanel.addComponentListener(onResizeGraphPanelListener);
+		mGraphPanel.setCursor(Cursor.getPredefinedCursor(Cursor.CROSSHAIR_CURSOR));
 		
 		// init the side panel
 		mTxt_explanation.setLineWrap(true);
 		mTxt_explanation.setEditable(false);
 		mTxt_explanation.setBorder(new EmptyBorder(5, 5, 5, 5));
+		mTxt_explanation.setCursor(Cursor.getPredefinedCursor(Cursor.TEXT_CURSOR));
 		// used for automated scrolling
 		mDefCar = (DefaultCaret) mTxt_explanation.getCaret();
 		mDefCar.setUpdatePolicy(DefaultCaret.ALWAYS_UPDATE);
