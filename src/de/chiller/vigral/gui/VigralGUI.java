@@ -129,7 +129,7 @@ public class VigralGUI extends JFrame {
 				if(require != null) {
 					RequirementDialog dialog = new RequirementDialog(require, graph, mChosenAlgorithm);
 					dialog.setModal(true);
-					dialog.show();
+					dialog.setVisible(true);
 				}
 				else {
 					requirementsApplied(graph);
