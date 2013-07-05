@@ -334,7 +334,8 @@ public class VigralGUI extends JFrame {
 		mSpltContentPanel.setBottomComponent(mButtonPanel);
 		mSpltContentPanel.setResizeWeight(1.0d);
 		mSpltContentPanel.addComponentListener(onResizeContentPanelListener);
-		mSpltContentPanel.setEnabled(false);
+//		mSpltContentPanel.setEnabled(false);
+		mSpltContentPanel.setDividerSize(0);
 		setContentPane(mSpltContentPanel);
 		
 		initSizesAndPositions();
