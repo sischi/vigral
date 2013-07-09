@@ -173,7 +173,7 @@ public class Edge extends GraphElement implements Comparable<Edge> {
 		private Vertex mStartVertex;
 		private Vertex mEndVertex;
 		private boolean mEdgeIsDirected;
-		private double mEdgeWeight;
+		private double mEdgeWeight = 1.0;
 		
 		public static void resetIdCounter() {
 			IDCOUNT = 0;
