@@ -65,7 +65,7 @@ public class MenuBar extends JMenuBar {
 					mainInstance.changeMode(VigralGUI.Mode.GRAPHCREATION);
 				
 				mainInstance.getGraphBuilder().resetGraph();
-				Vertex.VertexFactory.resetIdCounter();
+				Vertex.VertexFactory.getInstance().resetIdCounter();
 				Edge.EdgeFactory.resetIdCounter();
 				break;
 			case JOptionPane.YES_OPTION:
@@ -75,7 +75,7 @@ public class MenuBar extends JMenuBar {
 				FileOperator fo = FileOperator.getInstance(mainInstance);
 				fo.saveGraphToFile(mainInstance.getGraphBuilder().getGraph());
 				mainInstance.getGraphBuilder().resetGraph();
-				Vertex.VertexFactory.resetIdCounter();
+				Vertex.VertexFactory.getInstance().resetIdCounter();
 				Edge.EdgeFactory.resetIdCounter();
 				break;
 			default:

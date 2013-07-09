@@ -28,7 +28,7 @@ public class Vertex extends GraphElement implements Comparable<Vertex> {
 	/**
 	 * constructs a vertex
 	 */
-	public Vertex() {
+	private Vertex() {
 		this(-1, new Point2D.Double(0, 0));
 	}
 	
@@ -170,7 +170,7 @@ public class Vertex extends GraphElement implements Comparable<Vertex> {
 		private static VertexFactory mInstance = new VertexFactory();
 		private Point2D mPoint;
 		
-		public static void resetIdCounter() {
+		public void resetIdCounter() {
 			IDCOUNT = 0;
 		}
 		

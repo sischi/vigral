@@ -173,6 +173,7 @@ public class Edge extends GraphElement implements Comparable<Edge> {
 		private Vertex mStartVertex;
 		private Vertex mEndVertex;
 		private boolean mEdgeIsDirected;
+		private double mEdgeWeight;
 		
 		public static void resetIdCounter() {
 			IDCOUNT = 0;
@@ -189,6 +190,10 @@ public class Edge extends GraphElement implements Comparable<Edge> {
 		 */
 		public static EdgeFactory getInstance() {
 			return mInstance;
+		}
+		
+		public void setWeight(double weight) {
+			mEdgeWeight = weight;
 		}
 		
 		/**
@@ -211,7 +216,9 @@ public class Edge extends GraphElement implements Comparable<Edge> {
 
 		@Override
 		public Edge create() {
-			return new Edge(IDCOUNT++, 1.0, mStartVertex, mEndVertex, mEdgeIsDirected);
+			Edge e = new Edge(IDCOUNT++, mEdgeWeight, mStartVertex, mEndVertex, mEdgeIsDirected);
+			mEdgeWeight = 1.0;
+			return e;
 		}
 	}
 
