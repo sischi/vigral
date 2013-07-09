@@ -436,7 +436,7 @@ public class VigralGUI extends JFrame {
 	
 	private void onResizeButtonPanel() {
 		Rectangle rect = mButtonPanel.getBounds();
-		System.out.println("contentRect: "+ rect);
+		//System.out.println("contentRect: "+ rect);
 		
 		Rectangle buttonRect = mBtn_changeMode.getBounds();
 		buttonRect.x = rect.width - buttonRect.width - MARGIN;
