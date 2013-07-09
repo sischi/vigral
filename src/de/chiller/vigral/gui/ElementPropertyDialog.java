@@ -31,6 +31,7 @@ public class ElementPropertyDialog<GE> extends JDialog {
 
 	private GE mElement;
 	
+	// TODO change code to be able to enter double values
 	private static final int MAXIMUMDIGITS = 7;
 
 	private final JPanel contentPanel = new JPanel();
