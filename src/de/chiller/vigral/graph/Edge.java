@@ -44,7 +44,7 @@ public class Edge extends GraphElement implements Comparable<Edge> {
 	 * @param end the end vertex
 	 * @param directed true if it is an directed edge and false else
 	 */
-	public Edge(int id, double weight, Vertex start, Vertex end, boolean directed) {
+	private Edge(int id, double weight, Vertex start, Vertex end, boolean directed) {
 		this(id, weight, start, end, directed, ElementState.UNVISITED);
 	}
 	
@@ -57,7 +57,7 @@ public class Edge extends GraphElement implements Comparable<Edge> {
 	 * @param directed true if it is an directed edge and false else
 	 * @param state the state of the edge
 	 */
-	public Edge(int id, double weight, Vertex start, Vertex end, boolean directed, ElementState state) {
+	private Edge(int id, double weight, Vertex start, Vertex end, boolean directed, ElementState state) {
 		super();
 		mID = id;
 		mWeight = weight;
@@ -212,6 +212,10 @@ public class Edge extends GraphElement implements Comparable<Edge> {
 		 */
 		public void setDirected(boolean isDirected) {
 			mEdgeIsDirected = isDirected;
+		}
+		
+		public Edge copyEdge(Edge e, Vertex start, Vertex end) {
+			return new Edge(e.getId(), e.getWeight(), start, end, e.isDirected(), e.getState());
 		}
 
 		@Override
