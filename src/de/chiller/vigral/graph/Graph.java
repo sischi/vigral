@@ -2,15 +2,16 @@ package de.chiller.vigral.graph;
 
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import de.chiller.vigral.graph.Edge.EdgeFactory;
-
-import edu.uci.ics.jung.graph.SortedSparseMultigraph;
+import edu.uci.ics.jung.graph.OrderedSparseMultigraph;
 import edu.uci.ics.jung.graph.util.EdgeType;
 
 
-public class Graph extends SortedSparseMultigraph<Vertex, Edge> {
+@SuppressWarnings("serial")
+public class Graph extends OrderedSparseMultigraph<Vertex, Edge> {
 
 	public Graph() {
 		super();
@@ -19,19 +20,26 @@ public class Graph extends SortedSparseMultigraph<Vertex, Edge> {
 	public Graph(Graph g) {
 		super();
 	
-		for(Vertex v : g.getVertices())
-			addVertex(new Vertex(v));
+		HashMap<Integer, Vertex> vertices = new HashMap<Integer, Vertex>();
+		
+		for(Vertex v : g.getVertices()) {
+			Vertex copy = new Vertex(v); 
+			addVertex(copy);
+			vertices.put(copy.getId(), copy);
+		}
 		
 		for(Edge e : g.getEdges()) {
-			Vertex startVertex = null, endVertex = null;
-			for(Vertex v : getVertices()) {
-				if(e.getStartVertex().getId() == v.getId())
-					startVertex = v;
-				if(e.getEndVertex().getId() == v.getId())
-					endVertex = v;
-				if(startVertex != null && endVertex != null)
-					break;
-			}
+//			Vertex startVertex = null, endVertex = null;
+//			for(Vertex v : getVertices()) {
+//				if(e.getStartVertex().getId() == v.getId())
+//					startVertex = v;
+//				else if(e.getEndVertex().getId() == v.getId())
+//					endVertex = v;
+//				if(startVertex != null && endVertex != null)
+//					break;
+//			}
+			Vertex startVertex = vertices.get(e.getStartVertex().getId());
+			Vertex endVertex = vertices.get(e.getEndVertex().getId());
 			
 			Edge newEdge = new Edge(e.getId(), e.getWeight(), startVertex, endVertex, e.isDirected(), e.getState());
 			if(newEdge.isDirected())
