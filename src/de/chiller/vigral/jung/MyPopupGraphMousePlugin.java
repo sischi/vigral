@@ -3,7 +3,6 @@ package de.chiller.vigral.jung;
 import java.awt.event.MouseEvent;
 import java.awt.geom.Point2D;
 
-import javax.swing.JFrame;
 import javax.swing.JPopupMenu;
 
 import de.chiller.vigral.graph.Edge;

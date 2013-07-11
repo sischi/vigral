@@ -1,5 +1,6 @@
 package de.chiller.vigral.graph;
 import java.awt.geom.Point2D;
+
 import org.apache.commons.collections15.Factory;
 
 

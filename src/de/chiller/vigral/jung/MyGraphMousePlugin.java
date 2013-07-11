@@ -1,22 +1,19 @@
 package de.chiller.vigral.jung;
 
 
-import java.awt.Cursor;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.awt.geom.Point2D;
-import javax.swing.JComponent;
 
 import de.chiller.vigral.graph.Edge;
 import de.chiller.vigral.graph.Vertex;
 import de.chiller.vigral.gui.VigralGUI;
-
 import edu.uci.ics.jung.algorithms.layout.GraphElementAccessor;
 import edu.uci.ics.jung.algorithms.layout.Layout;
 import edu.uci.ics.jung.graph.util.EdgeType;
 import edu.uci.ics.jung.visualization.VisualizationViewer;
-import edu.uci.ics.jung.visualization.control.*;
+import edu.uci.ics.jung.visualization.control.AbstractGraphMousePlugin;
 
 /**
  * A plugin that can create vertices, undirected edges (CTRL) and directed edges (SHIFT + CTRL).

@@ -9,7 +9,6 @@ import java.awt.Shape;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.Point2D;
 
-import javax.swing.JFrame;
 import javax.swing.JPanel;
 
 import org.apache.commons.collections15.Transformer;
@@ -21,12 +20,10 @@ import de.chiller.vigral.graph.Graph;
 import de.chiller.vigral.graph.Vertex;
 import de.chiller.vigral.jung.MyColor;
 import de.chiller.vigral.jung.MyModalGraphMouse;
-
 import edu.uci.ics.jung.algorithms.layout.Layout;
 import edu.uci.ics.jung.algorithms.layout.StaticLayout;
 import edu.uci.ics.jung.visualization.VisualizationViewer;
 import edu.uci.ics.jung.visualization.control.ModalGraphMouse;
-import edu.uci.ics.jung.visualization.decorators.ToStringLabeller;
 import edu.uci.ics.jung.visualization.renderers.Renderer;
 
 public class GraphBuilder {

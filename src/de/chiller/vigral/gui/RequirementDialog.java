@@ -7,14 +7,12 @@ import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JDialog;
-import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
@@ -132,8 +130,6 @@ public class RequirementDialog extends JDialog {
 
 		// get the edges of the graph
 		mEdges = new ArrayList<Edge>(graph.getEdges());
-		// sort edges (by id)
-		Collections.sort(mEdges);
 
 		// put the labels in lists
 		for (int i = 0; i < mVertices.size(); i++)

@@ -12,7 +12,7 @@ import org.apache.commons.collections15.Factory;
  * @author Timmae
  *
  */
-public class Edge extends GraphElement implements Comparable<Edge> {
+public class Edge extends GraphElement {
 	
 	
 	/**
@@ -175,6 +175,10 @@ public class Edge extends GraphElement implements Comparable<Edge> {
 		private boolean mEdgeIsDirected;
 		private double mEdgeWeight;
 		
+		public void updateIdCounter(int val) {
+			// TODO update IDCOUNT to give the loaded edges the same id
+		}
+		
 		public static void resetIdCounter() {
 			IDCOUNT = 0;
 		}
@@ -221,11 +225,6 @@ public class Edge extends GraphElement implements Comparable<Edge> {
 			return e;
 		}
 	}
+	
 
-
-
-	@Override
-	public int compareTo(Edge o) {
-		return Integer.compare(getId(), o.getId());
-	}
 }

@@ -17,7 +17,6 @@ import javax.swing.JFrame;
 
 import au.com.bytecode.opencsv.CSVReader;
 import au.com.bytecode.opencsv.CSVWriter;
-
 import de.chiller.vigral.graph.Edge;
 import de.chiller.vigral.graph.Graph;
 import de.chiller.vigral.graph.Vertex;

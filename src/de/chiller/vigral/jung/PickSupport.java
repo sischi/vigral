@@ -10,13 +10,11 @@ import java.util.Collection;
 import de.chiller.vigral.graph.Edge;
 import de.chiller.vigral.graph.GraphElement;
 import de.chiller.vigral.graph.Vertex;
-
-
 import edu.uci.ics.jung.algorithms.layout.GraphElementAccessor;
 import edu.uci.ics.jung.algorithms.layout.Layout;
 import edu.uci.ics.jung.visualization.Layer;
-import edu.uci.ics.jung.visualization.VisualizationViewer;
 import edu.uci.ics.jung.visualization.VisualizationServer.Paintable;
+import edu.uci.ics.jung.visualization.VisualizationViewer;
 import edu.uci.ics.jung.visualization.picking.PickedState;
 
 

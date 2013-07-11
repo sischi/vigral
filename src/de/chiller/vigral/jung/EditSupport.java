@@ -11,8 +11,6 @@ import java.awt.geom.Point2D;
 
 import de.chiller.vigral.graph.Edge;
 import de.chiller.vigral.graph.Vertex;
-
-
 import edu.uci.ics.jung.algorithms.layout.Layout;
 import edu.uci.ics.jung.graph.Graph;
 import edu.uci.ics.jung.graph.util.EdgeType;

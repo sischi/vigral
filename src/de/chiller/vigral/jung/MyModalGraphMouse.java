@@ -2,14 +2,12 @@ package de.chiller.vigral.jung;
 
 import java.awt.ItemSelectable;
 
-import javax.swing.JFrame;
-
 import de.chiller.vigral.graph.Edge;
 import de.chiller.vigral.graph.Vertex;
-
-import edu.uci.ics.jung.visualization.control.*;
 import edu.uci.ics.jung.visualization.MultiLayerTransformer;
 import edu.uci.ics.jung.visualization.RenderContext;
+import edu.uci.ics.jung.visualization.control.AbstractModalGraphMouse;
+import edu.uci.ics.jung.visualization.control.ModalGraphMouse;
 
 public class MyModalGraphMouse extends AbstractModalGraphMouse implements ModalGraphMouse, ItemSelectable {
 	
