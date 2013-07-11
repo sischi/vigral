@@ -108,6 +108,7 @@ public class Graph extends SortedSparseMultigraph<Vertex, Edge> {
 			Edge.EdgeFactory.getInstance().setStartAndEnd(startVertex, endVertex);
    			Edge.EdgeFactory.getInstance().setDirected(Boolean.parseBoolean(strEdge[4]));
    			Edge.EdgeFactory.getInstance().setWeight(Double.parseDouble(strEdge[1]));
+   			// TODO set id of edge
    			Edge newEdge = EdgeFactory.getInstance().create();
 			if(newEdge.isDirected())
 				g.addEdge(newEdge, newEdge.getStartVertex(), newEdge.getEndVertex(), EdgeType.DIRECTED);
