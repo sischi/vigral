@@ -41,7 +41,7 @@ public class Graph extends OrderedSparseMultigraph<Vertex, Edge> {
 			Vertex startVertex = vertices.get(e.getStartVertex().getId());
 			Vertex endVertex = vertices.get(e.getEndVertex().getId());
 			
-			Edge newEdge = new Edge(e.getId(), e.getWeight(), startVertex, endVertex, e.isDirected(), e.getState());
+			Edge newEdge = Edge.EdgeFactory.getInstance().copyEdge(e, startVertex, endVertex);
 			if(newEdge.isDirected())
 				addEdge(newEdge, newEdge.getStartVertex(), newEdge.getEndVertex(), EdgeType.DIRECTED);
 			else
@@ -88,28 +88,34 @@ public class Graph extends OrderedSparseMultigraph<Vertex, Edge> {
 	
 	public static Graph parseGraph(List<String[]> strVertices, List<String[]> strEdges) {
 		Graph g = new Graph();
+		HashMap<Integer, Vertex> vertices = new HashMap<Integer, Vertex>();
 		
-		for(String[] strVertex : strVertices)
-			g.addVertex(Vertex.parseVertex(strVertex));
+		for(String[] strVertex : strVertices) {
+			Vertex v = Vertex.parseVertex(strVertex);
+			g.addVertex(v);
+			vertices.put(v.getId(), v);
+		}
 		
 		for(String[] strEdge : strEdges) {
 			int startId = Integer.parseInt(strEdge[2]);
 			int endId = Integer.parseInt(strEdge[3]);
-			Vertex startVertex = null, endVertex = null;
+			Vertex startVertex = vertices.get(startId);
+			Vertex endVertex = vertices.get(endId);
 			
-			for(Vertex v : g.getVertices()) {
-				if(v.getId() == startId)
-					startVertex = v;
-				if(v.getId() == endId)
-					endVertex = v;
-				if(startVertex != null && endVertex != null)
-					break;
-			}
+//			for(Vertex v : g.getVertices()) {
+//				if(v.getId() == startId)
+//					startVertex = v;
+//				if(v.getId() == endId)
+//					endVertex = v;
+//				if(startVertex != null && endVertex != null)
+//					break;
+//			}
 			
 			// unsure
 			Edge.EdgeFactory.getInstance().setStartAndEnd(startVertex, endVertex);
    			Edge.EdgeFactory.getInstance().setDirected(Boolean.parseBoolean(strEdge[4]));
    			Edge.EdgeFactory.getInstance().setWeight(Double.parseDouble(strEdge[1]));
+   			// TODO set id of edge
    			Edge newEdge = EdgeFactory.getInstance().create();
 			if(newEdge.isDirected())
 				g.addEdge(newEdge, newEdge.getStartVertex(), newEdge.getEndVertex(), EdgeType.DIRECTED);

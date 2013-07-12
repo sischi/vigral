@@ -118,10 +118,10 @@ public class EditSupport {
             if(mEdgeIsDirected == EdgeType.DIRECTED)
                 transformArrowShape(mDown, e.getPoint());
 
+            @SuppressWarnings("unchecked")
+    		VisualizationViewer<Vertex, Edge> vv = (VisualizationViewer<Vertex, Edge>)e.getSource();
+            vv.repaint();
         }
-        @SuppressWarnings("unchecked")
-		VisualizationViewer<Vertex, Edge> vv = (VisualizationViewer<Vertex, Edge>)e.getSource();
-        vv.repaint();
 	}
 
 	/**
