@@ -105,16 +105,17 @@ public class MenuBar extends JMenuBar {
 		JMenuItem file_new = new JMenuItem("New");
 		JMenuItem file_open = new JMenuItem("Open");
 		JMenuItem file_save = new JMenuItem("Save");
+		JMenuItem file_settings = new JMenuItem("Settings");
 		JMenuItem file_exit = new JMenuItem("Exit");
-		
 		fileMenu.add(file_new);
 		fileMenu.add(file_open);
 		fileMenu.add(file_save);
 		fileMenu.addSeparator();
+		fileMenu.add(file_settings);
+		fileMenu.addSeparator();
 		fileMenu.add(file_exit);
 		
 		JMenuItem plugins_reload = new JMenuItem("Reload");
-		
 		pluginMenu.add(plugins_reload);
 		
 		add(fileMenu);
