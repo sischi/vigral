@@ -58,6 +58,7 @@ public class PluginLoader {
 		ArrayList<AbstractAlgorithm> algorithms = new ArrayList<AbstractAlgorithm>();
 		ClassLoader loader = new URLClassLoader(urls);
 		for(String name : classes) {
+//			System.out.println("before try-catch");
 			try {
 				System.out.println("name: "+ name);
 				Class clss = loader.loadClass(name);
@@ -66,9 +67,23 @@ public class PluginLoader {
 				System.out.println("getsuperclass: "+ o.getClass().getSuperclass().getName());
 				AbstractAlgorithm algo = (AbstractAlgorithm) o;
 				algorithms.add(algo);
-			} catch(Exception e) {
+			} catch(NoClassDefFoundError e) {
+//				System.out.println("in catch 01");
+				e.printStackTrace();
+			} catch (ClassNotFoundException e) {
+//				System.out.println("in catch 02");
+				e.printStackTrace();
+			} catch (InstantiationException e) {
+//				System.out.println("in catch 03");
+				e.printStackTrace();
+			} catch (IllegalAccessException e) {
+//				System.out.println("in catch 04");
+				e.printStackTrace();
+			} catch (Exception e) {
+//				System.out.println("in catch 05");
 				e.printStackTrace();
 			}
+//			System.out.println("after try-catch");
 		}
 		
 		return algorithms;
