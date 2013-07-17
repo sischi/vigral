@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import de.chiller.vigral.graph.ElementType;
 import de.chiller.vigral.graph.Graph;
+import de.chiller.vigral.graph.GraphElement;
 import de.chiller.vigral.util.Pair;
 
 /**
@@ -25,7 +26,7 @@ public interface Algorithm {
 	 * @param requiredIDs a list of the IDs of the vertices or edges required in the order of the requirements list
 	 * sent by "getrequirements"
 	 */
-	public void setRequirements(ArrayList<Integer> requiredIDs);
+	public void setRequirements(ArrayList<GraphElement> requiredElements);
 	
 	/**
 	 * this function implements the algorithm

@@ -21,6 +21,7 @@ import de.chiller.vigral.algorithm.AbstractAlgorithm;
 import de.chiller.vigral.graph.Edge;
 import de.chiller.vigral.graph.ElementType;
 import de.chiller.vigral.graph.Graph;
+import de.chiller.vigral.graph.GraphElement;
 import de.chiller.vigral.graph.Vertex;
 import de.chiller.vigral.util.Pair;
 
@@ -48,7 +49,7 @@ public class RequirementDialog extends JDialog {
 		public void actionPerformed(ActionEvent e) {
 			// onOK:
 			// create an array for the required ids
-			ArrayList<Integer> required = new ArrayList<Integer>();
+			ArrayList<GraphElement> required = new ArrayList<GraphElement>();
 			boolean requirementsSetProperly = true;
 
 			// take the choices of the dialog
@@ -65,31 +66,31 @@ public class RequirementDialog extends JDialog {
 					// if the user has chosen 'nothing selected' (the first
 					// entry) return -1
 					if (lbl.equals("--"))
-						required.add(-1);
+						required.add(null);
 					// else add the appropriate id
 					else
-						required.add(mVertices.get(pair.getR().getSelectedIndex() - 1).getId());
+						required.add(mVertices.get(pair.getR().getSelectedIndex() - 1));
 					break;
 
 				case OPTIONAL_EDGE:
 					if (lbl.equals("--"))
-						required.add(-1);
+						required.add(null);
 					else
-						required.add(mEdges.get(pair.getR().getSelectedIndex() - 1).getId());
+						required.add(mEdges.get(pair.getR().getSelectedIndex() - 1));
 					break;
 
 				case EDGE:
 					if(mEdges.size() <= 0 || mEdges.get(pair.getR().getSelectedIndex()) == null)
 						requirementsSetProperly = false;
 					else
-						required.add(mEdges.get(pair.getR().getSelectedIndex()).getId());
+						required.add(mEdges.get(pair.getR().getSelectedIndex()));
 					break;
 
 				case VERTEX:
 					if(mVertices.size() <= 0 || mVertices.get(pair.getR().getSelectedIndex()) == null)
 						requirementsSetProperly = false;
 					else
-						required.add(mVertices.get(pair.getR().getSelectedIndex()).getId());
+						required.add(mVertices.get(pair.getR().getSelectedIndex()));
 					break;
 
 				default:
@@ -122,14 +123,14 @@ public class RequirementDialog extends JDialog {
 		mGraph = graph;
 
 		// get the vertices of the graph
-		mVertices = new ArrayList<Vertex>(graph.getVertices());
+		mVertices = new ArrayList<Vertex>(mGraph.getVertices());
 		System.out.println("unsorted: " + mVertices);
 		// sort the vertices (by label)
 		Collections.sort(mVertices);
 		System.out.println("sorted: " + mVertices);
 
 		// get the edges of the graph
-		mEdges = new ArrayList<Edge>(graph.getEdges());
+		mEdges = new ArrayList<Edge>(mGraph.getEdges());
 
 		// put the labels in lists
 		for (int i = 0; i < mVertices.size(); i++)
