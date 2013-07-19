@@ -23,6 +23,10 @@ public class Edge extends GraphElement implements Comparable<Edge> {
 	 * the weight of the edge
 	 */
 	private double mWeight;
+	
+	private double mMinCapacity;
+	private double mMaxCapacity;
+	
 	/**
 	 * the start vertex
 	 */
@@ -36,17 +40,22 @@ public class Edge extends GraphElement implements Comparable<Edge> {
 	 */
 	private boolean mIsDirected;
 	
-	/**
-	 * constructs the edge
-	 * @param id the identifier
-	 * @param weight the weight
-	 * @param start the start vertex
-	 * @param end the end vertex
-	 * @param directed true if it is an directed edge and false else
-	 */
-	private Edge(int id, double weight, Vertex start, Vertex end, boolean directed) {
-		this(id, weight, start, end, directed, ElementState.UNVISITED);
+	
+	private Edge(int id, Vertex start, Vertex end, boolean directed) {
+		this(id, 1.0d, 1.0d, 1.0d, start, end, directed, ElementState.UNVISITED);
 	}
+	
+//	/**
+//	 * constructs the edge
+//	 * @param id the identifier
+//	 * @param weight the weight
+//	 * @param start the start vertex
+//	 * @param end the end vertex
+//	 * @param directed true if it is an directed edge and false else
+//	 */
+//	private Edge(int id, double weight, Vertex start, Vertex end, boolean directed) {
+//		this(id, weight, start, end, directed, ElementState.UNVISITED);
+//	}
 	
 	/**
 	 * constructs the edge
@@ -57,15 +66,20 @@ public class Edge extends GraphElement implements Comparable<Edge> {
 	 * @param directed true if it is an directed edge and false else
 	 * @param state the state of the edge
 	 */
-	private Edge(int id, double weight, Vertex start, Vertex end, boolean directed, ElementState state) {
+	private Edge(int id, double weight, double minCapacity, double maxCapacity, Vertex start, Vertex end, boolean directed) {
+		this(id, weight, minCapacity, maxCapacity, start, end, directed, ElementState.UNVISITED);
+	}
+	
+	private Edge(int id, double weight, double minCapacity, double maxCapacity, Vertex start, Vertex end, boolean directed, ElementState state) {
 		super();
 		mID = id;
 		mWeight = weight;
+		mMinCapacity = minCapacity;
+		mMaxCapacity = maxCapacity;
 		mStart = start;
 		mEnd = end;
 		mIsDirected = directed;
 		mState = state;
-		//System.out.println("Edge created! "+ this.toString());
 	}
 	
 	/**
@@ -103,6 +117,22 @@ public class Edge extends GraphElement implements Comparable<Edge> {
 	 */
 	public void setWeight(double weight) {
 		mWeight = weight;
+	}
+	
+	public double getMinCapacity() {
+		return mMinCapacity;
+	}
+	
+	public void setMinCapacity(double capacity) {
+		mMinCapacity = capacity;
+	}
+	
+	public double getMaxCapacity() {
+		return mMaxCapacity;
+	}
+	
+	public void setMaxCapacity(double capacity) {
+		mMaxCapacity = capacity;
 	}
 	
 	/**
@@ -170,17 +200,14 @@ public class Edge extends GraphElement implements Comparable<Edge> {
 		
 		private static int IDCOUNT = 0;
 		private static EdgeFactory mInstance = new EdgeFactory();
-		private Vertex mStartVertex;
-		private Vertex mEndVertex;
-		private boolean mEdgeIsDirected;
-		private double mEdgeWeight = 1.0;
-		
-		public void updateIdCounter(int val) {
-			IDCOUNT = val;
-		}
 		
 		public static void resetIdCounter() {
 			IDCOUNT = 0;
+		}
+		
+		private void updateIdCount(int val) {
+			if(val >= IDCOUNT)
+				IDCOUNT = val + 1;
 		}
 		
 		/**
@@ -195,38 +222,26 @@ public class Edge extends GraphElement implements Comparable<Edge> {
 		public static EdgeFactory getInstance() {
 			return mInstance;
 		}
-		
-		public void setWeight(double weight) {
-			mEdgeWeight = weight;
-		}
-		
-		/**
-		 * setter for start and end vertices
-		 * @param start the start vertex
-		 * @param end the end vertex
-		 */
-		public void setStartAndEnd(Vertex start, Vertex end) {
-			mStartVertex = start;
-			mEndVertex = end;
-		}
-		
-		/**
-		 * setter for the direction
-		 * @param isDirected true if the edge is directed and false otherwise
-		 */
-		public void setDirected(boolean isDirected) {
-			mEdgeIsDirected = isDirected;
-		}
+
 		
 		public Edge copyEdge(Edge e, Vertex start, Vertex end) {
-			return new Edge(e.getId(), e.getWeight(), start, end, e.isDirected(), e.getState());
+			return new Edge(e.getId(), e.getWeight(), e.getMinCapacity(), e.getMaxCapacity(), start, end, e.isDirected(), e.getState());
+		}
+		
+		public Edge parseEdge(String[] strEdge, Vertex start, Vertex end) {
+			int id = Integer.parseInt(strEdge[0]);
+			updateIdCount(id);
+			return new Edge(id, Double.parseDouble(strEdge[1]), Double.parseDouble(strEdge[2]), 
+					Double.parseDouble(strEdge[3]), start, end, Boolean.parseBoolean(strEdge[6]));
 		}
 
 		@Override
 		public Edge create() {
-			Edge e = new Edge(IDCOUNT++, mEdgeWeight, mStartVertex, mEndVertex, mEdgeIsDirected);
-			mEdgeWeight = 1.0;
-			return e;
+			return null;
+		}
+		
+		public Edge create(Vertex start, Vertex end, boolean isDirected) {
+			return new Edge(IDCOUNT++, start, end, isDirected);
 		}
 	}
 

@@ -97,16 +97,12 @@ public class Graph extends OrderedSparseMultigraph<Vertex, Edge> {
 		}
 		
 		for(String[] strEdge : strEdges) {
-			int startId = Integer.parseInt(strEdge[2]);
-			int endId = Integer.parseInt(strEdge[3]);
+			int startId = Integer.parseInt(strEdge[4]);
+			int endId = Integer.parseInt(strEdge[5]);
 			Vertex startVertex = vertices.get(startId);
 			Vertex endVertex = vertices.get(endId);
-
-			Edge.EdgeFactory.getInstance().setStartAndEnd(startVertex, endVertex);
-   			Edge.EdgeFactory.getInstance().setDirected(Boolean.parseBoolean(strEdge[4]));
-   			Edge.EdgeFactory.getInstance().setWeight(Double.parseDouble(strEdge[1]));
-   			Edge.EdgeFactory.getInstance().updateIdCounter(Integer.parseInt(strEdge[0]));
-   			Edge newEdge = EdgeFactory.getInstance().create();
+			
+   			Edge newEdge = EdgeFactory.getInstance().parseEdge(strEdge, startVertex, endVertex);
 			if(newEdge.isDirected())
 				g.addEdge(newEdge, newEdge.getStartVertex(), newEdge.getEndVertex(), EdgeType.DIRECTED);
 			else

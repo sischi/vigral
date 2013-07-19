@@ -156,12 +156,10 @@ public class EditSupport {
 		if((vertex != null) && (mStartVertex != null)) {
 			if(!(mDown.getX() == p.getX() && mDown.getY() == p.getY())) {
 	    		Graph<Vertex, Edge> graph = vv.getGraphLayout().getGraph();
-	    		Edge.EdgeFactory.getInstance().setStartAndEnd(mStartVertex, vertex);
 	    		if(mEdgeIsDirected == EdgeType.DIRECTED)
-	    			Edge.EdgeFactory.getInstance().setDirected(true);
+	    			graph.addEdge(Edge.EdgeFactory.getInstance().create(mStartVertex, vertex, true), mStartVertex, vertex, mEdgeIsDirected);
 	    		else
-	    			Edge.EdgeFactory.getInstance().setDirected(false);
-	    		graph.addEdge(Edge.EdgeFactory.getInstance().create(), mStartVertex, vertex, mEdgeIsDirected);
+	    			graph.addEdge(Edge.EdgeFactory.getInstance().create(mStartVertex, vertex, false), mStartVertex, vertex, mEdgeIsDirected);
 	    	}
 		}
         vv.repaint();
