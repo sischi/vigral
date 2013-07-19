@@ -101,33 +101,16 @@ public class Graph extends OrderedSparseMultigraph<Vertex, Edge> {
 			int endId = Integer.parseInt(strEdge[3]);
 			Vertex startVertex = vertices.get(startId);
 			Vertex endVertex = vertices.get(endId);
-			
-//			for(Vertex v : g.getVertices()) {
-//				if(v.getId() == startId)
-//					startVertex = v;
-//				if(v.getId() == endId)
-//					endVertex = v;
-//				if(startVertex != null && endVertex != null)
-//					break;
-//			}
-			
-			// unsure
+
 			Edge.EdgeFactory.getInstance().setStartAndEnd(startVertex, endVertex);
    			Edge.EdgeFactory.getInstance().setDirected(Boolean.parseBoolean(strEdge[4]));
    			Edge.EdgeFactory.getInstance().setWeight(Double.parseDouble(strEdge[1]));
-   			// TODO set id of edge
+   			Edge.EdgeFactory.getInstance().updateIdCounter(Integer.parseInt(strEdge[0]));
    			Edge newEdge = EdgeFactory.getInstance().create();
 			if(newEdge.isDirected())
 				g.addEdge(newEdge, newEdge.getStartVertex(), newEdge.getEndVertex(), EdgeType.DIRECTED);
 			else
 				g.addEdge(newEdge, newEdge.getStartVertex(), newEdge.getEndVertex(), EdgeType.UNDIRECTED);
-			// unsure
-			
-//			Edge newEdge = new Edge(Integer.parseInt(strEdge[0]), Double.parseDouble(strEdge[1]), startVertex, endVertex, Boolean.parseBoolean(strEdge[4]), ElementState.UNVISITED);
-//			if(newEdge.isDirected())
-//				g.addEdge(newEdge, newEdge.getStartVertex(), newEdge.getEndVertex(), EdgeType.DIRECTED);
-//			else
-//				g.addEdge(newEdge, newEdge.getStartVertex(), newEdge.getEndVertex(), EdgeType.UNDIRECTED);
 		}
 		
 		return g;
