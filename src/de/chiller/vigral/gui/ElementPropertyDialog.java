@@ -141,6 +141,10 @@ public class ElementPropertyDialog<GE> extends JDialog {
 				if(mElement instanceof Vertex) {
 					String newLabel = mComponents.get(0).getR().getText().toString().trim();
 					boolean alreadyUsed = false;
+					if(((Vertex) mElement).getLabel().equals(newLabel) || ((Vertex) mElement).getIdentifier().equals(newLabel)) {
+						((Vertex) mElement).setLabel(newLabel);
+						dispose();
+					}
 					for(Vertex v : VigralGUI.getInstance().getGraphBuilder().getGraph().getVertices()) {
 						if(v.getLabel().equals(newLabel) || v.getIdentifier().equals(newLabel)) {
 							alreadyUsed = true;

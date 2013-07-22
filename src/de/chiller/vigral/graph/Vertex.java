@@ -211,6 +211,6 @@ public class Vertex extends GraphElement implements Comparable<Vertex> {
 
 	@Override
 	public int compareTo(Vertex o) {
-		return getLabel().compareTo(o.getLabel());
+		return toString().compareTo(o.toString());
 	}
 }

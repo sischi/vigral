@@ -137,7 +137,10 @@ public class GraphBuilder {
 		mVViewer.getRenderContext().setVertexLabelTransformer(new Transformer<Vertex, String>() {
 			@Override
 			public String transform(Vertex v) {
-				return "<html>"+ v.getLabel() +"<br />"+ v.getLabelAddition() +"</html>";
+				if(v.getLabel().equals(""))
+					return "<html>"+ v.getIdentifier() +"<br />"+ v.getLabelAddition() +"</html>";
+				else
+					return "<html>"+ v.getLabel() +"<br />"+ v.getLabelAddition() +"</html>";
 			}
 		});
 		

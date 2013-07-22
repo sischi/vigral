@@ -134,7 +134,7 @@ public class RequirementDialog extends JDialog {
 
 		// put the labels in lists
 		for (int i = 0; i < mVertices.size(); i++)
-			vertexLabels.add(i, mVertices.get(i).getLabel());
+			vertexLabels.add(i, mVertices.get(i).toString());
 		for (int i = 0; i < mEdges.size(); i++)
 			edgeLabels.add(i, mEdges.get(i).toString());
 
