@@ -10,6 +10,7 @@ import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.util.ArrayList;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -22,6 +23,7 @@ import javax.swing.border.EmptyBorder;
 
 import de.chiller.vigral.graph.Edge;
 import de.chiller.vigral.graph.Vertex;
+import de.chiller.vigral.util.Pair;
 
 
 @SuppressWarnings("serial")
@@ -33,9 +35,8 @@ public class ElementPropertyDialog<GE> extends JDialog {
 	
 
 	private final JPanel mContentPanel = new JPanel();
-	private JTextField mTxt_field = new JTextField();
-	private JLabel mLbl_propName = new JLabel();
-	private JLabel mLbl_errorHint = new JLabel();
+	private ArrayList<Pair<JLabel, JTextField>> mComponents = new ArrayList<Pair<JLabel, JTextField>>();
+	private ArrayList<JLabel> mErrorLabels = new ArrayList<JLabel>();
 	private JPanel mButtonPane = new JPanel();
 	private JButton mOkButton = new JButton();
 	private JButton mCancelButton = new JButton();
@@ -47,37 +48,37 @@ public class ElementPropertyDialog<GE> extends JDialog {
 	 */
 	public ElementPropertyDialog(GE elem) {
 		mElement = elem;
-		mDefaultBorder = mTxt_field.getBorder();
 		mErrorBorder = BorderFactory.createLineBorder(Color.RED, 2);
+		
+		mComponents.add(new Pair<JLabel, JTextField>(new JLabel(), new JTextField()));
+		mErrorLabels.add(new JLabel());
+		if(mElement instanceof Edge) {
+			mComponents.add(new Pair<JLabel, JTextField>(new JLabel(), new JTextField()));
+			mComponents.add(new Pair<JLabel, JTextField>(new JLabel(), new JTextField()));
+			mErrorLabels.add(new JLabel());
+			mErrorLabels.add(new JLabel());
+		}
+		mDefaultBorder = mComponents.get(0).getR().getBorder();
+		
+		
 		initComponents();
 		
 		
 		
-		if(mElement instanceof Vertex)
-			mTxt_field.setText(""+((Vertex) mElement).getLabel());
-		else {// it is an Edge
-//			txt_field.addKeyListener(new KeyListener() {
-//				@Override
-//				public void keyTyped(KeyEvent e) {
-//					char c = e.getKeyChar();
-//					
-//					if((!Character.isDigit(c) && c != KeyEvent.VK_BACK_SPACE && c != KeyEvent.VK_DELETE) || txt_field.getText().length() == MAXIMUMDIGITS)
-//						e.consume();
-//				}
-//				@Override
-//				public void keyReleased(KeyEvent e) {
-//				}
-//				@Override
-//				public void keyPressed(KeyEvent arg0) {
-//				}
-//			});
-			mTxt_field.setText(""+((Edge) mElement).getWeight());
+		if(mElement instanceof Vertex) {
+			mComponents.get(0).getR().setText(""+((Vertex) mElement).getLabel());
+			mComponents.get(0).getL().setText("Label");
+			mErrorLabels.get(0).setText("name is already used");
 		}
-		
-		if(mElement instanceof Vertex)
-			mLbl_propName.setText("Label");
-		else // it is an edge
-			mLbl_propName.setText("Weight");
+		else {// it is an Edge
+			mComponents.get(0).getR().setText(""+((Edge) mElement).getWeight());
+			mComponents.get(0).getL().setText("Weight");
+			mComponents.get(1).getR().setText(""+((Edge) mElement).getMinCapacity());
+			mComponents.get(1).getL().setText("Min Capacity");
+			mComponents.get(2).getR().setText(""+((Edge) mElement).getMaxCapacity());
+			mComponents.get(2).getL().setText("Max Capacity");
+		}
+
 		
 		
 		initButtonPane();
@@ -88,36 +89,44 @@ public class ElementPropertyDialog<GE> extends JDialog {
 	
 	private void initComponents() {
 		Rectangle rect = VigralGUI.getInstance().getBounds();
-		setBounds(rect.x + 100, rect.y + 100, 312, 115);
+		if(mElement instanceof Vertex)
+			setBounds(rect.x + 100, rect.y + 100, 312, 115);
+		else
+			setBounds(rect.x + 100, rect.y + 100, 312, 265);
 		
 		getContentPane().setLayout(new BorderLayout());
 		mContentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
 		mContentPanel.setLayout(null);
 		getContentPane().add(mContentPanel, BorderLayout.CENTER);
 		
-		
-		mTxt_field.setBounds(150, 25, 150, 20);
-		mTxt_field.addFocusListener(new FocusListener() {
-			@Override
-			public void focusLost(FocusEvent e) {}
+
+		for(int i = 0; i < mComponents.size(); i++) {
+			final Pair<JLabel, JTextField> p = mComponents.get(i);
+			p.getL().setBounds(MARGIN, (i * 50) + 30, 130, 15);
 			
-			@Override
-			public void focusGained(FocusEvent e) {
-				mTxt_field.selectAll();
-			}
-		});
-		mContentPanel.add(mTxt_field);
-		
-		mLbl_errorHint.setBounds(150, 10, 150, 15);
-		mLbl_errorHint.setText("only floating numbers");
-		mLbl_errorHint.setForeground(Color.RED);
-		Font font = mLbl_errorHint.getFont().deriveFont(10.0f);
-		mLbl_errorHint.setFont(font);
-		mLbl_errorHint.setVisible(false);
-		mContentPanel.add(mLbl_errorHint);
-		
-		mLbl_propName.setBounds(MARGIN, 32, 130, 15);
-		mContentPanel.add(mLbl_propName);
+			p.getR().setBounds(150, (i * 50) + 25, 150, 20);
+			p.getR().addFocusListener(new FocusListener() {
+				@Override
+				public void focusLost(FocusEvent e) {}
+				@Override
+				public void focusGained(FocusEvent e) {
+					p.getR().selectAll();
+				}
+			});
+			
+			JLabel errorLabel = mErrorLabels.get(i);
+			errorLabel.setBounds(150, (i * 50) + 10, 150, 15);
+			errorLabel.setForeground(Color.RED);
+			errorLabel.setText("only floating numbers");
+			Font font = mErrorLabels.get(0).getFont().deriveFont(10.0f);
+			errorLabel.setFont(font);
+			errorLabel.setVisible(false);
+			
+			mContentPanel.add(p.getL());
+			mContentPanel.add(p.getR());
+			mContentPanel.add(errorLabel);
+		}
+
 	}
 	
 	private void initButtonPane() {
@@ -130,7 +139,7 @@ public class ElementPropertyDialog<GE> extends JDialog {
 			public void actionPerformed(ActionEvent e) {
 				resetErrorStates();
 				if(mElement instanceof Vertex) {
-					String newLabel = mTxt_field.getText().toString().trim();
+					String newLabel = mComponents.get(0).getR().getText().toString().trim();
 					boolean alreadyUsed = false;
 					for(Vertex v : VigralGUI.getInstance().getGraphBuilder().getGraph().getVertices()) {
 						if(v.getLabel().equals(newLabel) || v.getIdentifier().equals(newLabel)) {
@@ -138,24 +147,40 @@ public class ElementPropertyDialog<GE> extends JDialog {
 							break;
 						}
 					}
-					if(!alreadyUsed)
+					
+					if(!alreadyUsed) {
 						((Vertex) mElement).setLabel(newLabel);
+						dispose();
+					}
+					else {
+						mComponents.get(0).getR().setBorder(mErrorBorder);
+						mErrorLabels.get(0).setVisible(true);
+					}
 				}
 				else { // it is an Edge
-					String in = mTxt_field.getText().toString().trim();
-					if(in.equals(""))
-						in = "1";
-					
-					try {
-						Double inVal = Double.parseDouble(in);
-						((Edge) mElement).setWeight(inVal);
-						dispose();
-					} catch(NumberFormatException ex) {
-						mTxt_field.setBorder(mErrorBorder);
-						mLbl_errorHint.setVisible(true);
-						ex.printStackTrace();
+					ArrayList<Double> values = new ArrayList<Double>();
+					boolean errorOccured = false;
+					for(int i = 0; i < 3; i++) {
+						String in = mComponents.get(i).getR().getText().toString().trim();
+						if(in.equals(""))
+							in = "1";
+						
+						try {
+							values.add(Double.parseDouble(in));
+						} catch(NumberFormatException ex) {
+							mComponents.get(i).getR().setBorder(mErrorBorder);
+							mErrorLabels.get(i).setVisible(true);
+							errorOccured = true;
+							ex.printStackTrace();
+						}
 					}
 					
+					if(!errorOccured) {
+						((Edge) mElement).setWeight(values.get(0));
+						((Edge) mElement).setMinCapacity(values.get(1));
+						((Edge) mElement).setMaxCapacity(values.get(2));
+						dispose();
+					}
 				}
 			}
 		});
@@ -176,8 +201,10 @@ public class ElementPropertyDialog<GE> extends JDialog {
 	
 	
 	private void resetErrorStates() {
-		mTxt_field.setBorder(mDefaultBorder);
-		mLbl_errorHint.setVisible(false);
+		for(int i = 0; i < mComponents.size(); i++) {
+			mComponents.get(i).getR().setBorder(mDefaultBorder);
+			mErrorLabels.get(i).setVisible(false);
+		}
 	}
 
 
