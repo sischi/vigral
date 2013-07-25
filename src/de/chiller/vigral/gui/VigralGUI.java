@@ -246,7 +246,6 @@ public class VigralGUI extends JFrame {
 	 * Create
 	 */
 	private VigralGUI() {
-		System.out.println("Harroo!!");
 		mMainWindow = this;
 		
 		Settings.loadSettings();
@@ -280,7 +279,8 @@ public class VigralGUI extends JFrame {
 				
 		mCb_algorithm.setBackground(Color.WHITE);
 		initAlgorithms();
-		mCb_algorithm.setModel(mAlgorithmBoxModel);		
+		mCb_algorithm.setModel(mAlgorithmBoxModel);	
+		
 		
 		mBtn_changeMode.addActionListener(mCreationListener);
 		
@@ -334,6 +334,11 @@ public class VigralGUI extends JFrame {
 		setContentPane(mSpltContentPanel);
 		
 		initSizesAndPositions();
+	}
+	
+	
+	public void setFocusToDrawPanel() {
+		mGraphPanel.requestFocus();
 	}
 	
 	
@@ -448,6 +453,7 @@ public class VigralGUI extends JFrame {
 	
 	
 	public void requirementsApplied(Graph g) {
+		System.out.println("requirements applied");
 		changeMode(Mode.VISUALISATION);
 		mBtn_changeMode.removeActionListener(mCreationListener);
 		mBtn_changeMode.addActionListener(mVisualisationListener);

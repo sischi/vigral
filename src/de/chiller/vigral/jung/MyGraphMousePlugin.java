@@ -1,6 +1,8 @@
 package de.chiller.vigral.jung;
 
 
+import java.awt.KeyEventDispatcher;
+import java.awt.KeyboardFocusManager;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
@@ -40,9 +42,19 @@ public class MyGraphMousePlugin extends AbstractGraphMousePlugin implements Mous
 	
 	
 	
-
+	private static final int MASK_UNDIRECTED_EDGE = 0b00001;
+	private static final int MASK_DIRECTED_EDGE = 0b00010;
+	private static final int MASK_MULTIPLE_SELECT = 0b00100;
+	private static final int MASK_RECTANGULAR_SELECT = 0b01000;
+	private static final int MASK_KEY_NOT_MAPPED = 0b10000;
+	private static final int MASK_NOKEY = 0b0000;
 	
-	private final int NOKEY = 0;
+	private static final int INVMASK_UNDIRECTED_EDGE = MASK_UNDIRECTED_EDGE ^ 0b11111;
+	private static final int INVMASK_DIRECTED_EDGE = MASK_DIRECTED_EDGE ^ 0b11111;
+	private static final int INVMASK_MULTIPLE_SELECT = MASK_MULTIPLE_SELECT ^ 0b11111;
+	private static final int INVMASK_RECTANGULAR_SELECT = MASK_RECTANGULAR_SELECT ^ 0b11111;
+	private static final int INVMASK_KEY_NOT_MAPPED = MASK_KEY_NOT_MAPPED ^ 0b11111;
+	private static final int INVMASK_NOKEY = MASK_NOKEY ^ 0b11111;
 	
 	private PickSupport mPicking;
 	private EditSupport mEditing;
@@ -55,9 +67,19 @@ public class MyGraphMousePlugin extends AbstractGraphMousePlugin implements Mous
     
     
     
-    
-    
-    
+	private KeyEventDispatcher keyEventDispatcher = new KeyEventDispatcher() {
+		@Override
+		public boolean dispatchKeyEvent(final KeyEvent e) {
+			if (e.getID() == KeyEvent.KEY_PRESSED) {
+				onKeyPressed(e);
+			}
+			else if (e.getID() == KeyEvent.KEY_RELEASED) {
+				onKeyReleased(e);
+			}
+			return false;
+		}
+	};
+	    
     
     
     public MyGraphMousePlugin() {
@@ -70,6 +92,7 @@ public class MyGraphMousePlugin extends AbstractGraphMousePlugin implements Mous
      */
     public MyGraphMousePlugin(int modifiers) {
         super(modifiers);
+        KeyboardFocusManager.getCurrentKeyboardFocusManager().addKeyEventDispatcher(keyEventDispatcher);
 		mPicking = new PickSupport();
 		mEditing = new EditSupport();
 		mMode = EDITING_MODE;
@@ -78,7 +101,10 @@ public class MyGraphMousePlugin extends AbstractGraphMousePlugin implements Mous
 
     @SuppressWarnings("unchecked")
     public void mousePressed(MouseEvent e) {
-    	System.out.println("Mouse down");
+    	VigralGUI.getInstance().setFocusToDrawPanel();
+    	System.out.println("Mouse down in mode editing mode? -"+ (mMode == EDITING_MODE));
+    	System.out.println("Mouse down in mode picking mode? -"+ (mMode == PICKING_MODE));
+    	System.out.println("key pressed = "+ mKeyPressed);
 		if ((e.getModifiers() & MouseEvent.BUTTON1_MASK) != 0) {
 			// get the clicked vv and the coordinates
 			final VisualizationViewer<Vertex, Edge> vv = (VisualizationViewer<Vertex, Edge>) e .getSource();
@@ -118,7 +144,7 @@ public class MyGraphMousePlugin extends AbstractGraphMousePlugin implements Mous
 						mPicking.prepareToDrawRect(vv, p);
 					}
 
-				} else if (mKeyPressed == NOKEY) {
+				} else if (mKeyPressed == MASK_NOKEY) {
 					// create vertex
 					if (vertex == null && mMode == EDITING_MODE && (e.getModifiers() & MouseEvent.CTRL_MASK) == 0) {
 						// just create a new vertex if editing is enabled
@@ -135,69 +161,11 @@ public class MyGraphMousePlugin extends AbstractGraphMousePlugin implements Mous
 				}
 			}
 		}
-    	
-//    	// on left mouse press
-//    	if((e.getModifiers() & MouseEvent.BUTTON1_MASK) != 0) {
-//    		// get the clicked vv and the coordinates
-//        	final VisualizationViewer<Vertex, Edge> vv = (VisualizationViewer<Vertex, Edge>)e.getSource();
-//            final Point2D p = e.getPoint();
-//            
-//            // get an instance of the graphelementaccessor
-//            GraphElementAccessor<Vertex, Edge> pickSupport = vv.getPickSupport();
-//            if(pickSupport != null) {
-//            	final Vertex vertex = (Vertex) pickSupport.getVertex(vv.getModel().getGraphLayout(), p.getX(), p.getY());
-//            	
-//            	// edge drawing
-//            	if((e.getModifiers() & MouseEvent.CTRL_MASK) != 0 && vertex != null) {
-//            		if(!mEditingPossible)
-//            			return;
-//            		
-//            		EdgeType directed = EdgeType.UNDIRECTED;
-//            		
-//            		// directed edge
-//            		if((e.getModifiers() & MouseEvent.SHIFT_MASK) != 0)
-//            			directed = EdgeType.DIRECTED;
-//            		
-//            		mPicking.clearPickedCollection(vv);
-//            		mMode = EDITING_MODE;
-//            		mEditing.startEdge(e, vertex, directed);
-//            	}
-//            	// picking mode
-//            	else if((e.getModifiers() & MouseEvent.SHIFT_MASK) != 0 && vertex != null) {
-//            		mMode = PICKING_MODE;
-//            		mPicking.addToSelection(vertex, vv, p);
-//            	}
-//            	// start rectangle
-//            	else if((e.getModifiers() & MouseEvent.SHIFT_MASK) != 0 && vertex == null){
-//            		mMode = PICKING_MODE;
-//            		mPicking.clearPickedCollection(vv);
-//            		mPicking.prepareToDrawRect(vv, p);
-//            	}
-//            	else {
-//            		// create vertex
-//            		if(vertex == null && mMode == EDITING_MODE && (e.getModifiers() & MouseEvent.CTRL_MASK) == 0) {
-//            			// just create a new vertex if editing is enabled
-//            			if(!mEditingPossible)
-//                			return;
-//            			mEditing.addVertex(e, vv);
-//            		}
-//            		else if(vertex == null && mMode == PICKING_MODE) {
-//            			mMode = EDITING_MODE;
-//            			mPicking.clearPickedCollection(vv);
-//            		}
-//            		else if(vertex != null) {
-//            			mMode = PICKING_MODE;
-//            			mPicking.pickVertex(vv, vertex, p);
-//            		}
-//            	}
-//            }
-//    	}
     }
     
     
     @SuppressWarnings("unchecked")
     public void mouseDragged(MouseEvent e) {
-    	System.out.println("Mouse dragged");
     	if((e.getModifiers() & MouseEvent.BUTTON1_MASK) != 0) {
 	    	final VisualizationViewer<Vertex, Edge> vv = (VisualizationViewer<Vertex, Edge>)e.getSource();
 	        final Point2D p = e.getPoint();
@@ -262,46 +230,53 @@ public class MyGraphMousePlugin extends AbstractGraphMousePlugin implements Mous
     public void mouseMoved(MouseEvent e) {}
 
 	@Override
-	public void keyTyped(KeyEvent e) {	
-		System.out.println("key typed: "+ KeyEvent.getKeyText(e.getKeyCode()));
-	}
+	public void keyTyped(KeyEvent e) {}
 
 	@Override
 	public void keyPressed(KeyEvent e) {
-		System.out.println("pressed key: "+ KeyEvent.getKeyText(e.getKeyCode()) +"at time "+ e.getWhen());
-		if(e.getKeyCode() == Settings.mSettingsKey.get(Settings.KEY_UNDIRECTED_EDGE)) {
-			if((mKeyPressed & 0b0001) == 0b0000)
-				mKeyPressed |= 0b0001;
-		}
-		else if(e.getKeyCode() == Settings.mSettingsKey.get(Settings.KEY_DIRECTED_EDGE)) {
-			if((mKeyPressed & 0b0010) == 0b0000)
-				mKeyPressed |= 0b0010;
-		}
-		else if(e.getKeyCode() == Settings.mSettingsKey.get(Settings.KEY_MULTIPLE_SELECT)) {
-			if((mKeyPressed & 0b0100) == 0b0000)
-				mKeyPressed |= 0b0100;
-		}
-		else if(e.getKeyCode() == Settings.mSettingsKey.get(Settings.KEY_RECTANGULAR_SELECT)) {
-			if((mKeyPressed & 0b1000) == 0b0000)
-				mKeyPressed |= 0b1000;
-		}
+		onKeyPressed(e);
 	}
 
 	@Override
 	public void keyReleased(KeyEvent e) {
-		System.out.println("released key: "+ KeyEvent.getKeyText(e.getKeyCode()) +"at time "+ e.getWhen());
-		if(e.getKeyCode() == Settings.mSettingsKey.get(Settings.KEY_UNDIRECTED_EDGE)) {
-				mKeyPressed &= 0b1110;
-		}
-		else if(e.getKeyCode() == Settings.mSettingsKey.get(Settings.KEY_DIRECTED_EDGE)) {
-				mKeyPressed &= 0b1101;
-		}
-		else if(e.getKeyCode() == Settings.mSettingsKey.get(Settings.KEY_MULTIPLE_SELECT)) {
-				mKeyPressed &= 0b1011;
-		}
-		else if(e.getKeyCode() == Settings.mSettingsKey.get(Settings.KEY_RECTANGULAR_SELECT)) {
-				mKeyPressed &= 0b0111;
+		onKeyReleased(e);
+	}
+	
+	private void onKeyPressed(KeyEvent e) {
+		if(e.getKeyCode() == Settings.mSettingsKey.get(Settings.KEY_UNDIRECTED_EDGE))
+			mKeyPressed |= MASK_UNDIRECTED_EDGE;
+		
+		else if(e.getKeyCode() == Settings.mSettingsKey.get(Settings.KEY_DIRECTED_EDGE))
+			mKeyPressed |= MASK_DIRECTED_EDGE;
+		
+		else if(e.getKeyCode() == Settings.mSettingsKey.get(Settings.KEY_MULTIPLE_SELECT))
+			mKeyPressed |= MASK_MULTIPLE_SELECT;
+		
+		else if(e.getKeyCode() == Settings.mSettingsKey.get(Settings.KEY_RECTANGULAR_SELECT))
+			mKeyPressed |= MASK_RECTANGULAR_SELECT;
+		
+		else {
+			mKeyPressed |= MASK_KEY_NOT_MAPPED;
 		}
 	}
+	
+	private void onKeyReleased(KeyEvent e) {
+		if(e.getKeyCode() == Settings.mSettingsKey.get(Settings.KEY_UNDIRECTED_EDGE))
+			mKeyPressed &= INVMASK_UNDIRECTED_EDGE;
+		
+		else if(e.getKeyCode() == Settings.mSettingsKey.get(Settings.KEY_DIRECTED_EDGE))
+			mKeyPressed &= INVMASK_DIRECTED_EDGE;
+		
+		else if(e.getKeyCode() == Settings.mSettingsKey.get(Settings.KEY_MULTIPLE_SELECT))
+			mKeyPressed &= INVMASK_MULTIPLE_SELECT;
+		
+		else if(e.getKeyCode() == Settings.mSettingsKey.get(Settings.KEY_RECTANGULAR_SELECT))
+			mKeyPressed &= INVMASK_RECTANGULAR_SELECT;
+		
+		else {
+			mKeyPressed &= INVMASK_KEY_NOT_MAPPED;
+		}
+	}
+
 
 }

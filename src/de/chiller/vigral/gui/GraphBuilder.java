@@ -127,7 +127,7 @@ public class GraphBuilder {
 		
 		mGraphMouse = new MyModalGraphMouse(mVViewer.getRenderContext());
 		mVViewer.setGraphMouse(mGraphMouse);
-		mVViewer.addKeyListener(mGraphMouse.getEditingPlugin());
+//		mVViewer.addKeyListener(mGraphMouse.getEditingPlugin());
 		mVViewer.setFocusable(true);
 		mGraphMouse.setMode(ModalGraphMouse.Mode.EDITING);
 		
