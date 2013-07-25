@@ -18,7 +18,7 @@ import javax.swing.plaf.multi.MultiSeparatorUI;
 
 import de.chiller.vigral.graph.Edge;
 import de.chiller.vigral.graph.Vertex;
-import de.chiller.vigral.gui.SettingsFrame;
+import de.chiller.vigral.gui.SettingsDialog;
 import de.chiller.vigral.gui.VigralGUI;
 import de.chiller.vigral.menubar.FileOperator;
 import de.chiller.vigral.settings.Settings;

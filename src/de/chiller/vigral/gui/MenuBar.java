@@ -87,7 +87,7 @@ public class MenuBar extends JMenuBar {
 	private ActionListener onSettings = new ActionListener() {
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			SettingsFrame sf = new SettingsFrame();
+			SettingsDialog sf = new SettingsDialog();
 			sf.setModal(true);
 			sf.setVisible(true);
 		}

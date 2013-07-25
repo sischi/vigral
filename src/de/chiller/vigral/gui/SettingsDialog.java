@@ -26,6 +26,7 @@ import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -40,7 +41,7 @@ import de.chiller.vigral.menubar.FileOperator;
 import de.chiller.vigral.settings.Settings;
 import de.chiller.vigral.util.Pair;
 
-public class SettingsFrame extends JDialog {
+public class SettingsDialog extends JDialog {
 
 	private JPanel contentPane;
 	private JPanel mColorTab = new JPanel();
@@ -66,7 +67,7 @@ public class SettingsFrame extends JDialog {
 	/**
 	 * Create the frame.
 	 */
-	public SettingsFrame() {
+	public SettingsDialog() {
 		initComponents();
 	}
 
@@ -222,14 +223,28 @@ public class SettingsFrame extends JDialog {
 			public void mouseClicked(MouseEvent e) {
 				if(e.getClickCount() == 2) {
 					int index = mKeyTable.getSelectedRow();
-
+					System.out.println("selected index = "+ index);
 					KeyBinderDialog dialog = new KeyBinderDialog(Settings.mKeyKeyset.get(index));
 					dialog.setModal(true);
 					dialog.setVisible(true);
 					int result = dialog.getKey();
+					System.out.println("result = "+ result +"("+ KeyEvent.getKeyText(result) +")");
 					if(result != KeyBinderDialog.CANCELED && result != KeyBinderDialog.NO_CHOICE) {
-						mChosenKeys.put(Settings.mKeyKeyset.get(index), result);
-						mKeyTable.setValueAt(KeyEvent.getKeyText(result), index, 1);
+						boolean alreadyUsed = false;
+						for(int i = 0; i < mKeyTable.getRowCount(); i++) {
+							System.out.println("value at i = "+ i +" is "+ mKeyTable.getValueAt(i, 1));
+							if(mKeyTable.getValueAt(i, 1).equals(KeyEvent.getKeyText(result)) && i != index) {
+								alreadyUsed = true;
+							}
+						}
+						System.out.println("alreadyUsed = "+ alreadyUsed);
+						if(!alreadyUsed) {
+							mChosenKeys.put(Settings.mKeyKeyset.get(index), result);
+							mKeyTable.setValueAt(KeyEvent.getKeyText(result), index, 1);
+						}
+						else {
+							JOptionPane.showMessageDialog(null, "This key is already used.");
+						}
 					}
 				}
 			}
@@ -267,6 +282,7 @@ public class SettingsFrame extends JDialog {
 		mApplyButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				saveSettings();
+				VigralGUI.getInstance().getGraphBuilder().redraw();
 				dispose();
 			}
 		});
@@ -298,46 +314,22 @@ public class SettingsFrame extends JDialog {
 		for(String key : mChosenKeys.keySet()) {
 			Settings.mSettingsKey.put(key, mChosenKeys.get(key));
 		}
-//		System.out.println("new keymap: "+ Settings.mSettingsKey);
 		
 		Settings.saveSettings();
 	}
 	
 	
 	private void restoreDefaultColors() {
-//		mPreferences.put(COLOR_UNVISITED, DEF_COLOR_UNVISITED);
-//		mPreferences.put(COLOR_ACTIVE, DEF_COLOR_ACTIVE);
-//		mPreferences.put(COLOR_VISITED, DEF_COLOR_VISITED);
-//		mPreferences.put(COLOR_FINISHED_AND_RELEVANT, DEF_COLOR_FINISHED_AND_RELEVANT);
-//		mPreferences.put(COLOR_FINISHED_AND_NOT_RELEVANT, DEF_COLOR_FINISHED_AND_NOT_RELEVANT);
-//		mPreferences.put(COLOR_PICKED, DEF_COLOR_PICKED);
-//		
-
 		Settings.restoreDefaultColors();
 		for(int i = 0; i < Settings.mColorKeyset.size(); i++)
 			mColorsTable.setValueAt(Settings.mSettingsColor.get(Settings.mColorKeyset.get(i)), i, 1);
-//		mColorsTable.setValueAt(Settings.DEF_COLOR_ACTIVE, 1, 1);
-//		mColorsTable.setValueAt(Settings.DEF_COLOR_VISITED, 2, 1);
-//		mColorsTable.setValueAt(DEF_COLOR_FINISHED_AND_RELEVANT, 3, 1);
-//		mColorsTable.setValueAt(DEF_COLOR_FINISHED_AND_NOT_RELEVANT, 4, 1);
-//		mColorsTable.setValueAt(DEF_COLOR_PICKED, 5, 1);
 	}
 	
 	
 	private void restoreDefaultKeys() {
-//		mPreferences.putInt(KEY_UNDIRECTED_EDGE, DEF_KEY_UNDIRECTED_EDGE);
-//		mPreferences.putInt(KEY_DIRECTED_EDGE, DEF_KEY_DIRECTED_EDGE);
-//		mPreferences.putInt(KEY_MULTIPLE_SELECT, DEF_KEY_MULTIPLE_SELECT);
-//		mPreferences.putInt(KEY_RECTANGULAR_SELECT, DEF_KEY_RECTANGULAR_SELECT);
-		
 		Settings.restoreDefaultKeys();
 		for(int i = 0; i < Settings.mKeyKeyset.size(); i++)
-			mKeyTable.setValueAt(Settings.mSettingsKey.get(Settings.mKeyKeyset.get(i)), i, 1);
-		
-//		mKeyTable.setValueAt(KeyEvent.getKeyText(DEF_KEY_UNDIRECTED_EDGE), 0, 1);
-//		mKeyTable.setValueAt(KeyEvent.getKeyText(DEF_KEY_DIRECTED_EDGE), 1, 1);
-//		mKeyTable.setValueAt(KeyEvent.getKeyText(DEF_KEY_MULTIPLE_SELECT), 2, 1);
-//		mKeyTable.setValueAt(KeyEvent.getKeyText(DEF_KEY_RECTANGULAR_SELECT), 3, 1);
+			mKeyTable.setValueAt(KeyEvent.getKeyText(Settings.mSettingsKey.get(Settings.mKeyKeyset.get(i))), i, 1);
 	}
 
 	
