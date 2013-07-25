@@ -8,6 +8,7 @@ import java.awt.Rectangle;
 import java.awt.Shape;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.Point2D;
+import java.util.prefs.Preferences;
 
 import javax.swing.JPanel;
 
@@ -20,6 +21,7 @@ import de.chiller.vigral.graph.Graph;
 import de.chiller.vigral.graph.Vertex;
 import de.chiller.vigral.jung.MyColor;
 import de.chiller.vigral.jung.MyModalGraphMouse;
+import de.chiller.vigral.settings.Settings;
 import edu.uci.ics.jung.algorithms.layout.Layout;
 import edu.uci.ics.jung.algorithms.layout.StaticLayout;
 import edu.uci.ics.jung.visualization.VisualizationViewer;
@@ -72,7 +74,7 @@ public class GraphBuilder {
 		@Override
 		public Paint transform(Vertex v) {
 			if(v.isPicked())
-				return MyColor.YELLOW;
+				return Color.decode(Settings.mSettingsColor.get(Settings.COLOR_PICKED));
 			
 			if(v.getCustomColor() != null)
 				return v.getCustomColor();
@@ -96,17 +98,17 @@ public class GraphBuilder {
 		
 		switch(state) {
 		case UNVISITED:
-			return MyColor.LIGHT_CYAN;
+			return Color.decode(Settings.mSettingsColor.get(Settings.COLOR_UNVISITED));
 		case ACTIVE:
-			return MyColor.LIGHT_ORANGE;
+			return Color.decode(Settings.mSettingsColor.get(Settings.COLOR_ACTIVE));
 		case VISITED:
-			return new Color(0xFF4444);
+			return Color.decode(Settings.mSettingsColor.get(Settings.COLOR_VISITED));
 		case FINISHED_AND_NOT_RELEVANT:
-			return MyColor.LIGHT_GRAY;
+			return Color.decode(Settings.mSettingsColor.get(Settings.COLOR_FINISHED_AND_NOT_RELEVANT));
 		case FINISHED_AND_RELEVANT:
-			return MyColor.LIGHT_GREEN;
+			return Color.decode(Settings.mSettingsColor.get(Settings.COLOR_FINISHED_AND_RELEVANT));
 		default:
-			return Color.BLACK;
+			return Color.decode(Settings.mSettingsColor.get(Settings.COLOR_UNVISITED));
 		}
 	}
 	
@@ -125,7 +127,9 @@ public class GraphBuilder {
 		
 		mGraphMouse = new MyModalGraphMouse(mVViewer.getRenderContext());
 		mVViewer.setGraphMouse(mGraphMouse);
-		mGraphMouse.setMode(ModalGraphMouse.Mode.EDITING);		
+		mVViewer.addKeyListener(mGraphMouse.getEditingPlugin());
+		mVViewer.setFocusable(true);
+		mGraphMouse.setMode(ModalGraphMouse.Mode.EDITING);
 		
 		mVViewer.getRenderContext().setEdgeLabelTransformer(new Transformer<Edge, String>() {
 			@Override
@@ -346,5 +350,9 @@ public class GraphBuilder {
 		return mVViewer;
 	}
 	
+	
+	public void redraw() {
+		mVViewer.repaint();
+	}
 	
 }

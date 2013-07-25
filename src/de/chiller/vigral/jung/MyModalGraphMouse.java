@@ -65,4 +65,5 @@ public class MyModalGraphMouse extends AbstractModalGraphMouse implements ModalG
 	public MyGraphMousePlugin getEditingPlugin() {
 		return mEditingPlugin;
 	}
+
 }

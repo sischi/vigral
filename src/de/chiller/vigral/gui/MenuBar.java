@@ -84,6 +84,16 @@ public class MenuBar extends JMenuBar {
 	};
 	
 	
+	private ActionListener onSettings = new ActionListener() {
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			SettingsFrame sf = new SettingsFrame();
+			sf.setModal(true);
+			sf.setVisible(true);
+		}
+	};
+	
+	
 	private ActionListener onPluginsReload = new ActionListener() {
 		@Override
 		public void actionPerformed(ActionEvent e) {
@@ -126,6 +136,7 @@ public class MenuBar extends JMenuBar {
 		file_save.addActionListener(onSave);
 		file_open.addActionListener(onOpen);
 		file_new.addActionListener(onNew);
+		file_settings.addActionListener(onSettings);
 		
 		plugins_reload.addActionListener(onPluginsReload);
 	}

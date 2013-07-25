@@ -182,13 +182,15 @@ public class Edge extends GraphElement implements Comparable<Edge> {
 	
 	
 	public String[] toStringArray() {
-		String[] list = new String[5];
+		String[] list = new String[7];
 		
 		list[0] = ""+ mID;
 		list[1] = ""+ mWeight;
-		list[2] = ""+ mStart.getId();
-		list[3] = ""+ mEnd.getId();
-		list[4] = ""+ mIsDirected;
+		list[2] = ""+ mMinCapacity;
+		list[3] = ""+ mMaxCapacity;
+		list[4] = ""+ mStart.getId();
+		list[5] = ""+ mEnd.getId();
+		list[6] = ""+ mIsDirected;
 		
 		return list;
 	}

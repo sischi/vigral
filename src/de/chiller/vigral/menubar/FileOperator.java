@@ -2,18 +2,36 @@ package de.chiller.vigral.menubar;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Set;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
 
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
+
+import org.w3c.dom.Attr;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+import org.xml.sax.SAXException;
 
 import au.com.bytecode.opencsv.CSVReader;
 import au.com.bytecode.opencsv.CSVWriter;
@@ -260,9 +278,138 @@ public class FileOperator {
 			e.printStackTrace();
 			return null;
 		}
-		
-		 
+
 		 return graph;
+	}
+	
+	
+	
+	public boolean saveSettings(HashMap<String, String> colors, HashMap<String, Integer> keys) {
+		
+		
+		try {
+			DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
+			DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
+
+			// root element
+			Document doc = docBuilder.newDocument();
+			Element rootElement = doc.createElement("settings");
+			doc.appendChild(rootElement);
+
+			// color element
+			Element colorElement = doc.createElement("colors");
+			rootElement.appendChild(colorElement);
+
+			for (String key : colors.keySet()) {
+				Attr attr = doc.createAttribute(key);
+				attr.setValue(colors.get(key));
+				colorElement.setAttributeNode(attr);
+			}
+
+			// key element
+			Element keyElement = doc.createElement("keys");
+			rootElement.appendChild(keyElement);
+
+			for (String key : keys.keySet()) {
+				Attr attr = doc.createAttribute(key);
+				attr.setValue("" + keys.get(key));
+				keyElement.setAttributeNode(attr);
+			}
+
+			// write the content into xml file
+			TransformerFactory transformerFactory = TransformerFactory.newInstance();
+			Transformer transformer = transformerFactory.newTransformer();
+			DOMSource source = new DOMSource(doc);
+			StreamResult result = new StreamResult(new File(mDialogPath + File.separator + "config.xml"));
+
+			// Output to console for testing
+			StreamResult debugResult = new StreamResult(System.out);
+
+			transformer.transform(source, result);
+
+			System.out.println("File saved!");
+
+		} catch (ParserConfigurationException pce) {
+			pce.printStackTrace();
+			return false;
+		} catch (TransformerException tfe) {
+			tfe.printStackTrace();
+			return false;
+		}
+
+		return true;
+	}
+	
+	
+	public HashMap<String, String> loadColorSettings(ArrayList<String> keys) {
+		HashMap<String, String> colors = new HashMap<String, String>();
+		try {
+			File fXmlFile = new File(mDialogPath + File.separator + "config.xml");
+			DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+			DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
+			Document doc = dBuilder.parse(fXmlFile);
+
+			doc.getDocumentElement().normalize();
+
+			System.out.println("Root element :"+ doc.getDocumentElement().getNodeName());
+			NodeList nList = doc.getElementsByTagName("colors");
+
+			for(int i = 0; i < nList.getLength(); i++) {
+				Node nNode = nList.item(i);
+				System.out.println("\nCurrent Element :" + nNode.getNodeName());
+				if(nNode.getNodeType() == Node.ELEMENT_NODE) {
+					Element element = (Element) nNode;
+					for(String key : keys)
+						colors.put(key, element.getAttribute(key));
+				}
+			}
+			System.out.println("load colors done: "+ colors);
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+			return null;
+		} catch (ParserConfigurationException e) {
+			e.printStackTrace();
+			return null;
+		} catch (SAXException e) {
+			e.printStackTrace();
+			return null;
+		} catch (IOException e) {
+			e.printStackTrace();
+			return null;
+		}
+		
+		return colors;
+	}
+	
+	
+	public HashMap<String, Integer> loadKeySettings(ArrayList<String> keys) {
+		HashMap<String, Integer> keyCodes = new HashMap<String, Integer>();
+		try {
+
+			File fXmlFile = new File(mDialogPath + File.separator + "config.xml");
+			DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+			DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
+			Document doc = dBuilder.parse(fXmlFile);
+
+			doc.getDocumentElement().normalize();
+
+			System.out.println("Root element :"+ doc.getDocumentElement().getNodeName());
+			NodeList nList = doc.getElementsByTagName("keys");
+
+			for(int i = 0; i < nList.getLength(); i++) {
+				Node nNode = nList.item(i);
+				System.out.println("\nCurrent Element :" + nNode.getNodeName());
+				if(nNode.getNodeType() == Node.ELEMENT_NODE) {
+					Element element = (Element) nNode;
+					for(String key : keys)
+						keyCodes.put(key, Integer.parseInt(element.getAttribute(key)));
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}
+		return keyCodes;
 	}
 	
 	

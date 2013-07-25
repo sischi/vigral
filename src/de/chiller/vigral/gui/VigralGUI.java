@@ -35,6 +35,7 @@ import de.chiller.vigral.algorithm.AbstractAlgorithm;
 import de.chiller.vigral.graph.ElementType;
 import de.chiller.vigral.graph.Graph;
 import de.chiller.vigral.plugins.PluginLoader;
+import de.chiller.vigral.settings.Settings;
 import de.chiller.vigral.util.Pair;
 
 
@@ -245,7 +246,11 @@ public class VigralGUI extends JFrame {
 	 * Create
 	 */
 	private VigralGUI() {
+		System.out.println("Harroo!!");
 		mMainWindow = this;
+		
+		Settings.loadSettings();
+		
 		mGraphBuilder = new GraphBuilder();
 		mGraphBuilder.addToPanel(mGraphPanel);
 		

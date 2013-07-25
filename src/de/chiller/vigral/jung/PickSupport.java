@@ -128,12 +128,14 @@ public class PickSupport {
      * @param p the actual position
      */
     public void performDrag(VisualizationViewer<Vertex, Edge> vv, Point2D p) {
-    	if(mPickedVertex != null)
-    		moveVertex(vv, p);
-    	else
-    		updateRect(vv, p);
-    	
-    	vv.repaint();
+    	if(mDown != null) {
+	    	if(mPickedVertex != null)
+	    		moveVertex(vv, p);
+	    	else
+	    		updateRect(vv, p);
+	    	
+	    	vv.repaint();
+    	}
     }
     
     /**
