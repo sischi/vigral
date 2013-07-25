@@ -102,20 +102,14 @@ public class MyGraphMousePlugin extends AbstractGraphMousePlugin implements Mous
     @SuppressWarnings("unchecked")
     public void mousePressed(MouseEvent e) {
     	VigralGUI.getInstance().setFocusToDrawPanel();
-    	System.out.println("Mouse down in mode editing mode? -"+ (mMode == EDITING_MODE));
-    	System.out.println("Mouse down in mode picking mode? -"+ (mMode == PICKING_MODE));
-    	System.out.println("key pressed = "+ mKeyPressed);
 		if ((e.getModifiers() & MouseEvent.BUTTON1_MASK) != 0) {
 			// get the clicked vv and the coordinates
 			final VisualizationViewer<Vertex, Edge> vv = (VisualizationViewer<Vertex, Edge>) e .getSource();
 			final Point2D p = e.getPoint();
 
 			GraphElementAccessor<Vertex, Edge> pickSupport = vv.getPickSupport();
-			System.out.println("picksupport == null? -"+ (pickSupport == null));
 			if (pickSupport != null) {
 				final Vertex vertex = (Vertex) pickSupport.getVertex(vv.getModel().getGraphLayout(), p.getX(), p.getY());
-				System.out.println("Vertex = "+ vertex);
-				System.out.println("KeyEvent = "+ KeyEvent.getKeyText(mKeyPressed));
 				if (mKeyPressed == 0b0001) {
 					if (!mEditingPossible)
 						return;
@@ -182,7 +176,6 @@ public class MyGraphMousePlugin extends AbstractGraphMousePlugin implements Mous
     
     @SuppressWarnings("unchecked")
     public void mouseReleased(MouseEvent e) {
-    	System.out.println("Mouse up");
     	if((e.getModifiers() & MouseEvent.BUTTON1_MASK) != 0) {
     		final VisualizationViewer<Vertex, Edge> vv = (VisualizationViewer<Vertex, Edge>) e.getSource();
             final Point2D p = e.getPoint();
