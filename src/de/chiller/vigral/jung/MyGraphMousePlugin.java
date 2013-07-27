@@ -236,16 +236,16 @@ public class MyGraphMousePlugin extends AbstractGraphMousePlugin implements Mous
 	}
 	
 	private void onKeyPressed(KeyEvent e) {
-		if(e.getKeyCode() == Settings.mSettingsKey.get(Settings.KEY_UNDIRECTED_EDGE))
+		if(e.getKeyCode() == Settings.mKeys.get(Settings.KEY_UNDIRECTED_EDGE))
 			mKeyPressed |= MASK_UNDIRECTED_EDGE;
 		
-		else if(e.getKeyCode() == Settings.mSettingsKey.get(Settings.KEY_DIRECTED_EDGE))
+		else if(e.getKeyCode() == Settings.mKeys.get(Settings.KEY_DIRECTED_EDGE))
 			mKeyPressed |= MASK_DIRECTED_EDGE;
 		
-		else if(e.getKeyCode() == Settings.mSettingsKey.get(Settings.KEY_MULTIPLE_SELECT))
+		else if(e.getKeyCode() == Settings.mKeys.get(Settings.KEY_MULTIPLE_SELECT))
 			mKeyPressed |= MASK_MULTIPLE_SELECT;
 		
-		else if(e.getKeyCode() == Settings.mSettingsKey.get(Settings.KEY_RECTANGULAR_SELECT))
+		else if(e.getKeyCode() == Settings.mKeys.get(Settings.KEY_RECTANGULAR_SELECT))
 			mKeyPressed |= MASK_RECTANGULAR_SELECT;
 		
 		else {
@@ -254,16 +254,16 @@ public class MyGraphMousePlugin extends AbstractGraphMousePlugin implements Mous
 	}
 	
 	private void onKeyReleased(KeyEvent e) {
-		if(e.getKeyCode() == Settings.mSettingsKey.get(Settings.KEY_UNDIRECTED_EDGE))
+		if(e.getKeyCode() == Settings.mKeys.get(Settings.KEY_UNDIRECTED_EDGE))
 			mKeyPressed &= INVMASK_UNDIRECTED_EDGE;
 		
-		else if(e.getKeyCode() == Settings.mSettingsKey.get(Settings.KEY_DIRECTED_EDGE))
+		else if(e.getKeyCode() == Settings.mKeys.get(Settings.KEY_DIRECTED_EDGE))
 			mKeyPressed &= INVMASK_DIRECTED_EDGE;
 		
-		else if(e.getKeyCode() == Settings.mSettingsKey.get(Settings.KEY_MULTIPLE_SELECT))
+		else if(e.getKeyCode() == Settings.mKeys.get(Settings.KEY_MULTIPLE_SELECT))
 			mKeyPressed &= INVMASK_MULTIPLE_SELECT;
 		
-		else if(e.getKeyCode() == Settings.mSettingsKey.get(Settings.KEY_RECTANGULAR_SELECT))
+		else if(e.getKeyCode() == Settings.mKeys.get(Settings.KEY_RECTANGULAR_SELECT))
 			mKeyPressed &= INVMASK_RECTANGULAR_SELECT;
 		
 		else {

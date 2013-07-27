@@ -7,11 +7,14 @@ import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.awt.FlowLayout;
+import java.awt.GridLayout;
 import java.awt.LayoutManager;
 import java.awt.Paint;
 import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
@@ -22,7 +25,9 @@ import java.util.prefs.Preferences;
 
 import javax.swing.AbstractAction;
 import javax.swing.Action;
+import javax.swing.Box;
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -46,6 +51,7 @@ public class SettingsDialog extends JDialog {
 	private JPanel contentPane;
 	private JPanel mColorTab = new JPanel();
 	private JPanel mKeyTab = new JPanel();
+	private JPanel mViewTab = new JPanel();
 	private JPanel mButtonPane = new JPanel();
 	private JButton mApplyButton = new JButton();
 	private JButton mCancelButton = new JButton();
@@ -54,6 +60,7 @@ public class SettingsDialog extends JDialog {
 	private JButton mRestoreKeysButton = new JButton();
 	private JLabel mColorLabel = new JLabel();
 	private JLabel mKeyLabel = new JLabel();
+	private JLabel mViewLabel = new JLabel();
 	
 	private JTable mColorsTable;
 	private JTable mKeyTable;
@@ -61,7 +68,7 @@ public class SettingsDialog extends JDialog {
 
 	private static ArrayList<String> mDefaultColors = initDefColors();
 	private HashMap<String, Integer> mChosenKeys = new HashMap<String, Integer>();
-
+	private ArrayList<String> mCheckedProperties = new ArrayList<String>();
 
 
 	/**
@@ -75,6 +82,24 @@ public class SettingsDialog extends JDialog {
 
 
 	
+
+
+
+	private ArrayList<String> loadProperties() {
+		ArrayList<String> props = new ArrayList<String>();
+		
+		for(String key : Settings.mProperties.keySet()) {
+			if(Settings.mProperties.get(key))
+				props.add(key);
+		}
+		
+		return props;
+	}
+
+
+
+
+
 
 
 
@@ -109,6 +134,7 @@ public class SettingsDialog extends JDialog {
 		mTabbedPane = new JTabbedPane(JTabbedPane.TOP);
 		mTabbedPane.addTab("Colors", null, mColorTab, "change state colors");
 		mTabbedPane.addTab("Keys", null, mKeyTab, "edit drawing keys");
+		mTabbedPane.addTab("View", null, mViewTab, "modify visibility of edge properties");
 		
 		initButtonPane();
 		
@@ -118,7 +144,79 @@ public class SettingsDialog extends JDialog {
 		
 		initKeyTab();
 		
+		initViewTab();
+		
 	}
+
+
+	private void initViewTab() {
+		mViewTab.setLayout(new BorderLayout());
+		Box box = Box.createVerticalBox();
+		box.setAlignmentX(Box.LEFT_ALIGNMENT);
+		mViewLabel.setText("choose the displayed edge properties");
+		mViewLabel.setAlignmentX(JLabel.LEFT_ALIGNMENT);
+		mViewLabel.setLocation(10, 10);
+		box.add(mViewLabel);
+		
+		JCheckBox chkWeight = new JCheckBox("Weight");
+		chkWeight.setAlignmentX(JCheckBox.LEFT_ALIGNMENT);
+		chkWeight.addItemListener(new ItemListener() {
+			@Override
+			public void itemStateChanged(ItemEvent e) {
+				System.out.println("weight selected? -"+ (e.getStateChange() == ItemEvent.SELECTED));
+				if(e.getStateChange() == ItemEvent.SELECTED) 
+					mCheckedProperties.add(Settings.PROP_WEIGHT);
+				else
+					mCheckedProperties.remove(Settings.PROP_WEIGHT);
+				System.out.println("save properties: "+ mCheckedProperties);
+			}
+		});
+		if(Settings.mProperties.get(Settings.PROP_WEIGHT) == true)
+			chkWeight.setSelected(true);
+		
+		JCheckBox chkMinCapacity = new JCheckBox("Minimum Capacity");
+		chkMinCapacity.setAlignmentX(JCheckBox.LEFT_ALIGNMENT);
+		chkMinCapacity.addItemListener(new ItemListener() {
+			@Override
+			public void itemStateChanged(ItemEvent e) {
+				System.out.println("min capacity selected? -"+ (e.getStateChange() == ItemEvent.SELECTED));
+				if(e.getStateChange() == ItemEvent.SELECTED) 
+					mCheckedProperties.add(Settings.PROP_MIN_CAPACITY);
+				else
+					mCheckedProperties.remove(Settings.PROP_MIN_CAPACITY);
+				System.out.println("save properties: "+ mCheckedProperties);
+			}
+		});
+		if(Settings.mProperties.get(Settings.PROP_MIN_CAPACITY) == true)
+			chkMinCapacity.setSelected(true);
+		
+		JCheckBox chkMaxCapacity = new JCheckBox("Maximum Capacity");
+		chkMaxCapacity.setAlignmentX(JCheckBox.LEFT_ALIGNMENT);
+		chkMaxCapacity.addItemListener(new ItemListener() {
+			@Override
+			public void itemStateChanged(ItemEvent e) {
+				System.out.println("max capacity selected? -"+ (e.getStateChange() == ItemEvent.SELECTED));
+				if(e.getStateChange() == ItemEvent.SELECTED) 
+					mCheckedProperties.add(Settings.PROP_MAX_CAPACITY);
+				else
+					mCheckedProperties.remove(Settings.PROP_MAX_CAPACITY);
+				System.out.println("save properties: "+ mCheckedProperties);
+			}
+		});
+		if(Settings.mProperties.get(Settings.PROP_MAX_CAPACITY) == true)
+			chkMaxCapacity.setSelected(true);
+		
+		box.add(chkWeight);
+		box.add(chkMinCapacity);
+		box.add(chkMaxCapacity);
+		
+		mViewTab.add(box, BorderLayout.WEST);
+	}
+
+
+
+
+
 
 
 	private void initColorTab() {
@@ -127,12 +225,12 @@ public class SettingsDialog extends JDialog {
 		mColorTab.add(mColorLabel);
 		
 		String[] columnNames = {"State", "Color (#RRGGBB)", "Color preview"};
-		Object[][] data = {{"UNVISITED", Settings.mSettingsColor.get(Settings.COLOR_UNVISITED), ""},
-				{"ACTIVE", Settings.mSettingsColor.get(Settings.COLOR_ACTIVE), ""},
-				{"VISITED", Settings.mSettingsColor.get(Settings.COLOR_VISITED), ""},
-				{"FINISHED_AND_RELEVANT", Settings.mSettingsColor.get(Settings.COLOR_FINISHED_AND_RELEVANT), ""},
-				{"FINISHED_AND_NOT_RELEVANT", Settings.mSettingsColor.get(Settings.COLOR_FINISHED_AND_NOT_RELEVANT), ""},
-				{"PICKED", Settings.mSettingsColor.get(Settings.COLOR_PICKED), ""}
+		Object[][] data = {{"UNVISITED", Settings.mColors.get(Settings.COLOR_UNVISITED), ""},
+				{"ACTIVE", Settings.mColors.get(Settings.COLOR_ACTIVE), ""},
+				{"VISITED", Settings.mColors.get(Settings.COLOR_VISITED), ""},
+				{"FINISHED_AND_RELEVANT", Settings.mColors.get(Settings.COLOR_FINISHED_AND_RELEVANT), ""},
+				{"FINISHED_AND_NOT_RELEVANT", Settings.mColors.get(Settings.COLOR_FINISHED_AND_NOT_RELEVANT), ""},
+				{"PICKED", Settings.mColors.get(Settings.COLOR_PICKED), ""}
 		};
 		mColorsTable = new JTable(data, columnNames) {
 			public boolean isCellEditable(int row, int col) {
@@ -200,10 +298,10 @@ public class SettingsDialog extends JDialog {
 		mKeyTab.add(mKeyLabel);
 		
 		String[] columnNames = {"Action", "Key"};
-		Object[][] data = {{Settings.mKeyKeyset.get(0), KeyEvent.getKeyText(Settings.mSettingsKey.get(Settings.KEY_UNDIRECTED_EDGE))},
-				{Settings.mKeyKeyset.get(1), KeyEvent.getKeyText(Settings.mSettingsKey.get(Settings.KEY_DIRECTED_EDGE))},
-				{Settings.mKeyKeyset.get(2), KeyEvent.getKeyText(Settings.mSettingsKey.get(Settings.KEY_MULTIPLE_SELECT))},
-				{Settings.mKeyKeyset.get(3), KeyEvent.getKeyText(Settings.mSettingsKey.get(Settings.KEY_RECTANGULAR_SELECT))},
+		Object[][] data = {{Settings.mKeyKeyset.get(0), KeyEvent.getKeyText(Settings.mKeys.get(Settings.KEY_UNDIRECTED_EDGE))},
+				{Settings.mKeyKeyset.get(1), KeyEvent.getKeyText(Settings.mKeys.get(Settings.KEY_DIRECTED_EDGE))},
+				{Settings.mKeyKeyset.get(2), KeyEvent.getKeyText(Settings.mKeys.get(Settings.KEY_MULTIPLE_SELECT))},
+				{Settings.mKeyKeyset.get(3), KeyEvent.getKeyText(Settings.mKeys.get(Settings.KEY_RECTANGULAR_SELECT))},
 		};
 		mKeyTable = new JTable(data, columnNames) {
 			public boolean isCellEditable(int row, int col) {
@@ -304,15 +402,23 @@ public class SettingsDialog extends JDialog {
 	
 	private void saveSettings() {
 		
-		Settings.mSettingsColor.put(Settings.COLOR_UNVISITED, (String) mColorsTable.getValueAt(0, 1));
-		Settings.mSettingsColor.put(Settings.COLOR_ACTIVE, (String) mColorsTable.getValueAt(1, 1));
-		Settings.mSettingsColor.put(Settings.COLOR_VISITED, (String) mColorsTable.getValueAt(2, 1));
-		Settings.mSettingsColor.put(Settings.COLOR_FINISHED_AND_RELEVANT, (String) mColorsTable.getValueAt(3, 1));
-		Settings.mSettingsColor.put(Settings.COLOR_FINISHED_AND_NOT_RELEVANT, (String) mColorsTable.getValueAt(4, 1));
-		Settings.mSettingsColor.put(Settings.COLOR_PICKED, (String) mColorsTable.getValueAt(5, 1));
+		Settings.mColors.put(Settings.COLOR_UNVISITED, (String) mColorsTable.getValueAt(0, 1));
+		Settings.mColors.put(Settings.COLOR_ACTIVE, (String) mColorsTable.getValueAt(1, 1));
+		Settings.mColors.put(Settings.COLOR_VISITED, (String) mColorsTable.getValueAt(2, 1));
+		Settings.mColors.put(Settings.COLOR_FINISHED_AND_RELEVANT, (String) mColorsTable.getValueAt(3, 1));
+		Settings.mColors.put(Settings.COLOR_FINISHED_AND_NOT_RELEVANT, (String) mColorsTable.getValueAt(4, 1));
+		Settings.mColors.put(Settings.COLOR_PICKED, (String) mColorsTable.getValueAt(5, 1));
 		
 		for(String key : mChosenKeys.keySet()) {
-			Settings.mSettingsKey.put(key, mChosenKeys.get(key));
+			Settings.mKeys.put(key, mChosenKeys.get(key));
+		}
+		
+		System.out.println("save properties: "+ mCheckedProperties);
+		for(String key : Settings.mProperties.keySet()) {
+			if(mCheckedProperties.contains(key))
+				Settings.mProperties.put(key, true);
+			else
+				Settings.mProperties.put(key, false);
 		}
 		
 		Settings.saveSettings();
@@ -322,14 +428,14 @@ public class SettingsDialog extends JDialog {
 	private void restoreDefaultColors() {
 		Settings.restoreDefaultColors();
 		for(int i = 0; i < Settings.mColorKeyset.size(); i++)
-			mColorsTable.setValueAt(Settings.mSettingsColor.get(Settings.mColorKeyset.get(i)), i, 1);
+			mColorsTable.setValueAt(Settings.mColors.get(Settings.mColorKeyset.get(i)), i, 1);
 	}
 	
 	
 	private void restoreDefaultKeys() {
 		Settings.restoreDefaultKeys();
 		for(int i = 0; i < Settings.mKeyKeyset.size(); i++)
-			mKeyTable.setValueAt(KeyEvent.getKeyText(Settings.mSettingsKey.get(Settings.mKeyKeyset.get(i))), i, 1);
+			mKeyTable.setValueAt(KeyEvent.getKeyText(Settings.mKeys.get(Settings.mKeyKeyset.get(i))), i, 1);
 	}
 
 	

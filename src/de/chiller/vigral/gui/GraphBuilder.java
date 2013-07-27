@@ -74,7 +74,7 @@ public class GraphBuilder {
 		@Override
 		public Paint transform(Vertex v) {
 			if(v.isPicked())
-				return Color.decode(Settings.mSettingsColor.get(Settings.COLOR_PICKED));
+				return Color.decode(Settings.mColors.get(Settings.COLOR_PICKED));
 			
 			if(v.getCustomColor() != null)
 				return v.getCustomColor();
@@ -93,22 +93,55 @@ public class GraphBuilder {
 		}
 	};
 	
+	private Transformer<Edge, String> mEdgeLabelTransformer = new Transformer<Edge, String>() {
+		@Override
+		public String transform(Edge e) {
+			String lbl = "<html>";
+			
+			if(Settings.mProperties.get(Settings.PROP_WEIGHT)) {
+				lbl += "w="+ e.getWeight();
+			}
+			if(Settings.mProperties.get(Settings.PROP_MIN_CAPACITY)) {
+				if(!lbl.equals("<html>"))
+					lbl += "<br />";				
+				lbl += "min C="+ e.getMinCapacity();
+			}
+			if(Settings.mProperties.get(Settings.PROP_MAX_CAPACITY)) {
+				if(!lbl.equals("<html>"))
+					lbl += "<br />";
+				lbl += "max C="+ e.getMaxCapacity();
+			}
+			lbl += "</html>";
+			return lbl;
+		}
+	};
+	
+	private Transformer<Vertex, String> mVertexLabelTransformer = new Transformer<Vertex, String>() {
+		@Override
+		public String transform(Vertex v) {
+			if(v.getLabel().equals(""))
+				return "<html>"+ v.getIdentifier() +"<br />"+ v.getLabelAddition() +"</html>";
+			else
+				return "<html>"+ v.getLabel() +"<br />"+ v.getLabelAddition() +"</html>";
+		}
+	};
+	
 	
 	public Paint checkStateForColor(ElementState state) {
 		
 		switch(state) {
 		case UNVISITED:
-			return Color.decode(Settings.mSettingsColor.get(Settings.COLOR_UNVISITED));
+			return Color.decode(Settings.mColors.get(Settings.COLOR_UNVISITED));
 		case ACTIVE:
-			return Color.decode(Settings.mSettingsColor.get(Settings.COLOR_ACTIVE));
+			return Color.decode(Settings.mColors.get(Settings.COLOR_ACTIVE));
 		case VISITED:
-			return Color.decode(Settings.mSettingsColor.get(Settings.COLOR_VISITED));
+			return Color.decode(Settings.mColors.get(Settings.COLOR_VISITED));
 		case FINISHED_AND_NOT_RELEVANT:
-			return Color.decode(Settings.mSettingsColor.get(Settings.COLOR_FINISHED_AND_NOT_RELEVANT));
+			return Color.decode(Settings.mColors.get(Settings.COLOR_FINISHED_AND_NOT_RELEVANT));
 		case FINISHED_AND_RELEVANT:
-			return Color.decode(Settings.mSettingsColor.get(Settings.COLOR_FINISHED_AND_RELEVANT));
+			return Color.decode(Settings.mColors.get(Settings.COLOR_FINISHED_AND_RELEVANT));
 		default:
-			return Color.decode(Settings.mSettingsColor.get(Settings.COLOR_UNVISITED));
+			return Color.decode(Settings.mColors.get(Settings.COLOR_UNVISITED));
 		}
 	}
 	
@@ -131,22 +164,9 @@ public class GraphBuilder {
 		mVViewer.setFocusable(true);
 		mGraphMouse.setMode(ModalGraphMouse.Mode.EDITING);
 		
-		mVViewer.getRenderContext().setEdgeLabelTransformer(new Transformer<Edge, String>() {
-			@Override
-			public String transform(Edge e) {
-				return ""+ e.getWeight();
-			}
-		});
+		mVViewer.getRenderContext().setEdgeLabelTransformer(mEdgeLabelTransformer);
+		mVViewer.getRenderContext().setVertexLabelTransformer(mVertexLabelTransformer);
 		
-		mVViewer.getRenderContext().setVertexLabelTransformer(new Transformer<Vertex, String>() {
-			@Override
-			public String transform(Vertex v) {
-				if(v.getLabel().equals(""))
-					return "<html>"+ v.getIdentifier() +"<br />"+ v.getLabelAddition() +"</html>";
-				else
-					return "<html>"+ v.getLabel() +"<br />"+ v.getLabelAddition() +"</html>";
-			}
-		});
 		
 		mVViewer.setBackground(Color.WHITE);
 		mVViewer.getRenderContext().getEdgeLabelRenderer().setRotateEdgeLabels(false);
@@ -158,7 +178,7 @@ public class GraphBuilder {
 		//mVViewer.getRenderContext().setEdgeFillPaintTransformer(mEdgePaintTransformer);
 		mVViewer.getRenderContext().setEdgeStrokeTransformer(new ConstantTransformer(new BasicStroke(3.0f)));
 		mVViewer.getRenderContext().setArrowFillPaintTransformer(mEdgePaintTransformer);
-		mVViewer.getRenderContext().setEdgeFontTransformer(new ConstantTransformer(new Font("Helvetica", Font.PLAIN, 16)));
+		mVViewer.getRenderContext().setEdgeFontTransformer(new ConstantTransformer(new Font("Helvetica", Font.PLAIN, 12)));
 		//mVViewer.getRenderContext().setEdgeShapeTransformer(mEdgeShapeTransformer);
 
 		mVViewer.getRenderer().getVertexLabelRenderer().setPosition(Renderer.VertexLabel.Position.CNTR);

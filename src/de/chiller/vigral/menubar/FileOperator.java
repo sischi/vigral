@@ -284,7 +284,7 @@ public class FileOperator {
 	
 	
 	
-	public boolean saveSettings(HashMap<String, String> colors, HashMap<String, Integer> keys) {
+	public boolean saveSettings(HashMap<String, String> colors, HashMap<String, Integer> keys, HashMap<String, Boolean> props) {
 		
 		
 		try {
@@ -315,6 +315,18 @@ public class FileOperator {
 				attr.setValue("" + keys.get(key));
 				keyElement.setAttributeNode(attr);
 			}
+			
+			
+			// view element
+			Element viewElement = doc.createElement("view");
+			rootElement.appendChild(viewElement);
+
+			for (String key : props.keySet()) {
+				Attr attr = doc.createAttribute(key);
+				attr.setValue("" + props.get(key));
+				viewElement.setAttributeNode(attr);
+			}
+			
 
 			// write the content into xml file
 			TransformerFactory transformerFactory = TransformerFactory.newInstance();
@@ -411,6 +423,37 @@ public class FileOperator {
 		}
 		return keyCodes;
 	}
+	
+	public HashMap<String, Boolean> loadViewSettings(ArrayList<String> keys) {
+		HashMap<String, Boolean> props = new HashMap<String, Boolean>();
+		try {
+
+			File xmlFile = new File(mDialogPath + File.separator + "config.xml");
+			DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+			DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
+			Document doc = dBuilder.parse(xmlFile);
+
+			doc.getDocumentElement().normalize();
+
+			System.out.println("Root element :"+ doc.getDocumentElement().getNodeName());
+			NodeList nList = doc.getElementsByTagName("view");
+
+			for(int i = 0; i < nList.getLength(); i++) {
+				Node nNode = nList.item(i);
+				System.out.println("\nCurrent Element :" + nNode.getNodeName());
+				if(nNode.getNodeType() == Node.ELEMENT_NODE) {
+					Element element = (Element) nNode;
+					for(String key : keys)
+						props.put(key, Boolean.parseBoolean(element.getAttribute(key)));
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}
+		return props;
+	}
+	
 	
 	
 }

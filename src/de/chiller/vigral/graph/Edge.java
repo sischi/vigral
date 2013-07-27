@@ -227,7 +227,9 @@ public class Edge extends GraphElement implements Comparable<Edge> {
 
 		
 		public Edge copyEdge(Edge e, Vertex start, Vertex end) {
-			return new Edge(e.getId(), e.getWeight(), e.getMinCapacity(), e.getMaxCapacity(), start, end, e.isDirected(), e.getState());
+			Edge newEdge = new Edge(e.getId(), e.getWeight(), e.getMinCapacity(), e.getMaxCapacity(), start, end, e.isDirected(), e.getState());
+			newEdge.setCustomColor(e.getCustomColor());
+			return newEdge;
 		}
 		
 		public Edge parseEdge(String[] strEdge, Vertex start, Vertex end) {
