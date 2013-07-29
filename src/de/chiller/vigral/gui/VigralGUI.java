@@ -501,6 +501,10 @@ public class VigralGUI extends JFrame {
 		mGraphBuilder.setResultingGraph(pair.getL());
 		mTxt_explanation.setText(pair.getR());
 	}
+	
+	public boolean isGraphPanelFocused() {
+		return mGraphPanel.hasFocus();
+	}
 
 	
 	/**
@@ -518,4 +522,5 @@ public class VigralGUI extends JFrame {
 			}
 		});
 	}
+
 }

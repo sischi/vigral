@@ -11,11 +11,13 @@ import java.awt.geom.Point2D;
 
 import de.chiller.vigral.graph.Edge;
 import de.chiller.vigral.graph.Vertex;
+import de.chiller.vigral.gui.VigralGUI;
 import edu.uci.ics.jung.algorithms.layout.Layout;
 import edu.uci.ics.jung.graph.Graph;
 import edu.uci.ics.jung.graph.util.EdgeType;
 import edu.uci.ics.jung.visualization.VisualizationServer;
 import edu.uci.ics.jung.visualization.VisualizationViewer;
+import edu.uci.ics.jung.visualization.picking.PickedState;
 import edu.uci.ics.jung.visualization.util.ArrowFactory;
 
 
@@ -168,6 +170,17 @@ public class EditSupport {
         mEdgeIsDirected = EdgeType.UNDIRECTED;
         vv.removePostRenderPaintable(mEdgePaintable);
         vv.removePostRenderPaintable(mArrowPaintable);
+	}
+	
+	
+	public void deleteSelection() {
+		System.out.println("delete selection");
+		VisualizationViewer<Vertex, Edge> vv = VigralGUI.getInstance().getGraphBuilder().getVisualizationViewer();
+		PickedState<Vertex> pickedVertices = vv.getPickedVertexState();
+		for(Vertex v : pickedVertices.getPicked()) {
+			vv.getGraphLayout().getGraph().removeVertex(v);
+			vv.repaint();
+		}
 	}
 	
 	

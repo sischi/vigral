@@ -95,12 +95,13 @@ public class MyGraphMousePlugin extends AbstractGraphMousePlugin implements Mous
         KeyboardFocusManager.getCurrentKeyboardFocusManager().addKeyEventDispatcher(keyEventDispatcher);
 		mPicking = new PickSupport();
 		mEditing = new EditSupport();
-		mMode = EDITING_MODE;
+		changeMode(EDITING_MODE);
     }
     
 
     @SuppressWarnings("unchecked")
     public void mousePressed(MouseEvent e) {
+    	System.out.println("mouse pressed");
     	VigralGUI.getInstance().setFocusToDrawPanel();
 		if ((e.getModifiers() & MouseEvent.BUTTON1_MASK) != 0) {
 			// get the clicked vv and the coordinates
@@ -109,36 +110,37 @@ public class MyGraphMousePlugin extends AbstractGraphMousePlugin implements Mous
 
 			GraphElementAccessor<Vertex, Edge> pickSupport = vv.getPickSupport();
 			if (pickSupport != null) {
-				final Vertex vertex = (Vertex) pickSupport.getVertex(vv.getModel().getGraphLayout(), p.getX(), p.getY());
+				final Vertex vertex = (Vertex) pickSupport.getVertex(vv.getModel().getGraphLayout(), p.getX(), p.getY());				
 				if (mKeyPressed == 0b0001) {
 					if (!mEditingPossible)
 						return;
 
 					mPicking.clearPickedCollection(vv);
-					mMode = EDITING_MODE;
+					changeMode(EDITING_MODE);
 					mEditing.startEdge(e, vertex, EdgeType.UNDIRECTED);
 				} else if (mKeyPressed == 0b0010) {
 					if (!mEditingPossible)
 						return;
 
 					mPicking.clearPickedCollection(vv);
-					mMode = EDITING_MODE;
+					changeMode(EDITING_MODE);
 					mEditing.startEdge(e, vertex, EdgeType.DIRECTED);
 
 				} else if (mKeyPressed == 0b0100) {
 					if (vertex != null) {
-						mMode = PICKING_MODE;
+						changeMode(PICKING_MODE);
 						mPicking.addToSelection(vertex, vv, p);
 					}
 
 				} else if (mKeyPressed == 0b1000) {
 					if (vertex == null) {
-						mMode = PICKING_MODE;
+						changeMode(PICKING_MODE);
 						mPicking.clearPickedCollection(vv);
 						mPicking.prepareToDrawRect(vv, p);
 					}
 
 				} else if (mKeyPressed == MASK_NOKEY) {
+					System.out.println("nokey");
 					// create vertex
 					if (vertex == null && mMode == EDITING_MODE && (e.getModifiers() & MouseEvent.CTRL_MASK) == 0) {
 						// just create a new vertex if editing is enabled
@@ -146,10 +148,10 @@ public class MyGraphMousePlugin extends AbstractGraphMousePlugin implements Mous
 							return;
 						mEditing.addVertex(e, vv);
 					} else if (vertex == null && mMode == PICKING_MODE) {
-						mMode = EDITING_MODE;
+						changeMode(EDITING_MODE);
 						mPicking.clearPickedCollection(vv);
 					} else if (vertex != null) {
-						mMode = PICKING_MODE;
+						changeMode(PICKING_MODE);
 						mPicking.pickVertex(vv, vertex, p);
 					}
 				}
@@ -206,13 +208,13 @@ public class MyGraphMousePlugin extends AbstractGraphMousePlugin implements Mous
     
     public void stopEditing() {
     	mEditingPossible = false;
-    	mMode = EDITING_MODE;
+    	changeMode(EDITING_MODE);
     	mPicking.clearPickedCollection(VigralGUI.getInstance().getGraphBuilder().getVisualizationViewer());
     }
     
     public void startEditing() {
     	mEditingPossible = true;
-    	mMode = EDITING_MODE;
+    	changeMode(EDITING_MODE);
     	mPicking.clearPickedCollection(VigralGUI.getInstance().getGraphBuilder().getVisualizationViewer());
     }
     
@@ -235,8 +237,15 @@ public class MyGraphMousePlugin extends AbstractGraphMousePlugin implements Mous
 		onKeyReleased(e);
 	}
 	
+	private void changeMode(int mode) {
+		mMode = mode;
+	}
+	
 	private void onKeyPressed(KeyEvent e) {
-		if(e.getKeyCode() == Settings.getKey(Settings.KEY_UNDIRECTED_EDGE))
+		if(e.getKeyCode() == KeyEvent.VK_DELETE && VigralGUI.getInstance().isGraphPanelFocused())
+			e.consume();
+			
+		else if(e.getKeyCode() == Settings.getKey(Settings.KEY_UNDIRECTED_EDGE))
 			mKeyPressed |= MASK_UNDIRECTED_EDGE;
 		
 		else if(e.getKeyCode() == Settings.getKey(Settings.KEY_DIRECTED_EDGE))
@@ -248,13 +257,16 @@ public class MyGraphMousePlugin extends AbstractGraphMousePlugin implements Mous
 		else if(e.getKeyCode() == Settings.getKey(Settings.KEY_RECTANGULAR_SELECT))
 			mKeyPressed |= MASK_RECTANGULAR_SELECT;
 		
-		else {
+		else
 			mKeyPressed |= MASK_KEY_NOT_MAPPED;
-		}
 	}
 	
 	private void onKeyReleased(KeyEvent e) {
-		if(e.getKeyCode() == Settings.getKey(Settings.KEY_UNDIRECTED_EDGE))
+		if(e.getKeyCode() == KeyEvent.VK_DELETE && VigralGUI.getInstance().isGraphPanelFocused()) {
+			mEditing.deleteSelection();
+			changeMode(EDITING_MODE);
+		}
+		else if(e.getKeyCode() == Settings.getKey(Settings.KEY_UNDIRECTED_EDGE))
 			mKeyPressed &= INVMASK_UNDIRECTED_EDGE;
 		
 		else if(e.getKeyCode() == Settings.getKey(Settings.KEY_DIRECTED_EDGE))
@@ -266,9 +278,8 @@ public class MyGraphMousePlugin extends AbstractGraphMousePlugin implements Mous
 		else if(e.getKeyCode() == Settings.getKey(Settings.KEY_RECTANGULAR_SELECT))
 			mKeyPressed &= INVMASK_RECTANGULAR_SELECT;
 		
-		else {
+		else
 			mKeyPressed &= INVMASK_KEY_NOT_MAPPED;
-		}
 	}
 
 
