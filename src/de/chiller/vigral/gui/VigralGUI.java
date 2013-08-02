@@ -248,8 +248,6 @@ public class VigralGUI extends JFrame {
 	private VigralGUI() {
 		mMainWindow = this;
 		
-		Settings.loadSettings();
-		
 		mGraphBuilder = new GraphBuilder();
 		mGraphBuilder.addToPanel(mGraphPanel);
 		

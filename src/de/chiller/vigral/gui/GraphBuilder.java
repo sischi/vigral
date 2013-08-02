@@ -74,7 +74,7 @@ public class GraphBuilder {
 		@Override
 		public Paint transform(Vertex v) {
 			if(v.isPicked())
-				return Color.decode(Settings.getColor(Settings.COLOR_PICKED));
+				return Color.decode(Settings.getInstance().getColor(Settings.COLOR_PICKED));
 			
 			if(v.getCustomColor() != null)
 				return v.getCustomColor();
@@ -97,16 +97,17 @@ public class GraphBuilder {
 		@Override
 		public String transform(Edge e) {
 			String lbl = "<html>";
+			Settings settings = Settings.getInstance();
 			
-			if(Settings.getView(Settings.VIEW_WEIGHT)) {
+			if(settings.getView(Settings.VIEW_WEIGHT)) {
 				lbl += "w="+ e.getWeight();
 			}
-			if(Settings.getView(Settings.VIEW_MIN_CAPACITY)) {
+			if(settings.getView(Settings.VIEW_MIN_CAPACITY)) {
 				if(!lbl.equals("<html>"))
 					lbl += "<br />";				
 				lbl += "min C="+ e.getMinCapacity();
 			}
-			if(Settings.getView(Settings.VIEW_MAX_CAPACITY)) {
+			if(settings.getView(Settings.VIEW_MAX_CAPACITY)) {
 				if(!lbl.equals("<html>"))
 					lbl += "<br />";
 				lbl += "max C="+ e.getMaxCapacity();
@@ -131,17 +132,17 @@ public class GraphBuilder {
 		
 		switch(state) {
 		case UNVISITED:
-			return Color.decode(Settings.getColor(Settings.COLOR_UNVISITED));
+			return Color.decode(Settings.getInstance().getColor(Settings.COLOR_UNVISITED));
 		case ACTIVE:
-			return Color.decode(Settings.getColor(Settings.COLOR_ACTIVE));
+			return Color.decode(Settings.getInstance().getColor(Settings.COLOR_ACTIVE));
 		case VISITED:
-			return Color.decode(Settings.getColor(Settings.COLOR_VISITED));
+			return Color.decode(Settings.getInstance().getColor(Settings.COLOR_VISITED));
 		case FINISHED_AND_NOT_RELEVANT:
-			return Color.decode(Settings.getColor(Settings.COLOR_FINISHED_AND_NOT_RELEVANT));
+			return Color.decode(Settings.getInstance().getColor(Settings.COLOR_FINISHED_AND_NOT_RELEVANT));
 		case FINISHED_AND_RELEVANT:
-			return Color.decode(Settings.getColor(Settings.COLOR_FINISHED_AND_RELEVANT));
+			return Color.decode(Settings.getInstance().getColor(Settings.COLOR_FINISHED_AND_RELEVANT));
 		default:
-			return Color.decode(Settings.getColor(Settings.COLOR_UNVISITED));
+			return Color.decode(Settings.getInstance().getColor(Settings.COLOR_UNVISITED));
 		}
 	}
 	

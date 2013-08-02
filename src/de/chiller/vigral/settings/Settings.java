@@ -39,13 +39,23 @@ public class Settings {
 	private static final boolean DEF_VIEW_MIN_CAPACITY = false;
 	private static final boolean DEF_VIEW_MAX_CAPACITY = false;
 	
-	private static HashMap<String, String> mColorSettings = new HashMap<String, String>();
-	private static HashMap<String, Integer> mKeySettings = new HashMap<String, Integer>();
-	private static HashMap<String, Boolean> mViewSettings = new HashMap<String, Boolean>();
+	private HashMap<String, String> mColorSettings = new HashMap<String, String>();
+	private HashMap<String, Integer> mKeySettings = new HashMap<String, Integer>();
+	private HashMap<String, Boolean> mViewSettings = new HashMap<String, Boolean>();
 	
-	public static ArrayList<String> mColorKeyset = initColorKeyset();
-	public static ArrayList<String> mKeyKeyset = initKeyKeyset();
-	public static ArrayList<String> mViewKeyset = initViewKeyset();
+	private static ArrayList<String> mColorKeyset = initColorKeyset();
+	private static ArrayList<String> mKeyKeyset = initKeyKeyset();
+	private static ArrayList<String> mViewKeyset = initViewKeyset();
+	
+	private static Settings mSettings = new Settings();
+	
+	private Settings() {
+		loadSettings();
+	}
+	
+	public static Settings getInstance() {
+		return mSettings;
+	}
 	
 	private static ArrayList<String> initKeyKeyset() {
 		ArrayList<String> keyset = new ArrayList<String>();
@@ -83,14 +93,14 @@ public class Settings {
 		return keyset;
 	}
 	
-	private static void restoreDefaultView() {
+	private void restoreDefaultView() {
 		mViewSettings = new HashMap<String, Boolean>();
 		mViewSettings.put(VIEW_WEIGHT, DEF_VIEW_WEIGHT);
 		mViewSettings.put(VIEW_MIN_CAPACITY, DEF_VIEW_MIN_CAPACITY);
 		mViewSettings.put(VIEW_MAX_CAPACITY, DEF_VIEW_MAX_CAPACITY);
 	}
 	
-	public static void restoreDefaultColors() {
+	public void restoreDefaultColors() {
 		mColorSettings = new HashMap<String, String>();
 		mColorSettings.put(COLOR_UNVISITED, DEF_COLOR_UNVISITED);
 		mColorSettings.put(COLOR_ACTIVE, DEF_COLOR_ACTIVE);
@@ -100,7 +110,7 @@ public class Settings {
 		mColorSettings.put(COLOR_PICKED, DEF_COLOR_PICKED);
 	}
 	
-	public static void restoreDefaultKeys() {
+	public void restoreDefaultKeys() {
 		mKeySettings = new HashMap<String, Integer>();
 		mKeySettings.put(KEY_UNDIRECTED_EDGE, DEF_KEY_UNDIRECTED_EDGE);
 		mKeySettings.put(KEY_DIRECTED_EDGE, DEF_KEY_DIRECTED_EDGE);
@@ -108,7 +118,7 @@ public class Settings {
 		mKeySettings.put(KEY_RECTANGULAR_SELECT, DEF_KEY_RECTANGULAR_SELECT);
 	}
 	
-	public static void loadSettings() {
+	private void loadSettings() {
 		mColorSettings = FileOperator.getInstance(null).loadColorSettings(Settings.mColorKeyset);
 		if(mColorSettings == null) {
 			System.out.println("color settings is null");
@@ -130,37 +140,61 @@ public class Settings {
 	}
 
 
-	public static void saveSettings() {
+	public void saveSettings() {
 		FileOperator.getInstance(null).saveSettings(mColorSettings, mKeySettings, mViewSettings);
 	}
 	
 	
-	public static String getColor(String whatColor) {
+	public String getColor(String whatColor) {
 		return mColorSettings.get(whatColor);
 	}
 	
-	public static int getKey(String whatKey) {
+	public int getKey(String whatKey) {
 		return mKeySettings.get(whatKey);
 	}
 	
-	public static boolean getView(String whatView) {
+	public boolean getView(String whatView) {
 		return mViewSettings.get(whatView);
 	}
 	
-	public static void updateColorSetting(String whatColor, String val) {
+	public void updateColorSetting(String whatColor, String val) {
 		mColorSettings.put(whatColor, val);
 	}
 	
-	public static void updateKeySetting(String whatKey, int val) {
+	public void updateKeySetting(String whatKey, int val) {
 		mKeySettings.put(whatKey, val);
 	}
 	
-	public static void updateViewSetting(String whatView, boolean val) {
+	public void updateViewSetting(String whatView, boolean val) {
 		mViewSettings.put(whatView, val);
 	}
 	
+	public ArrayList<String> getColorKeySet() {
+		ArrayList<String> keyset = new ArrayList<String>();
+		
+		for(String val : mColorKeyset)
+			keyset.add(val);
+		
+		return keyset;			
+	}
 	
+	public ArrayList<String> getKeyKeySet() {
+		ArrayList<String> keyset = new ArrayList<String>();
+		
+		for(String val : mKeyKeyset)
+			keyset.add(val);
+		
+		return keyset;			
+	}
 	
+	public ArrayList<String> getViewKeySet() {
+		ArrayList<String> keyset = new ArrayList<String>();
+		
+		for(String val : mViewKeyset)
+			keyset.add(val);
+		
+		return keyset;			
+	}
 	
 	
 	
