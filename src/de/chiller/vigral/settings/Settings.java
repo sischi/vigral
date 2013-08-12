@@ -119,20 +119,20 @@ public class Settings {
 	}
 	
 	private void loadSettings() {
-		mColorSettings = FileOperator.getInstance(null).loadColorSettings(Settings.mColorKeyset);
+		mColorSettings = FileOperator.getInstance().loadColorSettings(Settings.mColorKeyset);
 		if(mColorSettings == null) {
 			System.out.println("color settings is null");
 			restoreDefaultColors();
 		}
 		System.out.println("color settings: "+ mColorSettings);
 		
-		mKeySettings = FileOperator.getInstance(null).loadKeySettings(Settings.mKeyKeyset);
+		mKeySettings = FileOperator.getInstance().loadKeySettings(Settings.mKeyKeyset);
 		if(mKeySettings == null) {
 			restoreDefaultKeys();
 		}
 		System.out.println("key settings: "+ mKeySettings);
 		
-		mViewSettings = FileOperator.getInstance(null).loadViewSettings(mViewKeyset);
+		mViewSettings = FileOperator.getInstance().loadViewSettings(mViewKeyset);
 		if(mViewSettings == null) {
 			restoreDefaultView();
 		}
@@ -141,7 +141,7 @@ public class Settings {
 
 
 	public void saveSettings() {
-		FileOperator.getInstance(null).saveSettings(mColorSettings, mKeySettings, mViewSettings);
+		FileOperator.getInstance().saveSettings(mColorSettings, mKeySettings, mViewSettings);
 	}
 	
 	

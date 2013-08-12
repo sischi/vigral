@@ -30,7 +30,7 @@ public class MenuBar extends JMenuBar {
 	private ActionListener onSave = new ActionListener() {
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			FileOperator fo = FileOperator.getInstance(VigralGUI.getInstance());
+			FileOperator fo = FileOperator.getInstance();
 			fo.saveGraphToFile(VigralGUI.getInstance().getGraphBuilder().getGraph());
 		}
 	};
@@ -40,7 +40,7 @@ public class MenuBar extends JMenuBar {
 		public void actionPerformed(ActionEvent arg0) {
 			VigralGUI mainInstance = VigralGUI.getInstance();
 			
-			FileOperator fo = FileOperator.getInstance(mainInstance);
+			FileOperator fo = FileOperator.getInstance();
 			Graph g = fo.readGraphFromFile();
 			if(g != null) {
 				if(mainInstance.getActualMode() == VigralGUI.Mode.VISUALISATION)
@@ -71,7 +71,7 @@ public class MenuBar extends JMenuBar {
 				if(mainInstance.getActualMode() == VigralGUI.Mode.VISUALISATION)
 					mainInstance.changeMode(VigralGUI.Mode.GRAPHCREATION);
 				
-				FileOperator fo = FileOperator.getInstance(mainInstance);
+				FileOperator fo = FileOperator.getInstance();
 				fo.saveGraphToFile(mainInstance.getGraphBuilder().getGraph());
 				mainInstance.getGraphBuilder().resetGraph();
 				Vertex.VertexFactory.getInstance().resetIdCounter();

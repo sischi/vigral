@@ -38,13 +38,14 @@ import au.com.bytecode.opencsv.CSVWriter;
 import de.chiller.vigral.graph.Edge;
 import de.chiller.vigral.graph.Graph;
 import de.chiller.vigral.graph.Vertex;
+import de.chiller.vigral.gui.VigralGUI;
 
 public class FileOperator {
 	
 	private final static int OPEN_DIALOG = 0;
 	private final static int SAVE_DIALOG = 1;
 	
-	private static JFrame mParentFrame;
+	private static JFrame mParentFrame = VigralGUI.getInstance();
 	private static FileOperator mFileOperator = new FileOperator();
 	
 	private File mFile;
@@ -52,8 +53,7 @@ public class FileOperator {
 	private ArrayList<File> mFileList = new ArrayList<File>();
 	
 	
-	public static FileOperator getInstance(JFrame parent) {
-		mParentFrame = parent;
+	public static FileOperator getInstance() {
 		return mFileOperator;
 	}
 	
@@ -255,12 +255,8 @@ public class FileOperator {
 		Graph graph = null;
 		try {
 			
-			for(File file : mFileList) {
-				if(!file.exists()) {
-					System.out.println("File '"+ file.getName() +"' does not exist in zip container!");
-					return null;
-				}
-			}
+			for(File file : mFileList)
+				if(!file.exists()) { return null; }
 			
 			CSVReader reader;
 			
@@ -279,7 +275,7 @@ public class FileOperator {
 			return null;
 		}
 
-		 return graph;
+		return graph;
 	}
 	
 	
@@ -334,18 +330,15 @@ public class FileOperator {
 			DOMSource source = new DOMSource(doc);
 			StreamResult result = new StreamResult(new File(mDialogPath + File.separator + "config.xml"));
 
-			// Output to console for testing
-			StreamResult debugResult = new StreamResult(System.out);
-
 			transformer.transform(source, result);
 
 			System.out.println("File saved!");
 
-		} catch (ParserConfigurationException pce) {
-			pce.printStackTrace();
+		} catch (ParserConfigurationException e) {
+			e.printStackTrace();
 			return false;
-		} catch (TransformerException tfe) {
-			tfe.printStackTrace();
+		} catch (TransformerException e) {
+			e.printStackTrace();
 			return false;
 		}
 

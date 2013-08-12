@@ -213,7 +213,7 @@ public class VigralGUI extends JFrame {
 			mBtn_play.setVisible(false);
 			mBtn_pause.setVisible(true);
 			System.out.println("Start timer!");
-			int speed = calcPaySpeed();
+			int speed = calcPlaySpeed();
 			mPlayTimer = new Timer(speed, mOnTimerTick);
 //			mPlayTimer.scheduleAtFixedRate(mTimerTask, speed, speed);
 			mPlayTimer.start();
@@ -235,7 +235,7 @@ public class VigralGUI extends JFrame {
 		@Override
 		public void stateChanged(ChangeEvent e) {
 			System.out.println("slider value: "+ mSldr_playSpeed.getValue());
-			int speed = calcPaySpeed();
+			int speed = calcPlaySpeed();
 			mPlayTimer.setDelay(speed);
 		}
 	};
@@ -373,7 +373,7 @@ public class VigralGUI extends JFrame {
 //		onResizeButtonPanel();
 	}
 	
-	private int calcPaySpeed() {
+	private int calcPlaySpeed() {
 		int speed = DEFAULT_PLAY_SPEED;
 		int usersChoice = mSldr_playSpeed.getValue();
 		speed -= (usersChoice * PLAY_STEP_SIZE);
