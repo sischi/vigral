@@ -1,4 +1,4 @@
-package de.chiller.vigral.gui;
+package de.chiller.vigral.settings;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -42,9 +42,9 @@ import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableColumn;
 import javax.swing.JTabbedPane;
 
+import de.chiller.vigral.VigralGUI;
 import de.chiller.vigral.jung.MyGraphMousePlugin;
-import de.chiller.vigral.menubar.FileOperator;
-import de.chiller.vigral.settings.Settings;
+import de.chiller.vigral.util.FileOperator;
 import de.chiller.vigral.util.Pair;
 
 public class SettingsDialog extends JDialog {

@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.HashMap;
 
-import de.chiller.vigral.menubar.FileOperator;
+import de.chiller.vigral.util.FileOperator;
 
 public class Settings {
 
@@ -23,7 +23,7 @@ public class Settings {
 	private static final String DEF_COLOR_FINISHED_AND_NOT_RELEVANT = "#C4C4C4";
 	private static final String DEF_COLOR_PICKED = "#F7FE2E";
 	
-	public static final String KEY_UNDIRECTED_EDGE = "KEY_UNDIRECTED";
+	public static final String KEY_UNDIRECTED_EDGE = "KEY_UNDIRECTED_EDGE";
 	public static final String KEY_DIRECTED_EDGE = "KEY_DIRECTED_EDGE";
 	public static final String KEY_MULTIPLE_SELECT = "KEY_MULTIPLE_SELECT";
 	public static final String KEY_RECTANGULAR_SELECT = "KEY_RECTANGULAR_SELECT";

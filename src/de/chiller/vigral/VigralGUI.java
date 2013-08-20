@@ -1,4 +1,4 @@
-package de.chiller.vigral.gui;
+package de.chiller.vigral;
 
 import java.awt.Color;
 import java.awt.Cursor;
@@ -32,8 +32,10 @@ import javax.swing.event.ChangeListener;
 import javax.swing.text.DefaultCaret;
 
 import de.chiller.vigral.algorithm.AbstractAlgorithm;
+import de.chiller.vigral.algorithm.RequirementDialog;
 import de.chiller.vigral.graph.ElementType;
 import de.chiller.vigral.graph.Graph;
+import de.chiller.vigral.menubar.MenuBar;
 import de.chiller.vigral.plugins.PluginLoader;
 import de.chiller.vigral.settings.Settings;
 import de.chiller.vigral.util.Pair;

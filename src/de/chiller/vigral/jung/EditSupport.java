@@ -9,9 +9,9 @@ import java.awt.geom.AffineTransform;
 import java.awt.geom.CubicCurve2D;
 import java.awt.geom.Point2D;
 
+import de.chiller.vigral.VigralGUI;
 import de.chiller.vigral.graph.Edge;
 import de.chiller.vigral.graph.Vertex;
-import de.chiller.vigral.gui.VigralGUI;
 import edu.uci.ics.jung.algorithms.layout.Layout;
 import edu.uci.ics.jung.graph.Graph;
 import edu.uci.ics.jung.graph.util.EdgeType;

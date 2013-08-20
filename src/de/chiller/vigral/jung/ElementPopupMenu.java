@@ -1,4 +1,4 @@
-package de.chiller.vigral.gui;
+package de.chiller.vigral.jung;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;

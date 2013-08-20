@@ -1,4 +1,4 @@
-package de.chiller.vigral.gui;
+package de.chiller.vigral.settings;
 
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
@@ -19,6 +19,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
+import de.chiller.vigral.VigralGUI;
 import de.chiller.vigral.util.Pair;
 
 import java.awt.GridLayout;

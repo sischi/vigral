@@ -1,4 +1,4 @@
-package de.chiller.vigral.menubar;
+package de.chiller.vigral.util;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -35,10 +35,10 @@ import org.xml.sax.SAXException;
 
 import au.com.bytecode.opencsv.CSVReader;
 import au.com.bytecode.opencsv.CSVWriter;
+import de.chiller.vigral.VigralGUI;
 import de.chiller.vigral.graph.Edge;
 import de.chiller.vigral.graph.Graph;
 import de.chiller.vigral.graph.Vertex;
-import de.chiller.vigral.gui.VigralGUI;
 
 public class FileOperator {
 	

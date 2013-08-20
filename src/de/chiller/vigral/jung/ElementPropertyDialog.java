@@ -1,4 +1,4 @@
-package de.chiller.vigral.gui;
+package de.chiller.vigral.jung;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.FlowLayout;
@@ -21,6 +21,7 @@ import javax.swing.JTextField;
 import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
 
+import de.chiller.vigral.VigralGUI;
 import de.chiller.vigral.graph.Edge;
 import de.chiller.vigral.graph.Vertex;
 import de.chiller.vigral.util.Pair;

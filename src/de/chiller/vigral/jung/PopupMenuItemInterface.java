@@ -1,4 +1,4 @@
-package de.chiller.vigral.gui;
+package de.chiller.vigral.jung;
 import de.chiller.vigral.graph.Edge;
 import de.chiller.vigral.graph.Vertex;
 import edu.uci.ics.jung.visualization.VisualizationViewer;

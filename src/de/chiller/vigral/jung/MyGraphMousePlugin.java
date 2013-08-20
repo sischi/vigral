@@ -16,12 +16,12 @@ import java.util.prefs.Preferences;
 import javax.swing.plaf.basic.BasicSplitPaneUI.KeyboardDownRightHandler;
 import javax.swing.plaf.multi.MultiSeparatorUI;
 
+import de.chiller.vigral.VigralGUI;
 import de.chiller.vigral.graph.Edge;
 import de.chiller.vigral.graph.Vertex;
-import de.chiller.vigral.gui.SettingsDialog;
-import de.chiller.vigral.gui.VigralGUI;
-import de.chiller.vigral.menubar.FileOperator;
 import de.chiller.vigral.settings.Settings;
+import de.chiller.vigral.settings.SettingsDialog;
+import de.chiller.vigral.util.FileOperator;
 import edu.uci.ics.jung.algorithms.layout.GraphElementAccessor;
 import edu.uci.ics.jung.algorithms.layout.Layout;
 import edu.uci.ics.jung.graph.util.EdgeType;

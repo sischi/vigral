@@ -1,4 +1,4 @@
-package de.chiller.vigral.gui;
+package de.chiller.vigral.menubar;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -8,10 +8,13 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 
+import de.chiller.vigral.VigralGUI;
+import de.chiller.vigral.VigralGUI.Mode;
 import de.chiller.vigral.graph.Edge;
 import de.chiller.vigral.graph.Graph;
 import de.chiller.vigral.graph.Vertex;
-import de.chiller.vigral.menubar.FileOperator;
+import de.chiller.vigral.settings.SettingsDialog;
+import de.chiller.vigral.util.FileOperator;
 
 public class MenuBar extends JMenuBar {
 	
@@ -105,6 +108,14 @@ public class MenuBar extends JMenuBar {
 		}
 	};
 	
+	
+	private ActionListener onHelp = new ActionListener() {
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			HelpMenu.showHelpMenu();
+		}
+	};
+	
 	public MenuBar(VigralGUI mainWindow) {
 		super();
 		
@@ -128,9 +139,13 @@ public class MenuBar extends JMenuBar {
 		JMenuItem plugins_reload = new JMenuItem("Reload");
 		pluginMenu.add(plugins_reload);
 		
+		JMenuItem help_show = new JMenuItem("Show");
+		helpMenu.add(help_show);
+		
 		add(fileMenu);
 		add(pluginMenu);
 		add(helpMenu);
+		
 		
 		file_exit.addActionListener(onExit);
 		file_save.addActionListener(onSave);
@@ -139,5 +154,7 @@ public class MenuBar extends JMenuBar {
 		file_settings.addActionListener(onSettings);
 		
 		plugins_reload.addActionListener(onPluginsReload);
+		
+		help_show.addActionListener(onHelp);
 	}
 }

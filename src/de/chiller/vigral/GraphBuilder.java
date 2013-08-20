@@ -1,4 +1,4 @@
-package de.chiller.vigral.gui;
+package de.chiller.vigral;
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Dimension;

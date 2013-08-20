@@ -1,0 +1,44 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Help - Usage - Graph creation</title>
+</head>
+
+	<body>
+	
+		<div id="navigation">
+			<a href="usage.html">Back</a>
+			<a href="index.html">Home</a>
+		</div>
+		
+		
+		<div id="content">
+			<h1>How to use this software</h1>
+			<h2>graph creation<h2>
+			<ul>
+				<li><a href="#createvertex">create a vertex</a></li>
+				<li><a href="#createundirected">create an undirected edge</a></li>
+				<li><a href="#createdirected">create a directed edge</a></li>
+				<li><a href="#delete">delete a vertex or an edge</a></li>
+				<li><a href="#changeparams">change parameters</a></li>
+			</ul>
+			
+			<h3><a name="createvertex">create a vertex</a></h3>
+			<p>blabla text blaaa</p><br /><br /><br />
+
+			<h3><a name="createundirected">create an undirected edge</a></h3>
+			<p>blabla text blaaa</p><br /><br /><br />
+
+			<h3><a name="createdirected">create a directed edge</a></h3>
+			<p>blabla text blaaa</p><br /><br /><br />
+
+			<h3><a name="delete">delete a vertex or an edge</a></h3>
+			<p>blabla text blaaa</p><br /><br /><br />
+
+			<h3><a name="changeparams">change parameters</a></h3>
+			<p>blabla text blaaa</p><br /><br /><br />
+		</div>
+	
+	</body>
+</html>

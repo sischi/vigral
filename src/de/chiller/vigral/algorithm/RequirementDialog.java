@@ -1,4 +1,4 @@
-package de.chiller.vigral.gui;
+package de.chiller.vigral.algorithm;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
@@ -17,7 +17,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
-import de.chiller.vigral.algorithm.AbstractAlgorithm;
+import de.chiller.vigral.VigralGUI;
 import de.chiller.vigral.graph.Edge;
 import de.chiller.vigral.graph.ElementType;
 import de.chiller.vigral.graph.Graph;
