@@ -11,12 +11,24 @@ import edu.uci.ics.jung.graph.util.EdgeType;
 
 
 @SuppressWarnings("serial")
+/**
+ * This class represents a Graph and extends the OrderedSparseMultigraph from the JUNG framework
+ * @author Simon Schiller
+ *
+ */
 public class Graph extends OrderedSparseMultigraph<Vertex, Edge> {
 
+	/**
+	 * creates an instance
+	 */
 	public Graph() {
 		super();
 	}
 	
+	/**
+	 * copy constructor
+	 * @param g the graph to be copied
+	 */
 	public Graph(Graph g) {
 		super();
 	
@@ -47,15 +59,25 @@ public class Graph extends OrderedSparseMultigraph<Vertex, Edge> {
 			else
 				addEdge(newEdge, newEdge.getStartVertex(), newEdge.getEndVertex(), EdgeType.UNDIRECTED);
 		}
-		
-		System.out.println("Graph copied!");
 	}
 	
+	/**
+	 * sets the states of all elements to UNVISITED
+	 */
 	public void resetStates() {
 		for(Vertex v : getVertices())
 			v.setState(ElementState.UNVISITED);
+		
+		for(Edge e : getEdges())
+			e.setState(ElementState.UNVISITED);
 	}
 
+	/**
+	 * this methods gives all edges between the given vertices
+	 * @param v1 the start vertex
+	 * @param v2 the end vertex
+	 * @return returns a list of all edges that starts at vertex v1 and end at vertex v2
+	 */
 	public ArrayList<Edge> getEdgesFromTo(Vertex v1, Vertex v2) {
 		ArrayList<Edge> edges = new ArrayList<Edge>();
 		
@@ -66,16 +88,22 @@ public class Graph extends OrderedSparseMultigraph<Vertex, Edge> {
 		return edges;
 	}
 	
-	
+	/**
+	 * returns a string representation of the graph
+	 */
 	public String toString() {
 		String out = "";
 		
-		for(Vertex v : getVertices())
-			out = out +"\n"+ v.debug();
+		out += "Vertices: "+ getVertices() +"\nEdges: "+ getEdges();
 		
 		return out;
 	}
 	
+	/**
+	 * returns the vertex according to the given id
+	 * @param id the id of the vertex
+	 * @return returns the appropriate vertex or null, if no vertex with that id is found
+	 */
 	public Vertex getVertexById(int id) {
 		for(Vertex v : getVertices()) {
 			if(v.getId() == id)
@@ -85,7 +113,12 @@ public class Graph extends OrderedSparseMultigraph<Vertex, Edge> {
 		return null;
 	}
 	
-	
+	/**
+	 * constructs a graph object from the lists of string representations of vertices and edges 
+	 * @param strVertices the list of vertices as string array
+	 * @param strEdges the list of edges as string array
+	 * @return returns the appropriate graph object
+	 */
 	public static Graph parseGraph(List<String[]> strVertices, List<String[]> strEdges) {
 		Graph g = new Graph();
 		HashMap<Integer, Vertex> vertices = new HashMap<Integer, Vertex>();

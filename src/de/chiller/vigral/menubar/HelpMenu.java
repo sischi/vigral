@@ -14,8 +14,18 @@ import javax.swing.event.HyperlinkListener;
 
 import de.chiller.vigral.VigralGUI;
 
+
+/**
+ * this class is responsible for displaying the helpmenu to help the user using this software
+ * @author Simon Schiller
+ *
+ */
 public class HelpMenu extends JEditorPane {
 	private static String mUrl = System.getProperty("user.dir") + File.separator + "help" + File.separator + "index.html";
+	
+	/**
+	 * shows the help menu
+	 */
 	public static void showHelpMenu() {
 		try {
 			JFrame helpmenu = new JFrame("ViGrAl - Help");

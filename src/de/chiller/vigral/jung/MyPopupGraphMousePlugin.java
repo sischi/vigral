@@ -12,25 +12,33 @@ import edu.uci.ics.jung.visualization.VisualizationViewer;
 import edu.uci.ics.jung.visualization.control.AbstractPopupGraphMousePlugin;
 
 /**
- * a plugin that uses popup menus to create vertices, undirected edges,
- * and directed edges.
+ * a plugin that uses popup menus to show properties and delete or modify verties and edges
  * 
- * @author Tom Nelson
+ * @author Simon Schiller
  *
  */
 public class MyPopupGraphMousePlugin extends AbstractPopupGraphMousePlugin {
     
     protected JPopupMenu popup = new JPopupMenu();
 
+    /**
+     * constructor
+     */
     public MyPopupGraphMousePlugin() {
     	this(MouseEvent.BUTTON3_MASK);
     }
     
+    /**
+     * constructor
+     * @param modifiers int modifiers
+     */
     public MyPopupGraphMousePlugin(int modifiers) {
     	super(modifiers);
     }
     
-    
+    /**
+     * creates the popup menu
+     */
     protected void handlePopup(MouseEvent e) {
         @SuppressWarnings("unchecked")
 		final VisualizationViewer<Vertex, Edge> vv = (VisualizationViewer<Vertex, Edge>)e.getSource();

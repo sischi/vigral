@@ -3,7 +3,7 @@ package de.chiller.vigral.util;
 
 /**
  * this class represents a pair of objects
- * @author Timmae
+ * @author Simon Schiller
  *
  * @param <L> the left side object type
  * @param <R> the right side object type

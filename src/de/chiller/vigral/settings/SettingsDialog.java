@@ -47,6 +47,13 @@ import de.chiller.vigral.jung.MyGraphMousePlugin;
 import de.chiller.vigral.util.FileOperator;
 import de.chiller.vigral.util.Pair;
 
+
+
+/**
+ * this class represents the settings dialog and gives the user the ability to change the settings
+ * @author Simon Schiller
+ *
+ */
 public class SettingsDialog extends JDialog {
 
 	private JPanel contentPane;
@@ -67,7 +74,6 @@ public class SettingsDialog extends JDialog {
 	private JTable mKeyTable;
 	private Settings mSettings;
 
-//	private static ArrayList<String> mDefaultColors = new ArrayList<String>();
 	private HashMap<String, Integer> mChosenKeys = new HashMap<String, Integer>();
 	private ArrayList<String> mCheckedProperties = new ArrayList<String>();
 
@@ -214,7 +220,6 @@ public class SettingsDialog extends JDialog {
 		mColorsTable.setDefaultRenderer(Object.class, new DefaultTableCellRenderer() {
 			@Override
 			public Component getTableCellRendererComponent(JTable table, Object val, boolean isSelected, boolean hasFocus, int row, int col) {
-//				System.out.println("Table renderer is called for ("+row+"/"+col+")");
 				final Component c = super.getTableCellRendererComponent(table, val, isSelected, hasFocus, row, col);
 				if((col+1) % 2 == 0) {
 					((AbstractTableModel) mColorsTable.getModel()).fireTableCellUpdated(row, 2);
@@ -222,7 +227,6 @@ public class SettingsDialog extends JDialog {
 				}
 				else if((col+1) % 3 == 0) {
 		        	String colorStr = (String) table.getValueAt(row, col - 1);
-//		        	System.out.println("column 3 with color: "+ colorStr);
 		        	try {
 		        		Color color = Color.decode(colorStr);
 		        		c.setBackground(color);

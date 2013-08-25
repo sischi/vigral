@@ -127,7 +127,11 @@ public class GraphBuilder {
 		}
 	};
 	
-	
+	/**
+	 * this method returns the color according to the given state
+	 * @param state the ElementState
+	 * @return the color of 'state' set by the user
+	 */
 	public Paint checkStateForColor(ElementState state) {
 		
 		switch(state) {
@@ -146,7 +150,9 @@ public class GraphBuilder {
 		}
 	}
 	
-	
+	/**
+	 * constructs the GraphBuilder
+	 */
 	public GraphBuilder() {
 		System.out.println("GraphBuilder Creation");
 		// create a graph
@@ -301,18 +307,25 @@ public class GraphBuilder {
 			return null;
 	}
 	
-	
+	/**
+	 * getter for the graph of graphcreation mode
+	 * @return returns a copy of the graph
+	 */
 	public Graph getGraph() {
 		return new Graph(mGraph);
 	}
 	
-	
+	/**
+	 * setter for the displayed graph in visualization mode
+	 * @param g the graph that will be copied and displayed
+	 */
 	public void setResultingGraph(Graph g) {
 		mResultGraph = new Graph(g);
 		showResultGraph();
 	}
 	
-	public void resetResultGraph() {
+
+	private void resetResultGraph() {
 		mResultGraph = mGraph;
 		mVViewer.repaint();
 	}
@@ -338,6 +351,10 @@ public class GraphBuilder {
 		modifyLocationsIfOutOfBounds((Graph) mVViewer.getGraphLayout().getGraph());
 	}
 	
+	/**
+	 * sets the mode
+	 * @param mode the mode to be set according to VigralGUI modes
+	 */
 	public void setMode(int mode) {
 		if(mode == VigralGUI.Mode.GRAPHCREATION) {
 			mGraphMouse.addEditingFunctionality();
@@ -350,28 +367,43 @@ public class GraphBuilder {
 		}
 	}
 	
-	public void resetVertexState() {
-		for(Vertex v : mGraph.getVertices())
-			v.setState(ElementState.UNVISITED);
-	}
+//	/**
+//	 * 
+//	 */
+//	public void resetVertexState() {
+//		for(Vertex v : mGraph.getVertices())
+//			v.setState(ElementState.UNVISITED);
+//	}
 	
-	
+	/**
+	 * displays the given graph
+	 * @param g the graph that will be copied and displayed
+	 */
 	public void setGraph(Graph g) {
 		mGraph = new Graph(g);
 		showOriginGraph();
 	}
 	
+	/**
+	 * displays a new, empty graph
+	 */
 	public void resetGraph() {
 		mGraph = new Graph();
 		mLayout.setGraph(mGraph);
 		mVViewer.repaint();
 	}
 	
+	/**
+	 * getter for the VisualizationViewer
+	 * @return the VisualizationViewer
+	 */
 	public VisualizationViewer<Vertex, Edge> getVisualizationViewer() {
 		return mVViewer;
 	}
 	
-	
+	/**
+	 * tells the graphbuilder to redraw the graph
+	 */
 	public void redraw() {
 		mVViewer.repaint();
 	}

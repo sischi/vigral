@@ -16,11 +16,14 @@ import de.chiller.vigral.graph.Vertex;
 import de.chiller.vigral.settings.SettingsDialog;
 import de.chiller.vigral.util.FileOperator;
 
+
+/**
+ * this class represents the menubar
+ * @author Simon Schiller
+ *
+ */
 public class MenuBar extends JMenuBar {
 	
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 	
 	private ActionListener onExit = new ActionListener() {
@@ -116,6 +119,10 @@ public class MenuBar extends JMenuBar {
 		}
 	};
 	
+	/**
+	 * the constructor for the menubar
+	 * @param mainWindow the instance of the mainwindow
+	 */
 	public MenuBar(VigralGUI mainWindow) {
 		super();
 		

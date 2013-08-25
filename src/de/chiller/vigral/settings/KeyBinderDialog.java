@@ -24,9 +24,21 @@ import de.chiller.vigral.util.Pair;
 
 import java.awt.GridLayout;
 
+
+/**
+ * this class shows the key choosing dialog
+ * @author Simon Schiller
+ *
+ */
 public class KeyBinderDialog extends JDialog implements KeyListener{
 
+	/**
+	 * error code, that will be returned when the user cancelled the 
+	 */
 	public static final int CANCELED = -2;
+	/**
+	 * error code, that will be returned if the user applies this dialog, without pressing any key
+	 */
 	public static final int NO_CHOICE = -1;
 	
 	private final JPanel contentPanel = new JPanel();
@@ -36,7 +48,7 @@ public class KeyBinderDialog extends JDialog implements KeyListener{
 	private JPanel mButtonPane = new JPanel();
 	private JLabel mDescription = new JLabel();
 	private JLabel mKeyLabel = new JLabel();
-	private int mKeyCode = -1;
+	private int mKeyCode = NO_CHOICE;
 	private boolean mCanceled = false;
 	private String mKeyChar = "";
 	private static ArrayList<Integer> mAllowedKeyCodes = initAllowedKeyCodes();
@@ -153,27 +165,22 @@ public class KeyBinderDialog extends JDialog implements KeyListener{
 		mButtonPane.add(mCancelButton);
 	}
 	
-	
+	/**
+	 * getter for the user choice
+	 * @return returns the keycode or an error code (-1 = NO_CHOICE, -2 = CANCELLED)
+	 */
 	public int getKey() {
 		if(mCanceled)
-			return -2;
+			return CANCELED;
 		
 		return mKeyCode;
 	}
 
 
 	@Override
-	public void keyTyped(KeyEvent e) {
-		// TODO Auto-generated method stub
-		
-	}
-
-
+	public void keyTyped(KeyEvent e) {}
 	@Override
-	public void keyPressed(KeyEvent e) {
-		// TODO Auto-generated method stub
-		
-	}
+	public void keyPressed(KeyEvent e) {}
 
 
 	@Override

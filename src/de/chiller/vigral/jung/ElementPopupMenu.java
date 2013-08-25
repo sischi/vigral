@@ -24,7 +24,13 @@ public class ElementPopupMenu {
 	private static Vertex mVertex;
 	private static Edge mEdge;
 	
-	
+	/**
+	 * sets the mode and the passed params
+	 * @param mode the mode as binary int (01 = VERTEXMENU, 10 = EDGEMENU)
+	 * @param v the vertex as context or null according to the mode
+	 * @param e the edge as context or null according to the mode
+	 * @param vv the visualizationviewer
+	 */
 	public static void setMode(int mode, Vertex v, Edge e, VisualizationViewer<Vertex, Edge> vv) {
 		mMenuMode = mode;
 		mVertex = v;
@@ -32,13 +38,20 @@ public class ElementPopupMenu {
 		mVViewer = vv;
 	}
 	
-
+	/**
+	 * This inner class represents the context menu
+	 * @author Simon Schiller
+	 *
+	 */
 	public static class PopupMenu extends JPopupMenu {
         /**
 		 * 
 		 */
 		private static final long serialVersionUID = 1L;
 
+		/**
+		 * constructs the context menu according to the params of the outer class
+		 */
         public PopupMenu() {
             super("Context Menu");
             

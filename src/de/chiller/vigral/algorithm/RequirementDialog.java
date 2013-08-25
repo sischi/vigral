@@ -115,7 +115,7 @@ public class RequirementDialog extends JDialog {
 	};
 
 	/**
-	 * Create the dialog.
+	 * creates a RequirementDialog.
 	 */
 	public RequirementDialog(ArrayList<Pair<ElementType, String>> requirements, Graph graph, AbstractAlgorithm algorithm) {
 		mRequirements = requirements;

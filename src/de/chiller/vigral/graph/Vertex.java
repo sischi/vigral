@@ -8,7 +8,7 @@ import org.apache.commons.collections15.Factory;
 
 /**
  * this class represents a single vertex of a graph
- * @author Timmae
+ * @author Simon Schiller
  *
  */
 public class Vertex extends GraphElement implements Comparable<Vertex> {
@@ -76,14 +76,25 @@ public class Vertex extends GraphElement implements Comparable<Vertex> {
 		mLabel = label;
 	}
 	
+	/**
+	 * getter for the label addition
+	 * @return returns the string that represents the label addition
+	 */
 	public String getLabelAddition() {
 		return mLabelAddition;
 	}
 	
+	/**
+	 * resets the labeladdition to an empty string
+	 */
 	public void resetLabelAddition() {
 		mLabelAddition = "";
 	}
 	
+	/**
+	 * setter for the label addition
+	 * @param addition the string to what the label addition should be set
+	 */
 	public void setLabelAddition(String addition) {
 		mLabelAddition = addition;
 	}
@@ -132,7 +143,10 @@ public class Vertex extends GraphElement implements Comparable<Vertex> {
 		return mID;
 	}
 	
-	
+	/**
+	 * transforms the vertex into a string array representation
+	 * @return a string array that represents the vertex
+	 */
 	public String[] toStringArray() {
 		String[] values = new String[4];
 		
@@ -144,7 +158,11 @@ public class Vertex extends GraphElement implements Comparable<Vertex> {
 		return values;
 	}
 	
-	
+	/**
+	 * creates a vertex from a string array representation
+	 * @param values the string array that represents a vertex
+	 * @return returns the appropriate vertex object
+	 */
 	public static Vertex parseVertex(String[] values) {
 		Vertex v = new Vertex();
 		
@@ -158,19 +176,26 @@ public class Vertex extends GraphElement implements Comparable<Vertex> {
 	}
 	
 	
-	public String debug() {
-		return "V"+ getId() +" is at Location "+ getLocation().toString();
-	}
+//	public String debug() {
+//		return "V"+ getId() +" is at Location "+ getLocation().toString();
+//	}
 
 	
 	
-	// singleton factory to create a vertex
+	/**
+	 * singleton factory that creates a new vertex
+	 * @author Simon Schiller
+	 *
+	 */
 	public static class VertexFactory implements Factory<Vertex> {
 
 		private static int IDCOUNT = 0;
 		private static VertexFactory mInstance = new VertexFactory();
 		private Point2D mPoint;
 		
+		/**
+		 * resets IDCOUNTer to 0
+		 */
 		public void resetIdCounter() {
 			IDCOUNT = 0;
 		}
@@ -201,6 +226,10 @@ public class Vertex extends GraphElement implements Comparable<Vertex> {
 			return new Vertex(IDCOUNT++, mPoint);
 		}
 		
+		/**
+		 * checks if the passed id is is smaller or equal to the idcounter. if so, the idcounter is set to id+1
+		 * @param id the id against that the idcounter has to be checked
+		 */
 		public static void checkIdCount(int id) {
 			if(id >= IDCOUNT)
 				IDCOUNT = id+1;

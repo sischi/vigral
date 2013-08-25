@@ -20,7 +20,11 @@ import edu.uci.ics.jung.visualization.VisualizationViewer;
 import edu.uci.ics.jung.visualization.picking.PickedState;
 import edu.uci.ics.jung.visualization.util.ArrowFactory;
 
-
+/**
+ * this class implements the creation and editing of vertices and edges
+ * @author Simon Schiller
+ *
+ */
 public class EditSupport {
 	
 	protected Vertex mStartVertex;
@@ -172,7 +176,9 @@ public class EditSupport {
         vv.removePostRenderPaintable(mArrowPaintable);
 	}
 	
-	
+	/**
+	 * deselects all vertices
+	 */
 	public void deleteSelection() {
 		System.out.println("delete selection");
 		VisualizationViewer<Vertex, Edge> vv = VigralGUI.getInstance().getGraphBuilder().getVisualizationViewer();
@@ -204,6 +210,8 @@ public class EditSupport {
         xform.scale(dist / mRawEdge.getBounds().getWidth(), 1.0);
         mEdgeShape = xform.createTransformedShape(mRawEdge);
     }
+    
+    
     private void transformArrowShape(Point2D down, Point2D out) {
         float x1 = (float) down.getX();
         float y1 = (float) down.getY();

@@ -17,7 +17,11 @@ import edu.uci.ics.jung.visualization.VisualizationServer.Paintable;
 import edu.uci.ics.jung.visualization.VisualizationViewer;
 import edu.uci.ics.jung.visualization.picking.PickedState;
 
-
+/**
+ * this class implements the picking of vertices
+ * @author Simon Schiller
+ *
+ */
 public class PickSupport {
 	
 	protected Rectangle2D mRect;
@@ -220,7 +224,10 @@ public class PickSupport {
     }
     
     
-    
+    /**
+     * unpicks all vertices
+     * @param vv the visualizationviewer
+     */
     public void clearPickedCollection(VisualizationViewer<Vertex, Edge> vv) {
     	vv.getPickedVertexState().clear();
     	for(Vertex v : vv.getGraphLayout().getGraph().getVertices())
@@ -228,7 +235,12 @@ public class PickSupport {
         vv.getPickedEdgeState().clear();
     }
     
-    
+    /**
+     * adds the given vertex to the picked ones
+     * @param v the vertex to pick
+     * @param vv the visualizationviewer
+     * @param p the coordinates of the click
+     */
     public void addToSelection(Vertex v, VisualizationViewer<Vertex, Edge> vv, Point2D p) {
     	PickedState<Vertex> pickedVertexState = vv.getPickedVertexState();
     	mPickedVertex = v;

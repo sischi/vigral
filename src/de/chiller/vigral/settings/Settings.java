@@ -7,9 +7,16 @@ import java.util.HashMap;
 
 import de.chiller.vigral.util.FileOperator;
 
+
+
+/**
+ * singleton class that is responsible for saving and loading the settings
+ * @author Simon Schiller
+ *
+ */
 public class Settings {
 
-
+	
 	public static final String COLOR_UNVISITED = "COLOR_UNVISITED";
 	public static final String COLOR_VISITED = "COLOR_VISITED";
 	public static final String COLOR_ACTIVE = "COLOR_ACTIVE";
@@ -53,6 +60,10 @@ public class Settings {
 		loadSettings();
 	}
 	
+	/**
+	 * getter for the singleton instance
+	 * @return returns the singleton instance
+	 */
 	public static Settings getInstance() {
 		return mSettings;
 	}
@@ -100,6 +111,9 @@ public class Settings {
 		mViewSettings.put(VIEW_MAX_CAPACITY, DEF_VIEW_MAX_CAPACITY);
 	}
 	
+	/**
+	 * restores the default color settings
+	 */
 	public void restoreDefaultColors() {
 		mColorSettings = new HashMap<String, String>();
 		mColorSettings.put(COLOR_UNVISITED, DEF_COLOR_UNVISITED);
@@ -110,6 +124,9 @@ public class Settings {
 		mColorSettings.put(COLOR_PICKED, DEF_COLOR_PICKED);
 	}
 	
+	/**
+	 * restores the default key settings
+	 */
 	public void restoreDefaultKeys() {
 		mKeySettings = new HashMap<String, Integer>();
 		mKeySettings.put(KEY_UNDIRECTED_EDGE, DEF_KEY_UNDIRECTED_EDGE);
@@ -118,6 +135,9 @@ public class Settings {
 		mKeySettings.put(KEY_RECTANGULAR_SELECT, DEF_KEY_RECTANGULAR_SELECT);
 	}
 	
+	/**
+	 * loads the settings
+	 */
 	private void loadSettings() {
 		mColorSettings = FileOperator.getInstance().loadColorSettings(Settings.mColorKeyset);
 		if(mColorSettings == null) {
@@ -140,35 +160,71 @@ public class Settings {
 	}
 
 
+	/**
+	 * saves the settings to file
+	 */
 	public void saveSettings() {
 		FileOperator.getInstance().saveSettings(mColorSettings, mKeySettings, mViewSettings);
 	}
 	
-	
+	/**
+	 * returns the demanded color
+	 * @param whatColor the color that should be returned
+	 * @return returns the appropriate color
+	 */
 	public String getColor(String whatColor) {
 		return mColorSettings.get(whatColor);
 	}
 	
+	/**
+	 * returns the demanded key
+	 * @param whatKey the key that should be returned
+	 * @return returns the appropriate key
+	 */
 	public int getKey(String whatKey) {
 		return mKeySettings.get(whatKey);
 	}
-	
+
+	/**
+	 * returns the demanded view setting
+	 * @param whatView the view setting that should be returned
+	 * @return returns the appropriate view setting
+	 */
 	public boolean getView(String whatView) {
 		return mViewSettings.get(whatView);
 	}
 	
+	/**
+	 * updates color settings
+	 * @param whatColor the color that should be updated
+	 * @param val the new value for the color
+	 */
 	public void updateColorSetting(String whatColor, String val) {
 		mColorSettings.put(whatColor, val);
 	}
 	
+	/**
+	 * updates key settings
+	 * @param whatKey the key that should be updated
+	 * @param val the new value for the key
+	 */
 	public void updateKeySetting(String whatKey, int val) {
 		mKeySettings.put(whatKey, val);
 	}
 	
+	/**
+	 * updates view settings
+	 * @param whatView the view setting that should be updated
+	 * @param val the new value of the view setting
+	 */
 	public void updateViewSetting(String whatView, boolean val) {
 		mViewSettings.put(whatView, val);
 	}
 	
+	/**
+	 * 
+	 * @return returns an arraylist of the available colors
+	 */
 	public ArrayList<String> getColorKeySet() {
 		ArrayList<String> keyset = new ArrayList<String>();
 		
@@ -178,6 +234,10 @@ public class Settings {
 		return keyset;			
 	}
 	
+	/**
+	 * 
+	 * @return returns an arraylist of the available keys
+	 */
 	public ArrayList<String> getKeyKeySet() {
 		ArrayList<String> keyset = new ArrayList<String>();
 		
@@ -187,6 +247,10 @@ public class Settings {
 		return keyset;			
 	}
 	
+	/**
+	 * 
+	 * @return returns an arraylist of the available view settings
+	 */
 	public ArrayList<String> getViewKeySet() {
 		ArrayList<String> keyset = new ArrayList<String>();
 		

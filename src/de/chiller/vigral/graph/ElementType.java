@@ -4,7 +4,7 @@ package de.chiller.vigral.graph;
 
 /**
  * enumeration for the requirements of an algorithm. Here you can choose between vertex and edge and the optional equivalent
- * @author Timmae
+ * @author Simon Schiller
  *
  */
 public enum ElementType {

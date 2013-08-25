@@ -9,7 +9,7 @@ import org.apache.commons.collections15.Factory;
 
 /**
  * this class represents a single edge of a graph
- * @author Timmae
+ * @author Simon Schiller
  *
  */
 public class Edge extends GraphElement implements Comparable<Edge> {
@@ -119,18 +119,34 @@ public class Edge extends GraphElement implements Comparable<Edge> {
 		mWeight = weight;
 	}
 	
+	/**
+	 * getter for the minimum capacity
+	 * @return returns the minimum capacity as double value
+	 */
 	public double getMinCapacity() {
 		return mMinCapacity;
 	}
 	
+	/**
+	 * setter for the minimum capacity
+	 * @param capacity the double value that represents the new minimum capacity
+	 */
 	public void setMinCapacity(double capacity) {
 		mMinCapacity = capacity;
 	}
 	
+	/**
+	 * getter for the maximum capacity
+	 * @return returns the maximum capacity as double value
+	 */
 	public double getMaxCapacity() {
 		return mMaxCapacity;
 	}
 	
+	/**
+	 * setter for the maximum capacity
+	 * @param capacity the double value that represents the new maximum capacity
+	 */
 	public void setMaxCapacity(double capacity) {
 		mMaxCapacity = capacity;
 	}
@@ -166,21 +182,25 @@ public class Edge extends GraphElement implements Comparable<Edge> {
 	}
 
 	/**
-	 * returns a string representation of the edge
+	 * transforms the edge into a string
+	 * @return returns a string representation of the edge
 	 */
 	public String toString() {
 		return "E"+ mID +" ("+ mStart.toString() +", "+ mEnd.toString() +")";
 	}
 	
 	/**
-	 * 
+	 * getter for the ID
 	 * @return returns the id of the edge
 	 */
 	public int getId() {
 		return mID;
 	}
 	
-	
+	/**
+	 * transforms the edge into a string array
+	 * @return returns the string array representation of the edge
+	 */
 	public String[] toStringArray() {
 		String[] list = new String[7];
 		
@@ -197,12 +217,19 @@ public class Edge extends GraphElement implements Comparable<Edge> {
 	
 	
 	
-	// singleton factory to create an edge
+	/**
+	 * singleton factory to create an edge
+	 * @author Simon Schiller
+	 *
+	 */
 	public static class EdgeFactory implements Factory<Edge> {
 		
 		private static int IDCOUNT = 0;
 		private static EdgeFactory mInstance = new EdgeFactory();
 		
+		/**
+		 * resets the IDCOUNTer to 0
+		 */
 		public static void resetIdCounter() {
 			IDCOUNT = 0;
 		}
@@ -225,13 +252,26 @@ public class Edge extends GraphElement implements Comparable<Edge> {
 			return mInstance;
 		}
 
-		
+		/**
+		 * copies an edge
+		 * @param e the edge to be copied
+		 * @param start the start vertex of the edge
+		 * @param end the end vertex of the edge
+		 * @return returns the copied edge
+		 */
 		public Edge copyEdge(Edge e, Vertex start, Vertex end) {
 			Edge newEdge = new Edge(e.getId(), e.getWeight(), e.getMinCapacity(), e.getMaxCapacity(), start, end, e.isDirected(), e.getState());
 			newEdge.setCustomColor(e.getCustomColor());
 			return newEdge;
 		}
 		
+		/**
+		 * parses an edge out of a string array representation of an edge
+		 * @param strEdge the string array representation of the edge
+		 * @param start the start vertex
+		 * @param end the end vertex
+		 * @return returns the edge object according to the string array representation
+		 */
 		public Edge parseEdge(String[] strEdge, Vertex start, Vertex end) {
 			int id = Integer.parseInt(strEdge[0]);
 			updateIdCount(id);
@@ -244,6 +284,13 @@ public class Edge extends GraphElement implements Comparable<Edge> {
 			return null;
 		}
 		
+		/**
+		 * overloaded create method that creates a new edge
+		 * @param start the start vertex
+		 * @param end the end vertex
+		 * @param isDirected a boolean, that indicates if the edge is directed or not
+		 * @return returns the created edge
+		 */
 		public Edge create(Vertex start, Vertex end, boolean isDirected) {
 			return new Edge(IDCOUNT++, start, end, isDirected);
 		}

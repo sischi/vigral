@@ -9,7 +9,7 @@ import de.chiller.vigral.util.Pair;
 
 /**
  * Interface that have to implemented by all Algorithms
- * @author Timmae
+ * @author Simon Schiller
  *
  */
 public interface Algorithm {
@@ -33,9 +33,25 @@ public interface Algorithm {
 	 */
 	public void perform();
 	
+	/**
+	 * 
+	 * @return returns the first step
+	 */
 	public Pair<Graph, String> getFirstStep();
+	/**
+	 * 
+	 * @return returns the previous step
+	 */
 	public Pair<Graph, String> getPreviousStep();
+	/**
+	 * 
+	 * @return returns the next step
+	 */
 	public Pair<Graph, String> getNextStep();
+	/**
+	 * 
+	 * @return returns the last step
+	 */
 	public Pair<Graph, String> getLastStep();
 	
 	/**

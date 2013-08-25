@@ -10,7 +10,7 @@ import de.chiller.vigral.util.Pair;
 
 /**
  * abstract implementation of the algorithm interface. this class should be extended when implementing new algorithms
- * @author Timmae
+ * @author Simon Schiller
  *
  */
 public abstract class AbstractAlgorithm implements Algorithm {
@@ -56,7 +56,6 @@ public abstract class AbstractAlgorithm implements Algorithm {
 		if(mActualStep == 0)
 			return null;
 		mActualStep = 0;
-		System.out.println("get step "+ mActualStep);
 		return mSteps.get(mActualStep);
 	}
 
@@ -68,7 +67,6 @@ public abstract class AbstractAlgorithm implements Algorithm {
 			mActualStep--;
 		else
 			return null;
-		System.out.println("get step "+ mActualStep);
 		return mSteps.get(mActualStep);
 	}
 
@@ -80,7 +78,6 @@ public abstract class AbstractAlgorithm implements Algorithm {
 			mActualStep++;
 		else
 			return null;
-		System.out.println("get step "+ mActualStep);
 		return mSteps.get(mActualStep);	
 	}
 
@@ -92,14 +89,21 @@ public abstract class AbstractAlgorithm implements Algorithm {
 			return null;
 			
 		mActualStep = mSteps.size()-1;
-		System.out.println("get step "+ mActualStep);
 		return mSteps.get(mActualStep);
 	}
 	
+	/**
+	 * adds a new copy of the graph with an empty explanation to the list of the steps
+	 */
 	public void addStep() {
 		addStep("");
 	}
 	
+	
+	/**
+	 * adds a new copy of the graph with the given explanation to the list of the steps
+	 * @param explanation the explanation of the step
+	 */
 	public void addStep(String explanation) {
 		String tmp = "";
 		if(!mSteps.isEmpty()) 

@@ -46,6 +46,9 @@ public class MyModalGraphMouse extends AbstractModalGraphMouse implements ModalG
 		add(mEditingPlugin);
 	}
 
+	/**
+	 * adds editing functionality
+	 */
 	public void addEditingFunctionality() {
 		add(mEditingPlugin);
 		add(mPopupEditingPlugin);
@@ -53,6 +56,9 @@ public class MyModalGraphMouse extends AbstractModalGraphMouse implements ModalG
 		mEditingPlugin.startEditing();
 	}
 	
+	/**
+	 * removes editing functionality
+	 */
 	public void removeEditingFunctionality() {
 		remove(mPopupEditingPlugin);
 		// disable editing in the plugin itself

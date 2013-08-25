@@ -82,7 +82,9 @@ public class MyGraphMousePlugin extends AbstractGraphMousePlugin implements Mous
 	};
 	    
     
-    
+    /**
+     * creates a MyGraphMousePlugin
+     */
     public MyGraphMousePlugin() {
         this(MouseEvent.BUTTON1_MASK);
     }
@@ -207,13 +209,18 @@ public class MyGraphMousePlugin extends AbstractGraphMousePlugin implements Mous
     
     
     
-    
+    /**
+     * removes editing functionality
+     */
     public void stopEditing() {
     	mEditingPossible = false;
     	changeMode(EDITING_MODE);
     	mPicking.clearPickedCollection(VigralGUI.getInstance().getGraphBuilder().getVisualizationViewer());
     }
     
+    /**
+     * adds editing functionality
+     */
     public void startEditing() {
     	mEditingPossible = true;
     	changeMode(EDITING_MODE);

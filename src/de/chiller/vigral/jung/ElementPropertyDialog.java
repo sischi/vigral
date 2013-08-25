@@ -45,7 +45,7 @@ public class ElementPropertyDialog<GE> extends JDialog {
 	private Border mErrorBorder;
 
 	/**
-	 * Create the dialog.
+	 * Create the dialog for the passed GraphElement.
 	 */
 	public ElementPropertyDialog(GE elem) {
 		mElement = elem;

@@ -2,7 +2,11 @@ package de.chiller.vigral.jung;
 import java.awt.Color;
 import java.awt.Paint;
 
-
+/**
+ * This class defines some colors
+ * @author Simon Schiller
+ *
+ */
 public class MyColor {
 
 	final public static Paint LIGHT_GREEN = new Color(0x99CC00);

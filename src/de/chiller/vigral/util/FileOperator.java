@@ -40,6 +40,13 @@ import de.chiller.vigral.graph.Edge;
 import de.chiller.vigral.graph.Graph;
 import de.chiller.vigral.graph.Vertex;
 
+
+
+/**
+ * this class is responsible for writing and reading files
+ * @author Simon Schiller
+ *
+ */
 public class FileOperator {
 	
 	private final static int OPEN_DIALOG = 0;
@@ -52,14 +59,21 @@ public class FileOperator {
 	private String mDialogPath = System.getProperty("user.dir");
 	private ArrayList<File> mFileList = new ArrayList<File>();
 	
-	
+	/**
+	 * singleton getter for the instance
+	 * @return
+	 */
 	public static FileOperator getInstance() {
 		return mFileOperator;
 	}
 	
 	private FileOperator() {}
 	
-	
+	/**
+	 * shows a file dialog and saves the graph to the choosen file
+	 * @param g the graph to save
+	 * @return returns true if no errors appeared and false otherwise
+	 */
 	public boolean saveGraphToFile(final Graph g) {
 		if(!showFileDialog(SAVE_DIALOG)) {
 			System.out.println("File has NOT been saved!!");
@@ -85,10 +99,14 @@ public class FileOperator {
 		System.out.println("temp files have been deleted");
 		
 		
-		System.out.println("The file was saved successfully!");	
+		System.out.println("The file was saved successfully!");
 		return true;
 	}
 	
+	/**
+	 * reads and parses a graph from a file
+	 * @return returns the loaded graph or null, if an error occured
+	 */
 	public Graph readGraphFromFile() {
 		if(!showFileDialog(OPEN_DIALOG)) {
 			System.out.println("File was NOT loaded!!");
@@ -279,9 +297,14 @@ public class FileOperator {
 	}
 	
 	
-	
+	/**
+	 * saves the settings to xml file
+	 * @param colors the color settings to save
+	 * @param keys the key settings to save
+	 * @param props the view settings to save
+	 * @return returns true if no error occurred or false otherwise
+	 */
 	public boolean saveSettings(HashMap<String, String> colors, HashMap<String, Integer> keys, HashMap<String, Boolean> props) {
-		
 		
 		try {
 			DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
@@ -345,7 +368,11 @@ public class FileOperator {
 		return true;
 	}
 	
-	
+	/**
+	 * loads the color settings
+	 * @param keys a list of what colors should be loaded
+	 * @return returns a map with all the colors or null if an error occurred
+	 */
 	public HashMap<String, String> loadColorSettings(ArrayList<String> keys) {
 		HashMap<String, String> colors = new HashMap<String, String>();
 		try {
@@ -386,7 +413,11 @@ public class FileOperator {
 		return colors;
 	}
 	
-	
+	/**
+	 * loads the key settings
+	 * @param keys a list of what keys should be loaded
+	 * @return returns a map with all the loaded keys or null if an error occurred
+	 */
 	public HashMap<String, Integer> loadKeySettings(ArrayList<String> keys) {
 		HashMap<String, Integer> keyCodes = new HashMap<String, Integer>();
 		try {
@@ -403,7 +434,6 @@ public class FileOperator {
 
 			for(int i = 0; i < nList.getLength(); i++) {
 				Node nNode = nList.item(i);
-				System.out.println("\nCurrent Element :" + nNode.getNodeName());
 				if(nNode.getNodeType() == Node.ELEMENT_NODE) {
 					Element element = (Element) nNode;
 					for(String key : keys)
@@ -417,6 +447,11 @@ public class FileOperator {
 		return keyCodes;
 	}
 	
+	/**
+	 * loads the view settings
+	 * @param keys a list of what view settings should be loaded
+	 * @return returns a map with all the loaded view settings or null if an error occurred
+	 */
 	public HashMap<String, Boolean> loadViewSettings(ArrayList<String> keys) {
 		HashMap<String, Boolean> props = new HashMap<String, Boolean>();
 		try {

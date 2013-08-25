@@ -10,7 +10,11 @@ import java.util.ArrayList;
 import de.chiller.vigral.algorithm.AbstractAlgorithm;
 
 
-
+/**
+ * singleton class loads the algorithms as plugins
+ * @author Simon Schiller
+ *
+ */
 public class PluginLoader {
 
 	private File mPluginDir;
@@ -20,10 +24,18 @@ public class PluginLoader {
 		mPluginDir = new File(System.getProperty("user.dir") + File.separator + "plugins");
 	}
 	
+	/**
+	 * getter for the singleton instance
+	 * @return the only instance of this class
+	 */
 	public static PluginLoader getInstance() {
 		return mPluginLoader;
 	}
 	
+	/**
+	 * loads the plugins in the plugin dir that extends the AbstractAlgorithm
+	 * @return returns the list of found algorithms
+	 */
 	public ArrayList<AbstractAlgorithm> loadPlugins() {
 		System.out.println("plugin dir: "+ mPluginDir);
 		
