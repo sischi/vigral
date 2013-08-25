@@ -41,15 +41,6 @@ public class Graph extends OrderedSparseMultigraph<Vertex, Edge> {
 		}
 		
 		for(Edge e : g.getEdges()) {
-//			Vertex startVertex = null, endVertex = null;
-//			for(Vertex v : getVertices()) {
-//				if(e.getStartVertex().getId() == v.getId())
-//					startVertex = v;
-//				else if(e.getEndVertex().getId() == v.getId())
-//					endVertex = v;
-//				if(startVertex != null && endVertex != null)
-//					break;
-//			}
 			Vertex startVertex = vertices.get(e.getStartVertex().getId());
 			Vertex endVertex = vertices.get(e.getEndVertex().getId());
 			

@@ -44,24 +44,51 @@ public class MenuBar extends JMenuBar {
 	private ActionListener onOpen = new ActionListener() {
 		@Override
 		public void actionPerformed(ActionEvent arg0) {
-			VigralGUI mainInstance = VigralGUI.getInstance();
-			
-			FileOperator fo = FileOperator.getInstance();
-			Graph g = fo.readGraphFromFile();
-			if(g != null) {
-				if(mainInstance.getActualMode() == VigralGUI.Mode.VISUALISATION)
-					mainInstance.changeMode(VigralGUI.Mode.GRAPHCREATION);
-				
-				mainInstance.getGraphBuilder().setGraph(g);
+			int choice = JOptionPane.showConfirmDialog(VigralGUI.getInstance(), "Do you want to save your work?", "Save before Closing", JOptionPane.YES_NO_CANCEL_OPTION);
+			switch (choice) {
+			case JOptionPane.CANCEL_OPTION:
+				break;
+			case JOptionPane.NO_OPTION:
+				openGraph();
+				break;
+			case JOptionPane.YES_OPTION:
+				FileOperator fo = FileOperator.getInstance();
+				boolean saved = fo.saveGraphToFile(VigralGUI.getInstance().getGraphBuilder().getGraph());
+				if(saved)
+					openGraph();
+				break;
+			default:
+				break;
 			}
+			
 		}
 	};
+	
+	
+	private void openGraph() {
+		VigralGUI mainInstance = VigralGUI.getInstance();
+		FileOperator fo = FileOperator.getInstance();
+		Graph g = fo.readGraphFromFile();
+		if(g != null) {
+			if(mainInstance.getActualMode() == VigralGUI.Mode.VISUALISATION)
+				mainInstance.changeMode(VigralGUI.Mode.GRAPHCREATION);
+			
+			mainInstance.getGraphBuilder().setGraph(g);
+		}
+		else {
+			JOptionPane.showMessageDialog(VigralGUI.getInstance(), "The graph could not be loaded", "Error", JOptionPane.ERROR_MESSAGE);
+			mainInstance.getGraphBuilder().resetGraph();
+			Vertex.VertexFactory.getInstance().resetIdCounter();
+			Edge.EdgeFactory.getInstance().resetIdCounter();
+		}
+	}
+	
 	
 	private ActionListener onNew = new ActionListener() {
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			VigralGUI mainInstance = VigralGUI.getInstance();
-			int choice = JOptionPane.showConfirmDialog(VigralGUI.getInstance(), "Save before Closing", "Do you want to save your work?", JOptionPane.YES_NO_CANCEL_OPTION);
+			int choice = JOptionPane.showConfirmDialog(VigralGUI.getInstance(), "Do you want to save your work?", "Save before Closing", JOptionPane.YES_NO_CANCEL_OPTION);
 			switch (choice) {
 			case JOptionPane.CANCEL_OPTION:
 				break;
@@ -71,17 +98,19 @@ public class MenuBar extends JMenuBar {
 				
 				mainInstance.getGraphBuilder().resetGraph();
 				Vertex.VertexFactory.getInstance().resetIdCounter();
-				Edge.EdgeFactory.resetIdCounter();
+				Edge.EdgeFactory.getInstance().resetIdCounter();
 				break;
 			case JOptionPane.YES_OPTION:
 				if(mainInstance.getActualMode() == VigralGUI.Mode.VISUALISATION)
 					mainInstance.changeMode(VigralGUI.Mode.GRAPHCREATION);
 				
 				FileOperator fo = FileOperator.getInstance();
-				fo.saveGraphToFile(mainInstance.getGraphBuilder().getGraph());
-				mainInstance.getGraphBuilder().resetGraph();
-				Vertex.VertexFactory.getInstance().resetIdCounter();
-				Edge.EdgeFactory.resetIdCounter();
+				boolean saved = fo.saveGraphToFile(mainInstance.getGraphBuilder().getGraph());
+				if(saved) {
+					mainInstance.getGraphBuilder().resetGraph();
+					Vertex.VertexFactory.getInstance().resetIdCounter();
+					Edge.EdgeFactory.getInstance().resetIdCounter();
+				}
 				break;
 			default:
 				break;

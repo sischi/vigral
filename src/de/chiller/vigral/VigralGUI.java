@@ -36,9 +36,9 @@ import de.chiller.vigral.algorithm.RequirementDialog;
 import de.chiller.vigral.graph.ElementType;
 import de.chiller.vigral.graph.Graph;
 import de.chiller.vigral.menubar.MenuBar;
-import de.chiller.vigral.plugins.PluginLoader;
 import de.chiller.vigral.settings.Settings;
 import de.chiller.vigral.util.Pair;
+import de.chiller.vigral.util.PluginLoader;
 
 
 public class VigralGUI extends JFrame {

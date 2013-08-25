@@ -45,17 +45,6 @@ public class Edge extends GraphElement implements Comparable<Edge> {
 		this(id, 1.0d, 1.0d, 1.0d, start, end, directed, ElementState.UNVISITED);
 	}
 	
-//	/**
-//	 * constructs the edge
-//	 * @param id the identifier
-//	 * @param weight the weight
-//	 * @param start the start vertex
-//	 * @param end the end vertex
-//	 * @param directed true if it is an directed edge and false else
-//	 */
-//	private Edge(int id, double weight, Vertex start, Vertex end, boolean directed) {
-//		this(id, weight, start, end, directed, ElementState.UNVISITED);
-//	}
 	
 	/**
 	 * constructs the edge
@@ -230,7 +219,7 @@ public class Edge extends GraphElement implements Comparable<Edge> {
 		/**
 		 * resets the IDCOUNTer to 0
 		 */
-		public static void resetIdCounter() {
+		public void resetIdCounter() {
 			IDCOUNT = 0;
 		}
 		

@@ -123,7 +123,6 @@ public class Vertex extends GraphElement implements Comparable<Vertex> {
 	 * @param p the new location
 	 */
 	public void updateLocation(Point2D p) {
-		//System.out.println(mID +"= "+ p);
 		mLocation = p;
 	}
 	
@@ -174,11 +173,7 @@ public class Vertex extends GraphElement implements Comparable<Vertex> {
 		
 		return v;
 	}
-	
-	
-//	public String debug() {
-//		return "V"+ getId() +" is at Location "+ getLocation().toString();
-//	}
+
 
 	
 	

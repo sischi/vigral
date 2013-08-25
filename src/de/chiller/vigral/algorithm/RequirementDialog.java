@@ -124,10 +124,8 @@ public class RequirementDialog extends JDialog {
 
 		// get the vertices of the graph
 		mVertices = new ArrayList<Vertex>(mGraph.getVertices());
-		System.out.println("unsorted: " + mVertices);
 		// sort the vertices (by label)
 		Collections.sort(mVertices);
-		System.out.println("sorted: " + mVertices);
 
 		// get the edges of the graph
 		mEdges = new ArrayList<Edge>(mGraph.getEdges());
@@ -237,7 +235,6 @@ public class RequirementDialog extends JDialog {
 			if (lineWidth > maxLineWidth)
 				maxLineWidth = lineWidth;
 
-			System.out.println("box.y: "+ box.getBounds().y);
 			height = box.getBounds().y + box.getBounds().height + MARGIN;
 
 			// add the label and combobox
@@ -250,12 +247,10 @@ public class RequirementDialog extends JDialog {
 		rect.y = 0;
 		rect.width = maxLineWidth;
 		rect.height = height;
-		System.out.println("rect: "+ rect);
 		return rect;
 	}
 	
 	private void adaptSizes(Rectangle rect) {
-		System.out.println("rect: "+ rect);
 		Dimension d = new Dimension(rect.width, rect.height);
 		contentPanel.setPreferredSize(d);
 		contentPanel.setMinimumSize(d);
