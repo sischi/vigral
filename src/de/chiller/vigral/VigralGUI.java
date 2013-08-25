@@ -55,7 +55,11 @@ public class VigralGUI extends JFrame {
 	private static final int DEFAULT_PLAY_SPEED = 2001;
 	private static final int PLAY_STEP_SIZE = 200;
 	
-	
+	/**
+	 * This inner class defines the possible modes of the class 'VigralGUI'
+	 * @author Simon Schiller
+	 *
+	 */
 	public static class Mode {
 		public static final int GRAPHCREATION = 0;
 		public static final int VISUALISATION = 1;
@@ -93,7 +97,10 @@ public class VigralGUI extends JFrame {
 	private Timer mPlayTimer;
 	
 	
-	
+	/**
+	 * Singleton method
+	 * @return returns the only instance of this class
+	 */
 	public static VigralGUI getInstance() {
 		return mMainWindow;
 	}
@@ -113,6 +120,7 @@ public class VigralGUI extends JFrame {
 	private ActionListener mCreationListener = new ActionListener() {
 		@Override
 		public void actionPerformed(ActionEvent e) {
+			System.out.println("onclick graphcreation");
 			Graph graph = mGraphBuilder.getGraph();
 			if(graph.getVertexCount() != 0 && mAvailableAlgorithms != null) {
 				mChosenAlgorithm = mAvailableAlgorithms.get(mCb_algorithm.getSelectedIndex()); 
@@ -133,8 +141,7 @@ public class VigralGUI extends JFrame {
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			changeMode(Mode.GRAPHCREATION);
-			mBtn_changeMode.removeActionListener(mVisualisationListener);
-			mBtn_changeMode.addActionListener(mCreationListener);
+
 		}
 	};
 	
@@ -216,8 +223,9 @@ public class VigralGUI extends JFrame {
 			mBtn_pause.setVisible(true);
 			System.out.println("Start timer!");
 			int speed = calcPlaySpeed();
-			mPlayTimer = new Timer(speed, mOnTimerTick);
-//			mPlayTimer.scheduleAtFixedRate(mTimerTask, speed, speed);
+//			mPlayTimer = new Timer(speed, mOnTimerTick);
+			mPlayTimer.setDelay(speed);
+			mPlayTimer.setInitialDelay(speed);
 			mPlayTimer.start();
 		}
 	};
@@ -263,6 +271,8 @@ public class VigralGUI extends JFrame {
 		
 		mSpltMainPanel.setDividerLocation(1.0d);
 		pack();
+		
+		mPlayTimer = new Timer(calcPlaySpeed(), mOnTimerTick);
 	}
 	
 	
@@ -281,8 +291,6 @@ public class VigralGUI extends JFrame {
 		initAlgorithms();
 		mCb_algorithm.setModel(mAlgorithmBoxModel);	
 		
-		
-		mBtn_changeMode.addActionListener(mCreationListener);
 		
 		Hashtable<Integer, JLabel> labelTable = new Hashtable<Integer, JLabel>();
 		labelTable.put(new Integer(SPEED_MIN), new JLabel("Slow"));
@@ -336,13 +344,15 @@ public class VigralGUI extends JFrame {
 		initSizesAndPositions();
 	}
 	
-	
+	/**
+	 * sets the focus to the drawing pane
+	 */
 	public void setFocusToDrawPanel() {
 		mGraphPanel.requestFocus();
 	}
+
 	
-	
-	public void initButtonBar() {
+	private void initButtonBar() {
 		initButtonFromButtonBar(mBtn_jumpToStart, new ImageIcon("res/jumptostart_inactive.png"), new ImageIcon("res/jumptostart_active.png"), 0);
 		mBtn_jumpToStart.addActionListener(mJumpStartListener);
 		initButtonFromButtonBar(mBtn_stepBack, new ImageIcon("res/stepback_inactive.png"), new ImageIcon("res/stepback_active.png"), 1);
@@ -367,6 +377,9 @@ public class VigralGUI extends JFrame {
 		}
 	}
 	
+	/**
+	 * initiates the reloading of the plugins
+	 */
 	public void updateAlgorithmBox() {
 		mAvailableAlgorithms.clear();
 		mAlgorithmBoxModel.removeAllElements();
@@ -383,7 +396,7 @@ public class VigralGUI extends JFrame {
 	}
 	
 	
-	public void initButtonFromButtonBar(JButton btn, Icon inactive, Icon active, int pos) {
+	private void initButtonFromButtonBar(JButton btn, Icon inactive, Icon active, int pos) {
 		
 		btn.setContentAreaFilled(false);
 	    btn.setFocusPainted(false);
@@ -451,23 +464,31 @@ public class VigralGUI extends JFrame {
 		mSldr_playSpeed.setLocation(p);
 	}
 	
-	
+	/**
+	 * this method tells the main class, that the requirements demanded by the algorithm (plugin) has been applied correctly.
+	 * So the mode can be changed to visualization mode.
+	 * @param g the graph on what the algorithm will work
+	 */
 	public void requirementsApplied(Graph g) {
 		System.out.println("requirements applied");
 		changeMode(Mode.VISUALISATION);
-		mBtn_changeMode.removeActionListener(mCreationListener);
-		mBtn_changeMode.addActionListener(mVisualisationListener);
 		mChosenAlgorithm.setGraph(g);
 		mChosenAlgorithm.perform();
 		update(mChosenAlgorithm.getFirstStep());
 	}
 	
-	
+	/**
+	 * getter for the mode
+	 * @return returns the actual valid mode as an int
+	 */
 	public int getActualMode() {
 		return mMode;
 	}
 	
-	
+	/**
+	 * this method initiates all necessary actions that have to be done to change the mode to the desired one
+	 * @param mode the mode to be changed to (0 = GRAPHCREATION, 1 = VISUALISATION)
+	 */
 	public void changeMode(int mode) {
 		mMode = mode;
 		mGraphBuilder.setMode(mMode);
@@ -478,6 +499,8 @@ public class VigralGUI extends JFrame {
 			mSldr_playSpeed.setVisible(false);
 			mBtn_changeMode.setText("Visualization");
 			mButtonBar.setVisible(false);
+			mBtn_changeMode.removeActionListener(mVisualisationListener);
+			mBtn_changeMode.addActionListener(mCreationListener);
 		}
 		else if(mMode == Mode.VISUALISATION) {
 			setTitle("ViGrAl - Visualization");
@@ -485,10 +508,15 @@ public class VigralGUI extends JFrame {
 			mBtn_changeMode.setText("Graph Creation");
 			mButtonBar.setVisible(true);
 			mSldr_playSpeed.setVisible(true);
+			mBtn_changeMode.removeActionListener(mCreationListener);
+			mBtn_changeMode.addActionListener(mVisualisationListener);
 		}
 	}
 	
-	
+	/**
+	 * getter for the graphbuilder. that class is responsible for displaying the graph.
+	 * @return the graphbuilder
+	 */
 	public GraphBuilder getGraphBuilder() {
 		return mGraphBuilder;
 	}
@@ -502,6 +530,10 @@ public class VigralGUI extends JFrame {
 		mTxt_explanation.setText(pair.getR());
 	}
 	
+	/**
+	 * this method indicates, if the drawing pane has the focus
+	 * @return returns true if the drawing pane has the focus, false otherwise
+	 */
 	public boolean isGraphPanelFocused() {
 		return mGraphPanel.hasFocus();
 	}
