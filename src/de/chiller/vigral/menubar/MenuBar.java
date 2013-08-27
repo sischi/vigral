@@ -77,9 +77,9 @@ public class MenuBar extends JMenuBar {
 		}
 		else {
 			JOptionPane.showMessageDialog(VigralGUI.getInstance(), "The graph could not be loaded", "Error", JOptionPane.ERROR_MESSAGE);
-			mainInstance.getGraphBuilder().resetGraph();
-			Vertex.VertexFactory.getInstance().resetIdCounter();
-			Edge.EdgeFactory.getInstance().resetIdCounter();
+//			mainInstance.getGraphBuilder().resetGraph();
+//			Vertex.VertexFactory.getInstance().resetIdCounter();
+//			Edge.EdgeFactory.getInstance().resetIdCounter();
 		}
 	}
 	
