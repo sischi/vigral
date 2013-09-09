@@ -166,7 +166,7 @@ public class Vertex extends GraphElement implements Comparable<Vertex> {
 		Vertex v = new Vertex();
 		
 		v.mID = Integer.parseInt(values[0]);
-		VertexFactory.checkIdCount(v.getId());
+		VertexFactory.getInstance().checkIdCount(v.getId());
 		v.mLabel = values[1];
 		Point2D p = new Point2D.Double(Double.parseDouble(values[2]), Double.parseDouble(values[3]));
 		v.mLocation = p;
@@ -225,7 +225,7 @@ public class Vertex extends GraphElement implements Comparable<Vertex> {
 		 * checks if the passed id is is smaller or equal to the idcounter. if so, the idcounter is set to id+1
 		 * @param id the id against that the idcounter has to be checked
 		 */
-		public static void checkIdCount(int id) {
+		public void checkIdCount(int id) {
 			if(id >= IDCOUNT)
 				IDCOUNT = id+1;
 		}
