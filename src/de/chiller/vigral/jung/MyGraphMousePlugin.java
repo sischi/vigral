@@ -105,7 +105,6 @@ public class MyGraphMousePlugin extends AbstractGraphMousePlugin implements Mous
 
     @SuppressWarnings("unchecked")
     public void mousePressed(MouseEvent e) {
-    	System.out.println("mouse pressed");
     	VigralGUI.getInstance().setFocusToDrawPanel();
 		if ((e.getModifiers() & MouseEvent.BUTTON1_MASK) != 0) {
 			// get the clicked vv and the coordinates
@@ -144,7 +143,6 @@ public class MyGraphMousePlugin extends AbstractGraphMousePlugin implements Mous
 					}
 
 				} else if (mKeyPressed == MASK_NOKEY) {
-					System.out.println("nokey");
 					// create vertex
 					if (vertex == null && mMode == EDITING_MODE && (e.getModifiers() & MouseEvent.CTRL_MASK) == 0) {
 						// just create a new vertex if editing is enabled
