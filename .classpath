@@ -19,5 +19,6 @@
 	<classpathentry kind="lib" path="libs/jung2-2_0_1/stax-api-1.0.1.jar"/>
 	<classpathentry kind="lib" path="libs/jung2-2_0_1/wstx-asl-3.2.6.jar"/>
 	<classpathentry kind="lib" path="libs/jung2-2_0_1/jung-graph-impl-2.0.1.jar"/>
+	<classpathentry kind="lib" path="libs/jung2-2_0_1/jung-api-2.0.1.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
