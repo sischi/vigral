@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.HashMap;
 
+import de.chiller.vigral.util.ErrorDialog;
 import de.chiller.vigral.util.FileOperator;
 
 
@@ -139,18 +140,24 @@ public class Settings {
 	 * loads the settings
 	 */
 	private void loadSettings() {
-		mColorSettings = FileOperator.getInstance().loadColorSettings(Settings.mColorKeyset);
-		if(mColorSettings == null) {
+		try {
+			mColorSettings = FileOperator.getInstance().loadColorSettings(Settings.mColorKeyset);
+		} catch(Exception e) {
+			ErrorDialog.showQuickErrorDialog(null, "cannot load color settings", e);
 			restoreDefaultColors();
 		}
 		
-		mKeySettings = FileOperator.getInstance().loadKeySettings(Settings.mKeyKeyset);
-		if(mKeySettings == null) {
+		try {
+			mKeySettings = FileOperator.getInstance().loadKeySettings(Settings.mKeyKeyset);
+		} catch(Exception e) {
+			ErrorDialog.showQuickErrorDialog(null, "cannot load key settings", e);
 			restoreDefaultKeys();
 		}
-		
-		mViewSettings = FileOperator.getInstance().loadViewSettings(mViewKeyset);
-		if(mViewSettings == null) {
+
+		try {
+			mViewSettings = FileOperator.getInstance().loadViewSettings(mViewKeyset);
+		} catch(Exception e) {
+			ErrorDialog.showQuickErrorDialog(null, "cannot load view settings", e);
 			restoreDefaultView();
 		}
 	}
@@ -160,7 +167,11 @@ public class Settings {
 	 * saves the settings to file
 	 */
 	public void saveSettings() {
-		FileOperator.getInstance().saveSettings(mColorSettings, mKeySettings, mViewSettings);
+		try {
+			FileOperator.getInstance().saveSettings(mColorSettings, mKeySettings, mViewSettings);
+		} catch(Exception e) {
+			ErrorDialog.showQuickErrorDialog(null, "cannot save settings", e);
+		}
 	}
 	
 	/**

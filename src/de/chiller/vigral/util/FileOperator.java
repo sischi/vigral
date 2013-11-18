@@ -21,6 +21,7 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerConfigurationException;
 import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
@@ -79,28 +80,22 @@ public class FileOperator {
 			System.out.println("File has NOT been saved!!");
 			return false;
 		}
-		System.out.println("got a filename");
 		
-		if(!writeToFile(g)) {
-			System.out.println("The file was NOT saved due to an error that occured!");
+		try {
+			
+			writeToFile(g);
+			zipFiles();
+			if(!deleteTemporaryFiles()) {
+				System.out.println("The temp files could NOT be deleted");
+			}
+			System.out.println("file successfully saved!");
+			return true;
+			
+		} catch(Exception e) {
+			ErrorDialog.showQuickErrorDialog(null, "The graph could not be saved", e);
 			return false;
 		}
-		System.out.println("temp files have been created");
-		
-		if(!zipFiles()) {
-			System.out.println("The files have NOT been zipped!");
-			return false;
-		}
-		System.out.println("temp files have been zipped");
-		
-		if(!deleteTemporaryFiles()) {
-			System.out.println("The temp files have NOT been deleted");
-		}
-		System.out.println("temp files have been deleted");
-		
-		
-		System.out.println("The file was saved successfully!");
-		return true;
+
 	}
 	
 	/**
@@ -112,28 +107,22 @@ public class FileOperator {
 			System.out.println("File was NOT loaded!!");
 			return null;
 		}
-		System.out.println("Got filename");
 		
-		if(!unzipFiles()) {
-			System.out.println("The files have NOT been unzipped!");
-			return null;
-		}
-		System.out.println("The files have been unzipped");
 		
-		Graph graph = parseGraphFromFiles();
-		if(graph == null) {
-			System.out.println("the graph could NOT be parsed");
-			return null;
-		}
-		System.out.println("the graph has been parsed");
-		
-		if(!deleteTemporaryFiles()) {
-			System.out.println("the temp files have NOT been deleted");
+		try {
+			
+			unzipFiles();
+			Graph graph = parseGraphFromFiles();
+			if(!deleteTemporaryFiles()) {
+				System.out.println("the temp files have NOT been deleted");
+			}
 			return graph;
+			
+		} catch(Exception e) {
+			ErrorDialog.showQuickErrorDialog(null, "The graph could not be loaded", e);
+			return null;
 		}
-		System.out.println("the temp files have been deleted");
 		
-		return graph;
 	}
 	
 	
@@ -146,109 +135,88 @@ public class FileOperator {
 		else
 			retVal = fc.showSaveDialog(mParentFrame);
 		
-		if(retVal == JFileChooser.CANCEL_OPTION) {
-			System.out.println("The operation has been canceled");
+		if(retVal == JFileChooser.CANCEL_OPTION)
 			return false;
-		}
+		
 		mFile = fc.getSelectedFile();
 		mDialogPath = mFile.getParent();
 		mFileList.clear();
 		mFileList.add(new File(mFile.getParent() + File.separator +"Vertices"));
 		mFileList.add(new File(mFile.getParent() + File.separator +"Edges"));
-		System.out.println("chosen filename: "+ mFile);
-		System.out.println("the path seperator: '"+ File.separator +"'");
 		return true;
 	}
 	
 	
-	private boolean writeToFile(final Graph g) {
+	private boolean writeToFile(final Graph g) throws IOException {
 		
-		try {
-			CSVWriter writer = new CSVWriter(new FileWriter(mFileList.get(0)));
-			for(Vertex v : g.getVertices())
-				writer.writeNext(v.toStringArray());
-			writer.close();
-			
-			writer = new CSVWriter(new FileWriter(mFileList.get(1)));
-			for(Edge e : g.getEdges())
-				writer.writeNext(e.toStringArray());
-			writer.close();
-			
-		} catch (IOException e) {
-			e.printStackTrace();
-			return false;
-		}
+		CSVWriter writer = new CSVWriter(new FileWriter(mFileList.get(0)));
+		for(Vertex v : g.getVertices())
+			writer.writeNext(v.toStringArray());
+		writer.close();
+		
+		writer = new CSVWriter(new FileWriter(mFileList.get(1)));
+		for(Edge e : g.getEdges())
+			writer.writeNext(e.toStringArray());
+		writer.close();
 		
 		return true;
 	}
 	
 	
-	private boolean zipFiles() {
+	private boolean zipFiles() throws IOException {
 		
 		byte[] buffer = new byte[1024];
 		
-		try {
+		FileOutputStream fos = new FileOutputStream(mFile);
+		ZipOutputStream zos = new ZipOutputStream(fos);
+		
+		for(File file : mFileList) {
+		
+			ZipEntry entry = new ZipEntry(file.getName());
+			zos.putNextEntry(entry);
 			
-			FileOutputStream fos = new FileOutputStream(mFile);
-			ZipOutputStream zos = new ZipOutputStream(fos);
+			FileInputStream fis = new FileInputStream(file);
 			
-			for(File file : mFileList) {
-			
-				ZipEntry entry = new ZipEntry(file.getName());
-				zos.putNextEntry(entry);
-				
-				FileInputStream fis = new FileInputStream(file);
-				
-				int length;
-				while((length = fis.read(buffer)) > 0)
-					zos.write(buffer, 0, length);
-			
-				fis.close();
-			}
-			
-			zos.closeEntry();
-			zos.close();
-			
-		} catch (Exception e) {
-			e.printStackTrace();
-			return false;
+			int length;
+			while((length = fis.read(buffer)) > 0)
+				zos.write(buffer, 0, length);
+		
+			fis.close();
 		}
+		
+		zos.closeEntry();
+		zos.close();
+			
 		
 		return true;
 	}
 	
 	
-	private boolean unzipFiles() {
+	private boolean unzipFiles() throws IOException {
 		
 		byte[] buffer = new byte[1024];
 		
-		try {
+
+		ZipInputStream zis = new ZipInputStream(new FileInputStream(mFile));
+		ZipEntry entry = zis.getNextEntry();
+		
+		while(entry != null) {
 			
-			ZipInputStream zis = new ZipInputStream(new FileInputStream(mFile));
-			ZipEntry entry = zis.getNextEntry();
+			String filename = entry.getName();
+			File f = new File(mFile.getParent() + File.separator + filename);
 			
-			while(entry != null) {
-				
-				String filename = entry.getName();
-				File f = new File(mFile.getParent() + File.separator + filename);
-				
-				FileOutputStream fos = new FileOutputStream(f);
-				
-				int length;
-				while((length = zis.read(buffer)) > 0)
-					fos.write(buffer, 0, length);
-				
-				fos.close();
-				entry = zis.getNextEntry();
-			}
+			FileOutputStream fos = new FileOutputStream(f);
 			
-			zis.closeEntry();
-			zis.close();
+			int length;
+			while((length = zis.read(buffer)) > 0)
+				fos.write(buffer, 0, length);
 			
-		} catch (Exception e) {
-			e.printStackTrace();
-			return false;
+			fos.close();
+			entry = zis.getNextEntry();
 		}
+		
+		zis.closeEntry();
+		zis.close();
 		
 		return true;
 	}
@@ -266,32 +234,27 @@ public class FileOperator {
 		return true;
 	}
 	
-	private Graph parseGraphFromFiles() {
+	private Graph parseGraphFromFiles() throws IOException {
 		List<String[]> strVertices;
 		List<String[]> strEdges;
 		
 		Graph graph = null;
-		try {
-			
-			for(File file : mFileList)
-				if(!file.exists()) { return null; }
-			
-			CSVReader reader;
-			
-			reader = new CSVReader(new FileReader(mFileList.get(0)));
-			strVertices = reader.readAll();
-			reader.close();
 
-			reader = new CSVReader(new FileReader(mFileList.get(1)));
-			strEdges = reader.readAll();
-			reader.close();
+		for(File file : mFileList)
+			if(!file.exists()) { return null; }
+		
+		CSVReader reader;
+		
+		reader = new CSVReader(new FileReader(mFileList.get(0)));
+		strVertices = reader.readAll();
+		reader.close();
+
+		reader = new CSVReader(new FileReader(mFileList.get(1)));
+		strEdges = reader.readAll();
+		reader.close();
+		
+		graph = Graph.parseGraph(strVertices, strEdges);
 			
-			graph = Graph.parseGraph(strVertices, strEdges);
-			
-		} catch (Exception e) {
-			e.printStackTrace();
-			return null;
-		}
 
 		return graph;
 	}
@@ -303,67 +266,61 @@ public class FileOperator {
 	 * @param keys the key settings to save
 	 * @param props the view settings to save
 	 * @return returns true if no error occurred or false otherwise
+	 * @throws ParserConfigurationException 
+	 * @throws TransformerException 
 	 */
-	public boolean saveSettings(HashMap<String, String> colors, HashMap<String, Integer> keys, HashMap<String, Boolean> props) {
+	public boolean saveSettings(HashMap<String, String> colors, HashMap<String, Integer> keys, HashMap<String, Boolean> props) throws ParserConfigurationException, TransformerException {
 		
-		try {
-			DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
-			DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
+		DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
+		DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
 
-			// root element
-			Document doc = docBuilder.newDocument();
-			Element rootElement = doc.createElement("settings");
-			doc.appendChild(rootElement);
+		// root element
+		Document doc = docBuilder.newDocument();
+		Element rootElement = doc.createElement("settings");
+		doc.appendChild(rootElement);
 
-			// color element
-			Element colorElement = doc.createElement("colors");
-			rootElement.appendChild(colorElement);
+		// color element
+		Element colorElement = doc.createElement("colors");
+		rootElement.appendChild(colorElement);
 
-			for (String key : colors.keySet()) {
-				Attr attr = doc.createAttribute(key);
-				attr.setValue(colors.get(key));
-				colorElement.setAttributeNode(attr);
-			}
-
-			// key element
-			Element keyElement = doc.createElement("keys");
-			rootElement.appendChild(keyElement);
-
-			for (String key : keys.keySet()) {
-				Attr attr = doc.createAttribute(key);
-				attr.setValue("" + keys.get(key));
-				keyElement.setAttributeNode(attr);
-			}
-			
-			
-			// view element
-			Element viewElement = doc.createElement("view");
-			rootElement.appendChild(viewElement);
-
-			for (String key : props.keySet()) {
-				Attr attr = doc.createAttribute(key);
-				attr.setValue("" + props.get(key));
-				viewElement.setAttributeNode(attr);
-			}
-			
-
-			// write the content into xml file
-			TransformerFactory transformerFactory = TransformerFactory.newInstance();
-			Transformer transformer = transformerFactory.newTransformer();
-			DOMSource source = new DOMSource(doc);
-			StreamResult result = new StreamResult(new File(mDialogPath + File.separator + "config.xml"));
-
-			transformer.transform(source, result);
-
-			System.out.println("File saved!");
-
-		} catch (ParserConfigurationException e) {
-			e.printStackTrace();
-			return false;
-		} catch (TransformerException e) {
-			e.printStackTrace();
-			return false;
+		for (String key : colors.keySet()) {
+			Attr attr = doc.createAttribute(key);
+			attr.setValue(colors.get(key));
+			colorElement.setAttributeNode(attr);
 		}
+
+		// key element
+		Element keyElement = doc.createElement("keys");
+		rootElement.appendChild(keyElement);
+
+		for (String key : keys.keySet()) {
+			Attr attr = doc.createAttribute(key);
+			attr.setValue("" + keys.get(key));
+			keyElement.setAttributeNode(attr);
+		}
+		
+		
+		// view element
+		Element viewElement = doc.createElement("view");
+		rootElement.appendChild(viewElement);
+
+		for (String key : props.keySet()) {
+			Attr attr = doc.createAttribute(key);
+			attr.setValue("" + props.get(key));
+			viewElement.setAttributeNode(attr);
+		}
+		
+
+		// write the content into xml file
+		TransformerFactory transformerFactory = TransformerFactory.newInstance();
+		Transformer transformer = transformerFactory.newTransformer();
+		DOMSource source = new DOMSource(doc);
+		StreamResult result = new StreamResult(new File(mDialogPath + File.separator + "config.xml"));
+
+		transformer.transform(source, result);
+
+		System.out.println("File saved!");
+
 
 		return true;
 	}
@@ -372,43 +329,34 @@ public class FileOperator {
 	 * loads the color settings
 	 * @param keys a list of what colors should be loaded
 	 * @return returns a map with all the colors or null if an error occurred
+	 * @throws IOException 
+	 * @throws SAXException 
+	 * @throws ParserConfigurationException 
 	 */
-	public HashMap<String, String> loadColorSettings(ArrayList<String> keys) {
+	public HashMap<String, String> loadColorSettings(ArrayList<String> keys) throws SAXException, IOException, ParserConfigurationException {
 		HashMap<String, String> colors = new HashMap<String, String>();
-		try {
-			File fXmlFile = new File(mDialogPath + File.separator + "config.xml");
-			DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
-			DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
-			Document doc = dBuilder.parse(fXmlFile);
 
-			doc.getDocumentElement().normalize();
+		File fXmlFile = new File(mDialogPath + File.separator + "config.xml");
+		DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+		DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
+		Document doc = dBuilder.parse(fXmlFile);
 
-			System.out.println("Root element :"+ doc.getDocumentElement().getNodeName());
-			NodeList nList = doc.getElementsByTagName("colors");
+		doc.getDocumentElement().normalize();
 
-			for(int i = 0; i < nList.getLength(); i++) {
-				Node nNode = nList.item(i);
-				System.out.println("\nCurrent Element :" + nNode.getNodeName());
-				if(nNode.getNodeType() == Node.ELEMENT_NODE) {
-					Element element = (Element) nNode;
-					for(String key : keys)
-						colors.put(key, element.getAttribute(key));
-				}
+		System.out.println("Root element :"+ doc.getDocumentElement().getNodeName());
+		NodeList nList = doc.getElementsByTagName("colors");
+
+		for(int i = 0; i < nList.getLength(); i++) {
+			Node nNode = nList.item(i);
+			System.out.println("\nCurrent Element :" + nNode.getNodeName());
+			if(nNode.getNodeType() == Node.ELEMENT_NODE) {
+				Element element = (Element) nNode;
+				for(String key : keys)
+					colors.put(key, element.getAttribute(key));
 			}
-			System.out.println("load colors done: "+ colors);
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-			return null;
-		} catch (ParserConfigurationException e) {
-			e.printStackTrace();
-			return null;
-		} catch (SAXException e) {
-			e.printStackTrace();
-			return null;
-		} catch (IOException e) {
-			e.printStackTrace();
-			return null;
 		}
+		System.out.println("load colors done: "+ colors);
+
 		
 		return colors;
 	}
@@ -417,32 +365,30 @@ public class FileOperator {
 	 * loads the key settings
 	 * @param keys a list of what keys should be loaded
 	 * @return returns a map with all the loaded keys or null if an error occurred
+	 * @throws IOException 
+	 * @throws SAXException 
+	 * @throws ParserConfigurationException 
 	 */
-	public HashMap<String, Integer> loadKeySettings(ArrayList<String> keys) {
+	public HashMap<String, Integer> loadKeySettings(ArrayList<String> keys) throws SAXException, IOException, ParserConfigurationException {
 		HashMap<String, Integer> keyCodes = new HashMap<String, Integer>();
-		try {
 
-			File fXmlFile = new File(mDialogPath + File.separator + "config.xml");
-			DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
-			DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
-			Document doc = dBuilder.parse(fXmlFile);
+		File fXmlFile = new File(mDialogPath + File.separator + "config.xml");
+		DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+		DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
+		Document doc = dBuilder.parse(fXmlFile);
 
-			doc.getDocumentElement().normalize();
+		doc.getDocumentElement().normalize();
 
-			System.out.println("Root element :"+ doc.getDocumentElement().getNodeName());
-			NodeList nList = doc.getElementsByTagName("keys");
+		System.out.println("Root element :"+ doc.getDocumentElement().getNodeName());
+		NodeList nList = doc.getElementsByTagName("keys");
 
-			for(int i = 0; i < nList.getLength(); i++) {
-				Node nNode = nList.item(i);
-				if(nNode.getNodeType() == Node.ELEMENT_NODE) {
-					Element element = (Element) nNode;
-					for(String key : keys)
-						keyCodes.put(key, Integer.parseInt(element.getAttribute(key)));
-				}
+		for(int i = 0; i < nList.getLength(); i++) {
+			Node nNode = nList.item(i);
+			if(nNode.getNodeType() == Node.ELEMENT_NODE) {
+				Element element = (Element) nNode;
+				for(String key : keys)
+					keyCodes.put(key, Integer.parseInt(element.getAttribute(key)));
 			}
-		} catch (Exception e) {
-			e.printStackTrace();
-			return null;
 		}
 		return keyCodes;
 	}
@@ -451,33 +397,31 @@ public class FileOperator {
 	 * loads the view settings
 	 * @param keys a list of what view settings should be loaded
 	 * @return returns a map with all the loaded view settings or null if an error occurred
+	 * @throws ParserConfigurationException 
+	 * @throws IOException 
+	 * @throws SAXException 
 	 */
-	public HashMap<String, Boolean> loadViewSettings(ArrayList<String> keys) {
+	public HashMap<String, Boolean> loadViewSettings(ArrayList<String> keys) throws ParserConfigurationException, SAXException, IOException {
 		HashMap<String, Boolean> props = new HashMap<String, Boolean>();
-		try {
 
-			File xmlFile = new File(mDialogPath + File.separator + "config.xml");
-			DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
-			DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
-			Document doc = dBuilder.parse(xmlFile);
+		File xmlFile = new File(mDialogPath + File.separator + "config.xml");
+		DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+		DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
+		Document doc = dBuilder.parse(xmlFile);
 
-			doc.getDocumentElement().normalize();
+		doc.getDocumentElement().normalize();
 
-			System.out.println("Root element :"+ doc.getDocumentElement().getNodeName());
-			NodeList nList = doc.getElementsByTagName("view");
+		System.out.println("Root element :"+ doc.getDocumentElement().getNodeName());
+		NodeList nList = doc.getElementsByTagName("view");
 
-			for(int i = 0; i < nList.getLength(); i++) {
-				Node nNode = nList.item(i);
-				System.out.println("\nCurrent Element :" + nNode.getNodeName());
-				if(nNode.getNodeType() == Node.ELEMENT_NODE) {
-					Element element = (Element) nNode;
-					for(String key : keys)
-						props.put(key, Boolean.parseBoolean(element.getAttribute(key)));
-				}
+		for(int i = 0; i < nList.getLength(); i++) {
+			Node nNode = nList.item(i);
+			System.out.println("\nCurrent Element :" + nNode.getNodeName());
+			if(nNode.getNodeType() == Node.ELEMENT_NODE) {
+				Element element = (Element) nNode;
+				for(String key : keys)
+					props.put(key, Boolean.parseBoolean(element.getAttribute(key)));
 			}
-		} catch (Exception e) {
-			e.printStackTrace();
-			return null;
 		}
 		return props;
 	}
