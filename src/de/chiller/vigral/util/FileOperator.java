@@ -93,6 +93,9 @@ public class FileOperator {
 			
 		} catch(Exception e) {
 			ErrorDialog.showQuickErrorDialog(null, "The graph could not be saved", e);
+			if(!deleteTemporaryFiles()) {
+				System.out.println("The temp files could NOT be deleted");
+			}
 			return false;
 		}
 
@@ -110,7 +113,8 @@ public class FileOperator {
 		
 		
 		try {
-			
+			Vertex.VertexFactory.getInstance().backupID();
+			Edge.EdgeFactory.getInstance().backupID();
 			unzipFiles();
 			Graph graph = parseGraphFromFiles();
 			if(!deleteTemporaryFiles()) {
@@ -120,6 +124,11 @@ public class FileOperator {
 			
 		} catch(Exception e) {
 			ErrorDialog.showQuickErrorDialog(null, "The graph could not be loaded", e);
+			Vertex.VertexFactory.getInstance().restoreID();
+			Edge.EdgeFactory.getInstance().restoreID();
+			if(!deleteTemporaryFiles()) {
+				System.out.println("the temp files have NOT been deleted");
+			}
 			return null;
 		}
 		

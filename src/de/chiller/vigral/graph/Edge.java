@@ -215,6 +215,7 @@ public class Edge extends GraphElement implements Comparable<Edge> {
 		
 		private static int IDCOUNT = 0;
 		private static EdgeFactory mInstance = new EdgeFactory();
+		private int bID;
 		
 		/**
 		 * resets the IDCOUNTer to 0
@@ -282,6 +283,15 @@ public class Edge extends GraphElement implements Comparable<Edge> {
 		 */
 		public Edge create(Vertex start, Vertex end, boolean isDirected) {
 			return new Edge(IDCOUNT++, start, end, isDirected);
+		}
+		
+		
+		public void backupID() {
+			bID = IDCOUNT;
+		}
+		
+		public void restoreID() {
+			IDCOUNT = bID;
 		}
 	}
 

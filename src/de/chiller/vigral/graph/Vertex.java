@@ -187,6 +187,7 @@ public class Vertex extends GraphElement implements Comparable<Vertex> {
 		private static int IDCOUNT = 0;
 		private static VertexFactory mInstance = new VertexFactory();
 		private Point2D mPoint;
+		private int bID;
 		
 		/**
 		 * resets IDCOUNTer to 0
@@ -228,6 +229,14 @@ public class Vertex extends GraphElement implements Comparable<Vertex> {
 		public void checkIdCount(int id) {
 			if(id >= IDCOUNT)
 				IDCOUNT = id+1;
+		}
+		
+		public void backupID() {
+			bID = IDCOUNT;
+		}
+		
+		public void restoreID() {
+			IDCOUNT = bID;
 		}
 	}
 
