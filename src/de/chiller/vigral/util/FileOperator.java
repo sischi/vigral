@@ -58,6 +58,7 @@ public class FileOperator {
 	
 	private File mFile;
 	private String mDialogPath = System.getProperty("user.dir");
+	private String mSettingsFile = "config.xml";
 	private ArrayList<File> mFileList = new ArrayList<File>();
 	
 	/**
@@ -278,7 +279,8 @@ public class FileOperator {
 	 * @throws ParserConfigurationException 
 	 * @throws TransformerException 
 	 */
-	public boolean saveSettings(HashMap<String, String> colors, HashMap<String, Integer> keys, HashMap<String, Boolean> props) throws ParserConfigurationException, TransformerException {
+	public boolean saveSettings(HashMap<String, String> colors, HashMap<String, Integer> keys, HashMap<String, Boolean> props, HashMap<String, Integer> labels) 
+			throws ParserConfigurationException, TransformerException {
 		
 		DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
 		DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
@@ -319,6 +321,17 @@ public class FileOperator {
 			viewElement.setAttributeNode(attr);
 		}
 		
+		
+		// label element
+		Element labelElement = doc.createElement("labels");
+		rootElement.appendChild(labelElement);
+
+		for (String key : labels.keySet()) {
+			Attr attr = doc.createAttribute(key);
+			attr.setValue("" + labels.get(key));
+			labelElement.setAttributeNode(attr);
+		}
+		
 
 		// write the content into xml file
 		TransformerFactory transformerFactory = TransformerFactory.newInstance();
@@ -328,8 +341,6 @@ public class FileOperator {
 
 		transformer.transform(source, result);
 
-		System.out.println("File saved!");
-
 
 		return true;
 	}
@@ -338,11 +349,9 @@ public class FileOperator {
 	 * loads the color settings
 	 * @param keys a list of what colors should be loaded
 	 * @return returns a map with all the colors or null if an error occurred
-	 * @throws IOException 
-	 * @throws SAXException 
-	 * @throws ParserConfigurationException 
+	 * @throws Exception 
 	 */
-	public HashMap<String, String> loadColorSettings(ArrayList<String> keys) throws SAXException, IOException, ParserConfigurationException {
+	public HashMap<String, String> loadColorSettings(ArrayList<String> keys) throws Exception {
 		HashMap<String, String> colors = new HashMap<String, String>();
 
 		File fXmlFile = new File(mDialogPath + File.separator + "config.xml");
@@ -352,20 +361,19 @@ public class FileOperator {
 
 		doc.getDocumentElement().normalize();
 
-		System.out.println("Root element :"+ doc.getDocumentElement().getNodeName());
 		NodeList nList = doc.getElementsByTagName("colors");
 
 		for(int i = 0; i < nList.getLength(); i++) {
 			Node nNode = nList.item(i);
-			System.out.println("\nCurrent Element :" + nNode.getNodeName());
 			if(nNode.getNodeType() == Node.ELEMENT_NODE) {
 				Element element = (Element) nNode;
 				for(String key : keys)
 					colors.put(key, element.getAttribute(key));
 			}
 		}
-		System.out.println("load colors done: "+ colors);
 
+		if(colors.isEmpty())
+			throw new Exception(mSettingsFile + " does not contain any color settings");
 		
 		return colors;
 	}
@@ -374,11 +382,9 @@ public class FileOperator {
 	 * loads the key settings
 	 * @param keys a list of what keys should be loaded
 	 * @return returns a map with all the loaded keys or null if an error occurred
-	 * @throws IOException 
-	 * @throws SAXException 
-	 * @throws ParserConfigurationException 
+	 * @throws Exception 
 	 */
-	public HashMap<String, Integer> loadKeySettings(ArrayList<String> keys) throws SAXException, IOException, ParserConfigurationException {
+	public HashMap<String, Integer> loadKeySettings(ArrayList<String> keys) throws Exception {
 		HashMap<String, Integer> keyCodes = new HashMap<String, Integer>();
 
 		File fXmlFile = new File(mDialogPath + File.separator + "config.xml");
@@ -388,7 +394,6 @@ public class FileOperator {
 
 		doc.getDocumentElement().normalize();
 
-		System.out.println("Root element :"+ doc.getDocumentElement().getNodeName());
 		NodeList nList = doc.getElementsByTagName("keys");
 
 		for(int i = 0; i < nList.getLength(); i++) {
@@ -399,6 +404,10 @@ public class FileOperator {
 					keyCodes.put(key, Integer.parseInt(element.getAttribute(key)));
 			}
 		}
+		
+		if(keyCodes.isEmpty())
+			throw new Exception(mSettingsFile + " does not contain any key settings");
+		
 		return keyCodes;
 	}
 	
@@ -406,11 +415,9 @@ public class FileOperator {
 	 * loads the view settings
 	 * @param keys a list of what view settings should be loaded
 	 * @return returns a map with all the loaded view settings or null if an error occurred
-	 * @throws ParserConfigurationException 
-	 * @throws IOException 
-	 * @throws SAXException 
+	 * @throws Exception 
 	 */
-	public HashMap<String, Boolean> loadViewSettings(ArrayList<String> keys) throws ParserConfigurationException, SAXException, IOException {
+	public HashMap<String, Boolean> loadViewSettings(ArrayList<String> keys) throws Exception {
 		HashMap<String, Boolean> props = new HashMap<String, Boolean>();
 
 		File xmlFile = new File(mDialogPath + File.separator + "config.xml");
@@ -420,19 +427,50 @@ public class FileOperator {
 
 		doc.getDocumentElement().normalize();
 
-		System.out.println("Root element :"+ doc.getDocumentElement().getNodeName());
 		NodeList nList = doc.getElementsByTagName("view");
 
 		for(int i = 0; i < nList.getLength(); i++) {
 			Node nNode = nList.item(i);
-			System.out.println("\nCurrent Element :" + nNode.getNodeName());
 			if(nNode.getNodeType() == Node.ELEMENT_NODE) {
 				Element element = (Element) nNode;
 				for(String key : keys)
 					props.put(key, Boolean.parseBoolean(element.getAttribute(key)));
 			}
 		}
+		
+		if(props.isEmpty())
+			throw new Exception(mSettingsFile + " does not contain any view settings");
+		
 		return props;
+	}
+	
+	
+	
+	public HashMap<String, Integer> loadLabelSettings(ArrayList<String> labels) throws Exception {
+		HashMap<String, Integer> labelSizes = new HashMap<String, Integer>();
+
+		File fXmlFile = new File(mDialogPath + File.separator + "config.xml");
+		DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+		DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
+		Document doc = dBuilder.parse(fXmlFile);
+
+		doc.getDocumentElement().normalize();
+
+		NodeList nList = doc.getElementsByTagName("labels");
+
+		for(int i = 0; i < nList.getLength(); i++) {
+			Node nNode = nList.item(i);
+			if(nNode.getNodeType() == Node.ELEMENT_NODE) {
+				Element element = (Element) nNode;
+				for(String key : labels)
+					labelSizes.put(key, Integer.parseInt(element.getAttribute(key)));
+			}
+		}
+		
+		if(labelSizes.isEmpty())
+			throw new Exception(mSettingsFile + " does not contain any label settings");
+		
+		return labelSizes;
 	}
 	
 	

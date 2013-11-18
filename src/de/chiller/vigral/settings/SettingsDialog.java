@@ -36,6 +36,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.DefaultTableCellRenderer;
@@ -60,18 +61,23 @@ public class SettingsDialog extends JDialog {
 	private JPanel mColorTab = new JPanel();
 	private JPanel mKeyTab = new JPanel();
 	private JPanel mViewTab = new JPanel();
+	private JPanel mLabelTab = new JPanel();
 	private JPanel mButtonPane = new JPanel();
 	private JButton mApplyButton = new JButton();
 	private JButton mCancelButton = new JButton();
 	private JTabbedPane mTabbedPane;
 	private JButton mRestoreColorsButton = new JButton();
 	private JButton mRestoreKeysButton = new JButton();
+	private JButton mRestoreLabelsButton = new JButton();
 	private JLabel mColorLabel = new JLabel();
 	private JLabel mKeyLabel = new JLabel();
 	private JLabel mViewLabel = new JLabel();
+	private JLabel mLabelLabel = new JLabel();
 	
 	private JTable mColorsTable;
 	private JTable mKeyTable;
+	private JTextField mVertexLabelSize;
+	private JTextField mEdgeLabelSize;
 	private Settings mSettings;
 
 	private HashMap<String, Integer> mChosenKeys = new HashMap<String, Integer>();
@@ -81,6 +87,7 @@ public class SettingsDialog extends JDialog {
 	private ArrayList<String> mKeyKeyset;
 	private ArrayList<String> mColorKeyset;
 	private ArrayList<String> mViewKeyset;
+	private ArrayList<String> mLabelKeyset;
 	
 	/**
 	 * Create the frame.
@@ -90,6 +97,7 @@ public class SettingsDialog extends JDialog {
 		mKeyKeyset = mSettings.getKeyKeySet();
 		mColorKeyset = mSettings.getColorKeySet();
 		mViewKeyset = mSettings.getViewKeySet();
+		mLabelKeyset = mSettings.getLabelKeySet();
 		initComponents();
 	}
 
@@ -113,6 +121,7 @@ public class SettingsDialog extends JDialog {
 		mTabbedPane.addTab("Colors", null, mColorTab, "change state colors");
 		mTabbedPane.addTab("Keys", null, mKeyTab, "edit drawing keys");
 		mTabbedPane.addTab("View", null, mViewTab, "modify visibility of edge properties");
+		mTabbedPane.addTab("Labels", null, mLabelTab, "modify label sizes of vertices and edges");
 		
 		initButtonPane();
 		
@@ -124,9 +133,46 @@ public class SettingsDialog extends JDialog {
 		
 		initViewTab();
 		
+		initLabelTab();
+		
+	}
+	
+	
+	
+	
+	private void initLabelTab() {
+		mLabelTab.setLayout(new GridLayout(3, 1, 10, 10));
+		mLabelLabel.setText("enter the desired labelsize for the vertices and edges");
+		mLabelLabel.setAlignmentX(JLabel.LEFT_ALIGNMENT);
+		mLabelLabel.setLocation(10, 10);
+		mLabelTab.add(mLabelLabel);
+		
+		JPanel temp = new JPanel();
+		
+		temp.setLayout(new GridLayout(2, 2, 10, 10));
+		mVertexLabelSize = new JTextField(Integer.toString(mSettings.getLabelSize(mLabelKeyset.get(0))));
+		mEdgeLabelSize = new JTextField(Integer.toString(mSettings.getLabelSize(mLabelKeyset.get(1))));
+		
+		temp.add(new JLabel("Labelsize of Vertices"));
+		temp.add(mVertexLabelSize);
+		temp.add(new JLabel("Labelsize of Edges"));
+		temp.add(mEdgeLabelSize);
+		
+		mLabelTab.add(temp);
+		
+		
+		mRestoreLabelsButton.setText("Restore Defaults");
+		mRestoreLabelsButton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				restoreDefaultLabels();
+			}
+		});
+		mLabelTab.add(mRestoreLabelsButton);
 	}
 
 
+	
 	private void initViewTab() {
 		mViewTab.setLayout(new BorderLayout());
 		Box box = Box.createVerticalBox();
@@ -357,8 +403,9 @@ public class SettingsDialog extends JDialog {
 		mApplyButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				saveSettings();
+				//workAroundNotRedrawingEdgeLabelsByChangingSize();
 				VigralGUI.getInstance().getGraphBuilder().redraw();
-				dispose();
+				//dispose();
 			}
 		});
 		mApplyButton.setActionCommand("Apply");
@@ -375,9 +422,22 @@ public class SettingsDialog extends JDialog {
 		mCancelButton.setActionCommand("Cancel");
 		mButtonPane.add(mCancelButton);
 	}
+	
+	
+	private void workAroundNotRedrawingEdgeLabelsByChangingSize() {
+		mSettings.updateViewSetting(Settings.VIEW_WEIGHT, false);
+		VigralGUI.getInstance().getGraphBuilder().redraw();
+		mSettings.updateViewSetting(Settings.VIEW_WEIGHT, true);
+		VigralGUI.getInstance().getGraphBuilder().redraw();
+		saveSettings();
+	}
 		
 	
 	private void saveSettings() {
+		
+		
+		mSettings.updateLabelSetting(mLabelKeyset.get(0), Integer.parseInt(mVertexLabelSize.getText()));
+		mSettings.updateLabelSetting(mLabelKeyset.get(1), Integer.parseInt(mEdgeLabelSize.getText()));
 		
 		for(int row = 0; row < mColorsTable.getRowCount(); row++) {
 			mSettings.updateColorSetting((String) mColorsTable.getValueAt(row, 0), (String) mColorsTable.getValueAt(row, 1));
@@ -387,7 +447,6 @@ public class SettingsDialog extends JDialog {
 			mSettings.updateKeySetting(key, mChosenKeys.get(key));
 		}
 		
-		System.out.println("save properties: "+ mCheckedProperties);
 		for(String key : mViewKeyset) {
 			if(mCheckedProperties.contains(key))
 				mSettings.updateViewSetting(key, true);
@@ -410,6 +469,12 @@ public class SettingsDialog extends JDialog {
 		mSettings.restoreDefaultKeys();
 		for(int i = 0; i < mKeyKeyset.size(); i++)
 			mKeyTable.setValueAt(KeyEvent.getKeyText(mSettings.getKey(mKeyKeyset.get(i))), i, 1);
+	}
+	
+	private void restoreDefaultLabels() {
+		mSettings.restoreDefaultLabels();
+		mVertexLabelSize.setText(Integer.toString(mSettings.getLabelSize(mLabelKeyset.get(0))));
+		mEdgeLabelSize.setText(Integer.toString(mSettings.getLabelSize(mLabelKeyset.get(1))));
 	}
 
 	

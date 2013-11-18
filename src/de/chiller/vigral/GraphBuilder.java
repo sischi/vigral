@@ -26,6 +26,7 @@ import edu.uci.ics.jung.algorithms.layout.Layout;
 import edu.uci.ics.jung.algorithms.layout.StaticLayout;
 import edu.uci.ics.jung.visualization.VisualizationViewer;
 import edu.uci.ics.jung.visualization.control.ModalGraphMouse;
+import edu.uci.ics.jung.visualization.decorators.AbstractEdgeShapeTransformer;
 import edu.uci.ics.jung.visualization.renderers.Renderer;
 
 public class GraphBuilder {
@@ -53,6 +54,9 @@ public class GraphBuilder {
 	 * responsible for the GraphMousePlugins (Drawing with the mouse and context menus)
 	 */
 	private MyModalGraphMouse mGraphMouse;
+	
+	
+	private Settings mSettings = Settings.getInstance();
 	
 	private Transformer<Vertex, Paint> mVertexLineTransformer = new Transformer<Vertex, Paint>() {
 		@Override
@@ -127,6 +131,25 @@ public class GraphBuilder {
 		}
 	};
 	
+	
+	
+	private Transformer<Edge, Font> mEdgeFontTransformer = new Transformer<Edge, Font>() {
+		@Override
+		public Font transform(Edge e) {
+			return new Font("Helvetica", Font.PLAIN, mSettings.getLabelSize(Settings.LABEL_EDGE));
+		}
+	};
+	
+	
+	
+	private Transformer<Vertex, Font> mVertexFontTransformer = new Transformer<Vertex, Font>() {
+		@Override
+		public Font transform(Vertex arg0) {
+			return new Font("Helvetica", Font.PLAIN, mSettings.getLabelSize(Settings.LABEL_VERTEX));
+		}
+	};
+	
+	
 	/**
 	 * this method returns the color according to the given state
 	 * @param state the ElementState
@@ -154,7 +177,6 @@ public class GraphBuilder {
 	 * constructs the GraphBuilder
 	 */
 	public GraphBuilder() {
-		System.out.println("GraphBuilder Creation");
 		// create a graph
 		mGraph = new Graph();
 		mResultGraph = mGraph;
@@ -163,7 +185,6 @@ public class GraphBuilder {
 		// add the layout to the VisualizationViewer
 		mVViewer = new VisualizationViewer<Vertex, Edge>(mLayout);
 		
-		System.out.println("layout: "+ mLayout.getSize());
 		
 		mGraphMouse = new MyModalGraphMouse(mVViewer.getRenderContext());
 		mVViewer.setGraphMouse(mGraphMouse);
@@ -171,26 +192,26 @@ public class GraphBuilder {
 		mVViewer.setFocusable(true);
 		mGraphMouse.setMode(ModalGraphMouse.Mode.EDITING);
 		
-		mVViewer.getRenderContext().setEdgeLabelTransformer(mEdgeLabelTransformer);
-		mVViewer.getRenderContext().setVertexLabelTransformer(mVertexLabelTransformer);
-		
-		
 		mVViewer.setBackground(Color.WHITE);
-		mVViewer.getRenderContext().getEdgeLabelRenderer().setRotateEdgeLabels(false);
 		
+		mVViewer.getRenderContext().setEdgeLabelTransformer(mEdgeLabelTransformer);
+		mVViewer.getRenderContext().setEdgeDrawPaintTransformer(mEdgePaintTransformer);
+		mVViewer.getRenderContext().setEdgeStrokeTransformer(new ConstantTransformer(new BasicStroke(3.0f)));
+		mVViewer.getRenderContext().getEdgeLabelRenderer().setRotateEdgeLabels(true);
+		mVViewer.getRenderContext().setArrowFillPaintTransformer(mEdgePaintTransformer);
+		mVViewer.getRenderContext().setEdgeFontTransformer(mEdgeFontTransformer);
+		//mVViewer.getRenderContext().setEdgeShapeTransformer(mEdgeShapeTransformer);
+		//mVViewer.getRenderContext().setEdgeFillPaintTransformer(mEdgePaintTransformer);
+		
+		mVViewer.getRenderContext().setVertexLabelTransformer(mVertexLabelTransformer);
 		mVViewer.getRenderContext().setVertexShapeTransformer(mVertexShapeTransformer);
 		mVViewer.getRenderContext().setVertexFillPaintTransformer(mVertexPaintTransformer);
 		mVViewer.getRenderContext().setVertexDrawPaintTransformer(mVertexLineTransformer);
-		mVViewer.getRenderContext().setEdgeDrawPaintTransformer(mEdgePaintTransformer);
-		//mVViewer.getRenderContext().setEdgeFillPaintTransformer(mEdgePaintTransformer);
-		mVViewer.getRenderContext().setEdgeStrokeTransformer(new ConstantTransformer(new BasicStroke(3.0f)));
-		mVViewer.getRenderContext().setArrowFillPaintTransformer(mEdgePaintTransformer);
-		mVViewer.getRenderContext().setEdgeFontTransformer(new ConstantTransformer(new Font("Helvetica", Font.PLAIN, 12)));
-		//mVViewer.getRenderContext().setEdgeShapeTransformer(mEdgeShapeTransformer);
-
+		mVViewer.getRenderContext().setVertexFontTransformer(mVertexFontTransformer);
 		mVViewer.getRenderer().getVertexLabelRenderer().setPosition(Renderer.VertexLabel.Position.CNTR);
-
 	}
+
+	
 	
 	/**
 	 * adds the VisualisationViewer to the given panel

@@ -37,10 +37,9 @@ public class PluginLoader {
 	 * @return returns the list of found algorithms
 	 */
 	public ArrayList<AbstractAlgorithm> loadPlugins() {
-		System.out.println("plugin dir: "+ mPluginDir);
 		
 		if(!mPluginDir.exists()) {
-			System.out.println("plugin dir ("+ mPluginDir +") does not exist!");
+			//System.out.println("plugin dir ("+ mPluginDir +") does not exist!");
 			return null;
 		}
 			
@@ -66,11 +65,9 @@ public class PluginLoader {
 			return null;
 		}
 		URL[] urls = new URL[]{url};
-		System.out.println("urls: "+ urls);
 		ArrayList<AbstractAlgorithm> algorithms = new ArrayList<AbstractAlgorithm>();
 		ClassLoader loader = new URLClassLoader(urls);
 		for(String name : classes) {
-//			System.out.println("before try-catch");
 			try {
 				System.out.println("name: "+ name);
 				Class clss = loader.loadClass(name);
@@ -80,22 +77,16 @@ public class PluginLoader {
 				AbstractAlgorithm algo = (AbstractAlgorithm) o;
 				algorithms.add(algo);
 			} catch(NoClassDefFoundError e) {
-//				System.out.println("in catch 01");
 				e.printStackTrace();
 			} catch (ClassNotFoundException e) {
-//				System.out.println("in catch 02");
 				e.printStackTrace();
 			} catch (InstantiationException e) {
-//				System.out.println("in catch 03");
 				e.printStackTrace();
 			} catch (IllegalAccessException e) {
-//				System.out.println("in catch 04");
 				e.printStackTrace();
 			} catch (Exception e) {
-//				System.out.println("in catch 05");
 				e.printStackTrace();
 			}
-//			System.out.println("after try-catch");
 		}
 		
 		return algorithms;

@@ -1,6 +1,7 @@
 package de.chiller.vigral.settings;
 
 import java.awt.event.KeyEvent;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.HashMap;
@@ -47,15 +48,22 @@ public class Settings {
 	private static final boolean DEF_VIEW_MIN_CAPACITY = false;
 	private static final boolean DEF_VIEW_MAX_CAPACITY = false;
 	
+	public static final String LABEL_VERTEX = "LABEL_VERTEX";
+	public static final String LABEL_EDGE = "LABEL_EDGE";
+	private static final int DEF_LABEL_VERTEX = 12;
+	private static final int DEF_LABEL_EDGE = 12;
+	
 	private HashMap<String, String> mColorSettings = new HashMap<String, String>();
 	private HashMap<String, Integer> mKeySettings = new HashMap<String, Integer>();
 	private HashMap<String, Boolean> mViewSettings = new HashMap<String, Boolean>();
+	private HashMap<String, Integer> mLabelSettings = new HashMap<String, Integer>();
 	
 	private static ArrayList<String> mColorKeyset = initColorKeyset();
 	private static ArrayList<String> mKeyKeyset = initKeyKeyset();
 	private static ArrayList<String> mViewKeyset = initViewKeyset();
+	private static ArrayList<String> mLabelKeyset= initLabelKeyset();
 	
-	private static Settings mSettings = new Settings();
+	private static Settings mSettings = null;
 	
 	private Settings() {
 		loadSettings();
@@ -66,7 +74,19 @@ public class Settings {
 	 * @return returns the singleton instance
 	 */
 	public static Settings getInstance() {
+		if(mSettings == null)
+			mSettings = new Settings();
 		return mSettings;
+	}
+	
+	
+	private static ArrayList<String> initLabelKeyset() {
+		ArrayList<String> keyset = new ArrayList<String>();
+		
+		keyset.add(LABEL_VERTEX);
+		keyset.add(LABEL_EDGE);
+		
+		return keyset;
 	}
 	
 	private static ArrayList<String> initKeyKeyset() {
@@ -136,6 +156,12 @@ public class Settings {
 		mKeySettings.put(KEY_RECTANGULAR_SELECT, DEF_KEY_RECTANGULAR_SELECT);
 	}
 	
+	public void restoreDefaultLabels() {
+		mLabelSettings = new HashMap<String, Integer>();
+		mLabelSettings.put(LABEL_VERTEX, DEF_LABEL_VERTEX);
+		mLabelSettings.put(LABEL_EDGE, DEF_LABEL_EDGE);
+	}
+	
 	/**
 	 * loads the settings
 	 */
@@ -160,6 +186,13 @@ public class Settings {
 			ErrorDialog.showQuickErrorDialog(null, "cannot load view settings", e);
 			restoreDefaultView();
 		}
+		
+		try {
+			mLabelSettings = FileOperator.getInstance().loadLabelSettings(mLabelKeyset);
+		} catch(Exception e) {
+			ErrorDialog.showQuickErrorDialog(null, "cannot load label settings", e);
+			restoreDefaultLabels();
+		}
 	}
 
 
@@ -168,7 +201,7 @@ public class Settings {
 	 */
 	public void saveSettings() {
 		try {
-			FileOperator.getInstance().saveSettings(mColorSettings, mKeySettings, mViewSettings);
+			FileOperator.getInstance().saveSettings(mColorSettings, mKeySettings, mViewSettings, mLabelSettings);
 		} catch(Exception e) {
 			ErrorDialog.showQuickErrorDialog(null, "cannot save settings", e);
 		}
@@ -181,6 +214,11 @@ public class Settings {
 	 */
 	public String getColor(String whatColor) {
 		return mColorSettings.get(whatColor);
+	}
+	
+	
+	public int getLabelSize(String whatLabel) {
+		return mLabelSettings.get(whatLabel);
 	}
 	
 	/**
@@ -208,6 +246,10 @@ public class Settings {
 	 */
 	public void updateColorSetting(String whatColor, String val) {
 		mColorSettings.put(whatColor, val);
+	}
+	
+	public void updateLabelSetting(String whatLabel, int val) {
+		mLabelSettings.put(whatLabel, val);
 	}
 	
 	/**
@@ -265,6 +307,16 @@ public class Settings {
 			keyset.add(val);
 		
 		return keyset;			
+	}
+	
+	
+	public ArrayList<String> getLabelKeySet() {
+		ArrayList<String> keyset = new ArrayList<String>();
+		
+		for(String val : mLabelKeyset)
+			keyset.add(val);
+		
+		return keyset;
 	}
 	
 	
