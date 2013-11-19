@@ -27,6 +27,7 @@ import edu.uci.ics.jung.algorithms.layout.StaticLayout;
 import edu.uci.ics.jung.visualization.VisualizationViewer;
 import edu.uci.ics.jung.visualization.control.ModalGraphMouse;
 import edu.uci.ics.jung.visualization.decorators.AbstractEdgeShapeTransformer;
+import edu.uci.ics.jung.visualization.decorators.ConstantDirectionalEdgeValueTransformer;
 import edu.uci.ics.jung.visualization.renderers.Renderer;
 
 public class GraphBuilder {
@@ -97,26 +98,66 @@ public class GraphBuilder {
 		}
 	};
 	
+	
+	
+	
 	private Transformer<Edge, String> mEdgeLabelTransformer = new Transformer<Edge, String>() {
+		
+		/*
+		 * workaround!
+		 * 
+		 * ISSUE:
+		 * changing the label size of edges in SettingsDialog will not take effect. Only if you change the view settings, the label size
+		 * the edges is updated too.
+		 * 
+		 * REASON:
+		 * the HTML string, that is returned by this transformer. If you return a static, normal, hardcoded string (e.g. "hello") the label
+		 * size is updated every time when it is changed via the SettingsDialog.
+		 * 
+		 * WORKAROUND:
+		 * every second time this transformer is asked to transform an edge to a string, append a whitespace. All the other times return just
+		 * the desired string.
+		 * This will force repainting of the edges because the label has changed
+		 */
+		private boolean mBOO = false;
+		
 		@Override
 		public String transform(Edge e) {
+
 			String lbl = "<html>";
 			Settings settings = Settings.getInstance();
+			int offset = 0;
 			
 			if(settings.getView(Settings.VIEW_WEIGHT)) {
+				offset++;
 				lbl += "w="+ e.getWeight();
 			}
 			if(settings.getView(Settings.VIEW_MIN_CAPACITY)) {
 				if(!lbl.equals("<html>"))
-					lbl += "<br />";				
+					lbl += "<br />";
+				offset++;
 				lbl += "min C="+ e.getMinCapacity();
 			}
 			if(settings.getView(Settings.VIEW_MAX_CAPACITY)) {
 				if(!lbl.equals("<html>"))
 					lbl += "<br />";
+				offset++;
 				lbl += "max C="+ e.getMaxCapacity();
 			}
 			lbl += "</html>";
+			
+			
+			if(mBOO) {
+				mBOO = false;
+				lbl += " ";
+			}
+			else {
+				mBOO = true;
+			}
+			
+			// set the label offset according to the number of lines of the label and edge label font size (center the label)
+			mVViewer.getRenderContext().setLabelOffset(offset * mSettings.getLabelSize(Settings.LABEL_EDGE));
+			
 			return lbl;
 		}
 	};
@@ -132,8 +173,8 @@ public class GraphBuilder {
 	};
 	
 	
-	
 	private Transformer<Edge, Font> mEdgeFontTransformer = new Transformer<Edge, Font>() {
+		
 		@Override
 		public Font transform(Edge e) {
 			return new Font("Helvetica", Font.PLAIN, mSettings.getLabelSize(Settings.LABEL_EDGE));
@@ -144,7 +185,7 @@ public class GraphBuilder {
 	
 	private Transformer<Vertex, Font> mVertexFontTransformer = new Transformer<Vertex, Font>() {
 		@Override
-		public Font transform(Vertex arg0) {
+		public Font transform(Vertex v) {
 			return new Font("Helvetica", Font.PLAIN, mSettings.getLabelSize(Settings.LABEL_VERTEX));
 		}
 	};
@@ -188,21 +229,21 @@ public class GraphBuilder {
 		
 		mGraphMouse = new MyModalGraphMouse(mVViewer.getRenderContext());
 		mVViewer.setGraphMouse(mGraphMouse);
-//		mVViewer.addKeyListener(mGraphMouse.getEditingPlugin());
 		mVViewer.setFocusable(true);
 		mGraphMouse.setMode(ModalGraphMouse.Mode.EDITING);
 		
 		mVViewer.setBackground(Color.WHITE);
 		
+		// initialize the edge renderer
 		mVViewer.getRenderContext().setEdgeLabelTransformer(mEdgeLabelTransformer);
 		mVViewer.getRenderContext().setEdgeDrawPaintTransformer(mEdgePaintTransformer);
 		mVViewer.getRenderContext().setEdgeStrokeTransformer(new ConstantTransformer(new BasicStroke(3.0f)));
 		mVViewer.getRenderContext().getEdgeLabelRenderer().setRotateEdgeLabels(true);
 		mVViewer.getRenderContext().setArrowFillPaintTransformer(mEdgePaintTransformer);
 		mVViewer.getRenderContext().setEdgeFontTransformer(mEdgeFontTransformer);
-		//mVViewer.getRenderContext().setEdgeShapeTransformer(mEdgeShapeTransformer);
-		//mVViewer.getRenderContext().setEdgeFillPaintTransformer(mEdgePaintTransformer);
+		mVViewer.getRenderContext().setEdgeLabelClosenessTransformer(new ConstantDirectionalEdgeValueTransformer<Vertex, Edge>(.5, .5));
 		
+		// initialize the vertex renderer
 		mVViewer.getRenderContext().setVertexLabelTransformer(mVertexLabelTransformer);
 		mVViewer.getRenderContext().setVertexShapeTransformer(mVertexShapeTransformer);
 		mVViewer.getRenderContext().setVertexFillPaintTransformer(mVertexPaintTransformer);

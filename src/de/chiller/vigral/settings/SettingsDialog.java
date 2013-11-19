@@ -425,11 +425,10 @@ public class SettingsDialog extends JDialog {
 	
 	
 	private void workAroundNotRedrawingEdgeLabelsByChangingSize() {
-		mSettings.updateViewSetting(Settings.VIEW_WEIGHT, false);
-		VigralGUI.getInstance().getGraphBuilder().redraw();
-		mSettings.updateViewSetting(Settings.VIEW_WEIGHT, true);
-		VigralGUI.getInstance().getGraphBuilder().redraw();
-		saveSettings();
+		if(mSettings.getView(Settings.VIEW_WEIGHT))
+			mSettings.updateViewSetting(Settings.VIEW_WEIGHT, false);
+		else
+			mSettings.updateViewSetting(Settings.VIEW_WEIGHT, true);
 	}
 		
 	
