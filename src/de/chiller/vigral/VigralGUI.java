@@ -120,7 +120,7 @@ public class VigralGUI extends JFrame {
 	private ActionListener mCreationListener = new ActionListener() {
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			System.out.println("onclick graphcreation");
+			// System.out.println("onclick graphcreation");
 			Graph graph = mGraphBuilder.getGraph();
 			if(graph.getVertexCount() != 0 && mAvailableAlgorithms != null) {
 				mChosenAlgorithm = mAvailableAlgorithms.get(mCb_algorithm.getSelectedIndex()); 
@@ -141,7 +141,7 @@ public class VigralGUI extends JFrame {
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			changeMode(Mode.GRAPHCREATION);
-
+			mBtn_pause.doClick();
 		}
 	};
 	
@@ -221,7 +221,7 @@ public class VigralGUI extends JFrame {
 		public void actionPerformed(ActionEvent e) {
 			mBtn_play.setVisible(false);
 			mBtn_pause.setVisible(true);
-			System.out.println("Start timer!");
+			// System.out.println("Start timer!");
 			int speed = calcPlaySpeed();
 //			mPlayTimer = new Timer(speed, mOnTimerTick);
 			mPlayTimer.setDelay(speed);
@@ -237,14 +237,14 @@ public class VigralGUI extends JFrame {
 		public void actionPerformed(ActionEvent e) {
 			mBtn_play.setVisible(true);
 			mBtn_pause.setVisible(false);
-			System.out.println("cancel timer!");
+			// System.out.println("cancel timer!");
 			mPlayTimer.stop();
 		}
 	};
 	private ChangeListener onSliderValueChanged = new ChangeListener() {
 		@Override
 		public void stateChanged(ChangeEvent e) {
-			System.out.println("slider value: "+ mSldr_playSpeed.getValue());
+			// System.out.println("slider value: "+ mSldr_playSpeed.getValue());
 			int speed = calcPlaySpeed();
 			mPlayTimer.setDelay(speed);
 		}
@@ -470,7 +470,7 @@ public class VigralGUI extends JFrame {
 	 * @param g the graph on what the algorithm will work
 	 */
 	public void requirementsApplied(Graph g) {
-		System.out.println("requirements applied");
+		// System.out.println("requirements applied");
 		changeMode(Mode.VISUALISATION);
 		mChosenAlgorithm.setGraph(g);
 		mChosenAlgorithm.perform();
