@@ -169,28 +169,28 @@ public class Settings {
 		try {
 			mColorSettings = FileOperator.getInstance().loadColorSettings(Settings.mColorKeyset);
 		} catch(Exception e) {
-			ErrorDialog.showQuickErrorDialog(null, "cannot load color settings", e);
+			ErrorDialog.showErrorDialog(null, "cannot load color settings", e);
 			restoreDefaultColors();
 		}
 		
 		try {
 			mKeySettings = FileOperator.getInstance().loadKeySettings(Settings.mKeyKeyset);
 		} catch(Exception e) {
-			ErrorDialog.showQuickErrorDialog(null, "cannot load key settings", e);
+			ErrorDialog.showErrorDialog(null, "cannot load key settings", e);
 			restoreDefaultKeys();
 		}
 
 		try {
 			mViewSettings = FileOperator.getInstance().loadViewSettings(mViewKeyset);
 		} catch(Exception e) {
-			ErrorDialog.showQuickErrorDialog(null, "cannot load view settings", e);
+			ErrorDialog.showErrorDialog(null, "cannot load view settings", e);
 			restoreDefaultView();
 		}
 		
 		try {
 			mLabelSettings = FileOperator.getInstance().loadLabelSettings(mLabelKeyset);
 		} catch(Exception e) {
-			ErrorDialog.showQuickErrorDialog(null, "cannot load label settings", e);
+			ErrorDialog.showErrorDialog(null, "cannot load label settings", e);
 			restoreDefaultLabels();
 		}
 	}
@@ -203,7 +203,7 @@ public class Settings {
 		try {
 			FileOperator.getInstance().saveSettings(mColorSettings, mKeySettings, mViewSettings, mLabelSettings);
 		} catch(Exception e) {
-			ErrorDialog.showQuickErrorDialog(null, "cannot save settings", e);
+			ErrorDialog.showErrorDialog(null, "cannot save settings", e);
 		}
 	}
 	

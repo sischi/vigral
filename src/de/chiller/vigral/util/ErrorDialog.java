@@ -12,13 +12,13 @@ public class ErrorDialog {
 	}
 	
 	
-	public static void showQuickErrorDialog(JFrame parent, Exception e) 
+	public static void showErrorDialog(JFrame parent, Exception e) 
 	{
-		ErrorDialog.showQuickErrorDialog(parent, "An error occured", e);
+		ErrorDialog.showErrorDialog(parent, "An error occured", e);
 	}
 	
 	
-	public static void showQuickErrorDialog(JFrame parent, String title, Exception e) {
+	public static void showErrorDialog(JFrame parent, String title, Exception e) {
 		
 		// create and configure a text area - fill it with exception text.
 		final JTextArea textArea = new JTextArea();

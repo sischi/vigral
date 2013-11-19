@@ -93,7 +93,7 @@ public class FileOperator {
 			return true;
 			
 		} catch(Exception e) {
-			ErrorDialog.showQuickErrorDialog(null, "The graph could not be saved", e);
+			ErrorDialog.showErrorDialog(null, "The graph could not be saved", e);
 			if(!deleteTemporaryFiles()) {
 				System.out.println("The temp files could NOT be deleted");
 			}
@@ -124,7 +124,7 @@ public class FileOperator {
 			return graph;
 			
 		} catch(Exception e) {
-			ErrorDialog.showQuickErrorDialog(null, "The graph could not be loaded", e);
+			ErrorDialog.showErrorDialog(null, "The graph could not be loaded", e);
 			Vertex.VertexFactory.getInstance().restoreID();
 			Edge.EdgeFactory.getInstance().restoreID();
 			if(!deleteTemporaryFiles()) {
