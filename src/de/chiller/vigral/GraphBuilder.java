@@ -130,19 +130,31 @@ public class GraphBuilder {
 			
 			if(settings.getView(Settings.VIEW_WEIGHT)) {
 				offset++;
-				lbl += "w="+ e.getWeight();
+				double w = e.getWeight();
+				if(w % 1 == 0)
+					lbl += "w="+ (int) w;
+				else
+					lbl += "w="+ w;
 			}
 			if(settings.getView(Settings.VIEW_MIN_CAPACITY)) {
 				if(!lbl.equals("<html>"))
 					lbl += "<br />";
 				offset++;
-				lbl += "min C="+ e.getMinCapacity();
+				double c = e.getMinCapacity();
+				if(c % 1 == 0)
+					lbl += "min C="+ (int) c;
+				else
+					lbl += "min C="+ c;
 			}
 			if(settings.getView(Settings.VIEW_MAX_CAPACITY)) {
 				if(!lbl.equals("<html>"))
 					lbl += "<br />";
 				offset++;
-				lbl += "max C="+ e.getMaxCapacity();
+				double c = e.getMaxCapacity();
+				if(c % 1 == 0)
+					lbl += "max C="+ (int) c;
+				else
+					lbl += "max C="+ c;
 			}
 			lbl += "</html>";
 			

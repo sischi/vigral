@@ -139,13 +139,20 @@ public class ElementPropertyDialog<GE> extends JDialog {
 		mOkButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				resetErrorStates();
+				
+				// for Vertices
 				if(mElement instanceof Vertex) {
 					String newLabel = mComponents.get(0).getR().getText().toString().trim();
 					boolean alreadyUsed = false;
+					
+					// if the label equals the actual label or the actual identifier, then accept the input
 					if(((Vertex) mElement).getLabel().equals(newLabel) || ((Vertex) mElement).getIdentifier().equals(newLabel)) {
 						((Vertex) mElement).setLabel(newLabel);
 						dispose();
 					}
+					
+					
+					// check if the label is already used by another vertex
 					for(Vertex v : VigralGUI.getInstance().getGraphBuilder().getGraph().getVertices()) {
 						if(v.getLabel().equals(newLabel) || v.getIdentifier().equals(newLabel)) {
 							alreadyUsed = true;
@@ -153,16 +160,29 @@ public class ElementPropertyDialog<GE> extends JDialog {
 						}
 					}
 					
-					if(!alreadyUsed) {
+					
+					// if the new label is like "V<ID>" and show a hint with the actual vertex ID
+					if(newLabel.matches("[vV][0-9]*")) {
+						mErrorLabels.get(0).setText("Do you mean V"+ ((Vertex) mElement).getId() +"?");
+						mComponents.get(0).getR().setBorder(mErrorBorder);
+						mErrorLabels.get(0).setVisible(true);
+					}
+					// if the label is already used show a hint
+					else if(!alreadyUsed) {
 						((Vertex) mElement).setLabel(newLabel);
 						dispose();
 					}
+					// write the label to the vertex and close the dialog
 					else {
+						mErrorLabels.get(0).setText("name is already used");
 						mComponents.get(0).getR().setBorder(mErrorBorder);
 						mErrorLabels.get(0).setVisible(true);
 					}
 				}
-				else { // it is an Edge
+				
+				
+				// for Edges
+				else {
 					ArrayList<Double> values = new ArrayList<Double>();
 					boolean errorOccured = false;
 					for(int i = 0; i < 3; i++) {
