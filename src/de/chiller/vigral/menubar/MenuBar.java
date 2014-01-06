@@ -148,6 +148,13 @@ public class MenuBar extends JMenuBar {
 		}
 	};
 	
+	private ActionListener onAbout = new ActionListener() {
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			JOptionPane.showMessageDialog(VigralGUI.getInstance(), "You are using ViGrAl version 0.2");
+		}
+	};
+	
 	/**
 	 * the constructor for the menubar
 	 * @param mainWindow the instance of the mainwindow
@@ -176,7 +183,9 @@ public class MenuBar extends JMenuBar {
 		pluginMenu.add(plugins_reload);
 		
 		JMenuItem help_show = new JMenuItem("Show");
+		JMenuItem help_about = new JMenuItem("About");
 		helpMenu.add(help_show);
+		helpMenu.add(help_about);
 		
 		add(fileMenu);
 		add(pluginMenu);
@@ -192,5 +201,6 @@ public class MenuBar extends JMenuBar {
 		plugins_reload.addActionListener(onPluginsReload);
 		
 		help_show.addActionListener(onHelp);
+		help_about.addActionListener(onAbout);
 	}
 }
