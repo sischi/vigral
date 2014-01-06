@@ -123,52 +123,62 @@ public class GraphBuilder {
 		
 		@Override
 		public String transform(Edge e) {
-
-			String lbl = "<html>";
-			Settings settings = Settings.getInstance();
-			int offset = 0;
-			
-			if(settings.getView(Settings.VIEW_WEIGHT)) {
-				offset++;
-				double w = e.getWeight();
-				if(w % 1 == 0)
-					lbl += "w="+ (int) w;
-				else
-					lbl += "w="+ w;
-			}
-			if(settings.getView(Settings.VIEW_MIN_CAPACITY)) {
-				if(!lbl.equals("<html>"))
-					lbl += "<br />";
-				offset++;
-				double c = e.getMinCapacity();
-				if(c % 1 == 0)
-					lbl += "min C="+ (int) c;
-				else
-					lbl += "min C="+ c;
-			}
-			if(settings.getView(Settings.VIEW_MAX_CAPACITY)) {
-				if(!lbl.equals("<html>"))
-					lbl += "<br />";
-				offset++;
-				double c = e.getMaxCapacity();
-				if(c % 1 == 0)
-					lbl += "max C="+ (int) c;
-				else
-					lbl += "max C="+ c;
-			}
-			lbl += "</html>";
+			String lbl;
 			
 			
-			if(mBOO) {
-				mBOO = false;
-				lbl += " ";
-			}
-			else {
-				mBOO = true;
-			}
+			if(e.getCustomLabel().equals("")){
+				
+				lbl = "<html>";
+				Settings settings = Settings.getInstance();
+				int offset = 0;
+				
+				if(settings.getView(Settings.VIEW_WEIGHT)) {
+					offset++;
+					double w = e.getWeight();
+					if(w % 1 == 0)
+						lbl += "w="+ (int) w;
+					else
+						lbl += "w="+ w;
+				}
+				if(settings.getView(Settings.VIEW_MIN_CAPACITY)) {
+					if(!lbl.equals("<html>"))
+						lbl += "<br />";
+					offset++;
+					double c = e.getMinCapacity();
+					if(c % 1 == 0)
+						lbl += "min C="+ (int) c;
+					else
+						lbl += "min C="+ c;
+				}
+				if(settings.getView(Settings.VIEW_MAX_CAPACITY)) {
+					if(!lbl.equals("<html>"))
+						lbl += "<br />";
+					offset++;
+					double c = e.getMaxCapacity();
+					if(c % 1 == 0)
+						lbl += "max C="+ (int) c;
+					else
+						lbl += "max C="+ c;
+				}
+				lbl += "</html>";
+				
+				
+				if(mBOO) {
+					mBOO = false;
+					lbl += " ";
+				}
+				else {
+					mBOO = true;
+				}
+				
+				// set the label offset according to the number of lines of the label and edge label font size (center the label)
+				mVViewer.getRenderContext().setLabelOffset(offset * mSettings.getLabelSize(Settings.LABEL_EDGE));
 			
-			// set the label offset according to the number of lines of the label and edge label font size (center the label)
-			mVViewer.getRenderContext().setLabelOffset(offset * mSettings.getLabelSize(Settings.LABEL_EDGE));
+			}
+			else
+			{
+				lbl = e.getCustomLabel();
+			}
 			
 			return lbl;
 		}
