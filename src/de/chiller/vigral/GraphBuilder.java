@@ -124,13 +124,13 @@ public class GraphBuilder {
 		@Override
 		public String transform(Edge e) {
 			String lbl;
-			
+			int offset = 0;
 			
 			if(e.getCustomLabel().equals("")){
 				
 				lbl = "<html>";
 				Settings settings = Settings.getInstance();
-				int offset = 0;
+				
 				
 				if(settings.getView(Settings.VIEW_WEIGHT)) {
 					offset++;
@@ -170,15 +170,14 @@ public class GraphBuilder {
 				else {
 					mBOO = true;
 				}
-				
-				// set the label offset according to the number of lines of the label and edge label font size (center the label)
-				mVViewer.getRenderContext().setLabelOffset(offset * mSettings.getLabelSize(Settings.LABEL_EDGE));
-			
 			}
 			else
 			{
 				lbl = e.getCustomLabel();
 			}
+			
+			// set the label offset according to the number of lines of the label and edge label font size (center the label)
+			mVViewer.getRenderContext().setLabelOffset(offset * mSettings.getLabelSize(Settings.LABEL_EDGE));
 			
 			return lbl;
 		}
