@@ -27,6 +27,8 @@ public class Edge extends GraphElement implements Comparable<Edge> {
 	private double mMinCapacity;
 	private double mMaxCapacity;
 	
+	private String mCustomLabel;
+	
 	/**
 	 * the start vertex
 	 */
@@ -69,6 +71,7 @@ public class Edge extends GraphElement implements Comparable<Edge> {
 		mEnd = end;
 		mIsDirected = directed;
 		mState = state;
+		mCustomLabel = "";
 	}
 	
 	/**
@@ -82,8 +85,14 @@ public class Edge extends GraphElement implements Comparable<Edge> {
 		mStart = new Vertex(e.getStartVertex());
 		mEnd = new Vertex(e.getEndVertex());
 		mIsDirected = e.isDirected();
+		mCustomLabel = e.getCustomLabel();
 	}
 	
+	public String getCustomLabel() {
+		return mCustomLabel;
+	}
+
+
 	/**
 	 * a function that indicates if the edge is directed or not
 	 * @return returns true if the edge is directed and false otherwise
@@ -252,6 +261,7 @@ public class Edge extends GraphElement implements Comparable<Edge> {
 		public Edge copyEdge(Edge e, Vertex start, Vertex end) {
 			Edge newEdge = new Edge(e.getId(), e.getWeight(), e.getMinCapacity(), e.getMaxCapacity(), start, end, e.isDirected(), e.getState());
 			newEdge.setCustomColor(e.getCustomColor());
+			newEdge.setCustomLabel(e.getCustomLabel());
 			return newEdge;
 		}
 		
@@ -303,6 +313,12 @@ public class Edge extends GraphElement implements Comparable<Edge> {
 	}
 
 
+	public void setCustomLabel(String label) {
+		mCustomLabel = label;
+	}
 	
+	public void resetCustomLabel() {
+		mCustomLabel = "";
+	}
 
 }
