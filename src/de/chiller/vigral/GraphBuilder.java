@@ -28,6 +28,7 @@ import edu.uci.ics.jung.visualization.VisualizationViewer;
 import edu.uci.ics.jung.visualization.control.ModalGraphMouse;
 import edu.uci.ics.jung.visualization.decorators.AbstractEdgeShapeTransformer;
 import edu.uci.ics.jung.visualization.decorators.ConstantDirectionalEdgeValueTransformer;
+import edu.uci.ics.jung.visualization.decorators.DirectionalEdgeArrowTransformer;
 import edu.uci.ics.jung.visualization.renderers.Renderer;
 
 public class GraphBuilder {
@@ -258,9 +259,12 @@ public class GraphBuilder {
 		// initialize the edge renderer
 		mVViewer.getRenderContext().setEdgeLabelTransformer(mEdgeLabelTransformer);
 		mVViewer.getRenderContext().setEdgeDrawPaintTransformer(mEdgePaintTransformer);
+		mVViewer.getRenderContext().setArrowDrawPaintTransformer(mEdgePaintTransformer);
+		mVViewer.getRenderContext().setArrowFillPaintTransformer(mEdgePaintTransformer);
+		mVViewer.getRenderContext().setEdgeArrowTransformer(new DirectionalEdgeArrowTransformer<Vertex, Edge>(20, 16, 10));
+		
 		mVViewer.getRenderContext().setEdgeStrokeTransformer(new ConstantTransformer(new BasicStroke(3.0f)));
 		mVViewer.getRenderContext().getEdgeLabelRenderer().setRotateEdgeLabels(true);
-		mVViewer.getRenderContext().setArrowFillPaintTransformer(mEdgePaintTransformer);
 		mVViewer.getRenderContext().setEdgeFontTransformer(mEdgeFontTransformer);
 		mVViewer.getRenderContext().setEdgeLabelClosenessTransformer(new ConstantDirectionalEdgeValueTransformer<Vertex, Edge>(.5, .5));
 		
