@@ -104,6 +104,18 @@ public class Graph extends OrderedSparseMultigraph<Vertex, Edge> {
 		return null;
 	}
 	
+	
+	
+	public Edge getEdgeById(int id) {
+		for(Edge e : getEdges()) {
+			if(e.getId() == id)
+				return e;
+		}
+		
+		return null;
+	}
+	
+	
 	/**
 	 * constructs a graph object from the lists of string representations of vertices and edges 
 	 * @param strVertices the list of vertices as string array
