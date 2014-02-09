@@ -105,13 +105,45 @@ public abstract class AbstractAlgorithm implements Algorithm {
 	 * @param explanation the explanation of the step
 	 */
 	public void addStep(String explanation) {
+		addStep(mGraph, explanation);
+	}
+	
+	
+	public void addStep(Graph g, String explanation) {
 		String tmp = "";
 		if(!mSteps.isEmpty()) 
 			tmp = mSteps.get(mSteps.size()-1).getR() +"\n\n";
 
 		tmp += explanation;
-		mSteps.add(new Pair<Graph, String>(new Graph(mGraph), tmp));
+		mSteps.add(new Pair<Graph, String>(new Graph(g), tmp));
 	}
+	
+	
+	public void addStep(Graph g) {
+		addStep(g, "");
+	}
+	
+	
+	public void addStep(Graph g, Graph h, String explanation) {
+		ArrayList<Graph> graphs = new ArrayList<Graph>();
+		
+		graphs.add(new Graph(g));
+		graphs.add(new Graph(h));
+		
+		String tmp = "";
+		if(!mSteps.isEmpty()) 
+			tmp = mSteps.get(mSteps.size()-1).getR() +"\n\n";
+		
+		tmp += explanation;
+		// TODO: add arraylist to list of steps
+		// mSteps.add(new Pair<ArrayList<Graph>, String>(graphs, tmp));
+	}
+	
+	
+	public void addStep(Graph g, Graph h) {
+		addStep(g, h, "");
+	}
+	
 	
 
 }
