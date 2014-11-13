@@ -8,8 +8,6 @@ import java.awt.Rectangle;
 import java.awt.Shape;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.Point2D;
-import java.util.prefs.Preferences;
-
 import javax.swing.JPanel;
 
 import org.apache.commons.collections15.Transformer;
@@ -26,7 +24,6 @@ import edu.uci.ics.jung.algorithms.layout.Layout;
 import edu.uci.ics.jung.algorithms.layout.StaticLayout;
 import edu.uci.ics.jung.visualization.VisualizationViewer;
 import edu.uci.ics.jung.visualization.control.ModalGraphMouse;
-import edu.uci.ics.jung.visualization.decorators.AbstractEdgeShapeTransformer;
 import edu.uci.ics.jung.visualization.decorators.ConstantDirectionalEdgeValueTransformer;
 import edu.uci.ics.jung.visualization.decorators.DirectionalEdgeArrowTransformer;
 import edu.uci.ics.jung.visualization.renderers.Renderer;
@@ -43,11 +40,19 @@ public class GraphBuilder {
 	private static final int PADDING = 10;
 
 	private Layout<Vertex, Edge> mLayout;
+	
+	
 	/**
-	 * the graph, that inherits the vertices and egdes
+	 * the drawn or loaded graph
 	 */
 	private Graph mGraph;
+	/**
+	 * this graph represents the current step of the chosen algorithm
+	 */
 	private Graph mResultGraph;
+	
+	
+	
 	/**
 	 * responsible for the visualization of the graph
 	 */
@@ -57,9 +62,16 @@ public class GraphBuilder {
 	 */
 	private MyModalGraphMouse mGraphMouse;
 	
-	
+	/**
+	 * the settings instance
+	 */
 	private Settings mSettings = Settings.getInstance();
 	
+	
+	
+	
+	
+	// transformers that are responsible for the appearance of the vertices and edges
 	private Transformer<Vertex, Paint> mVertexLineTransformer = new Transformer<Vertex, Paint>() {
 		@Override
 		public Paint transform(Vertex arg0) {
@@ -98,9 +110,6 @@ public class GraphBuilder {
 			return checkStateForColor(e.getState());
 		}
 	};
-	
-	
-	
 	
 	private Transformer<Edge, String> mEdgeLabelTransformer = new Transformer<Edge, String>() {
 		
@@ -203,8 +212,6 @@ public class GraphBuilder {
 		}
 	};
 	
-	
-	
 	private Transformer<Vertex, Font> mVertexFontTransformer = new Transformer<Vertex, Font>() {
 		@Override
 		public Font transform(Vertex v) {
@@ -213,13 +220,18 @@ public class GraphBuilder {
 	};
 	
 	
+	
+	
+	
+	
+	
+	
 	/**
 	 * this method returns the color according to the given state
 	 * @param state the ElementState
 	 * @return the color of 'state' set by the user
 	 */
 	public Paint checkStateForColor(ElementState state) {
-		
 		switch(state) {
 		case UNVISITED:
 			return Color.decode(Settings.getInstance().getColor(Settings.COLOR_UNVISITED));
@@ -248,7 +260,7 @@ public class GraphBuilder {
 		// add the layout to the VisualizationViewer
 		mVViewer = new VisualizationViewer<Vertex, Edge>(mLayout);
 		
-		
+		// create mouse handler
 		mGraphMouse = new MyModalGraphMouse(mVViewer.getRenderContext());
 		mVViewer.setGraphMouse(mGraphMouse);
 		mVViewer.setFocusable(true);
@@ -294,7 +306,9 @@ public class GraphBuilder {
 	 * @param panel the given panel that shows the graph
 	 */
 	public void onResizePanel(JPanel panel) {
+		// get current dimension of the panel
 		Dimension dimen = new Dimension(panel.getBounds().width, panel.getBounds().height);
+		// resize the drawing space
 		mVViewer.setPreferredSize(dimen);
 		mVViewer.setSize(dimen);
 		
@@ -302,6 +316,7 @@ public class GraphBuilder {
 		//mLayout.setSize(dimen);
 		
 		//mVViewer.resize(dimen);
+		// resize graph if needed
 		modifyLocationsIfOutOfBounds(mGraph);
 		modifyLocationsIfOutOfBounds(mResultGraph);
 	}
@@ -352,7 +367,7 @@ public class GraphBuilder {
 	
 	
 	/**
-	 * calculates the rectangle of the drawed graph
+	 * calculates the rectangle of the drawn graph
 	 * @return the rectangle of the graph or null, if no vertex is present
 	 */
 	private Rectangle getGraphRect() {
@@ -395,7 +410,7 @@ public class GraphBuilder {
 	}
 	
 	/**
-	 * getter for the graph of graphcreation mode
+	 * getter for the graph of creation mode
 	 * @return returns a copy of the graph
 	 */
 	public Graph getGraph() {
@@ -429,6 +444,7 @@ public class GraphBuilder {
 		mVViewer.repaint();
 	}
 	
+	
 	private void updateLocations() {
 		for(Vertex v : mVViewer.getGraphLayout().getGraph().getVertices()) {
 			//mLayout.setLocation(v, v.getLocation());
@@ -443,6 +459,7 @@ public class GraphBuilder {
 	 * @param mode the mode to be set according to VigralGUI modes
 	 */
 	public void setMode(int mode) {
+		// toggle mouse editing functionality
 		if(mode == VigralGUI.Mode.GRAPHCREATION) {
 			mGraphMouse.addEditingFunctionality();
 			showOriginGraph();

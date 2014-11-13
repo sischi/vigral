@@ -36,15 +36,22 @@ import de.chiller.vigral.algorithm.RequirementDialog;
 import de.chiller.vigral.graph.ElementType;
 import de.chiller.vigral.graph.Graph;
 import de.chiller.vigral.menubar.MenuBar;
-import de.chiller.vigral.settings.Settings;
 import de.chiller.vigral.util.Pair;
 import de.chiller.vigral.util.PluginLoader;
 
-
+/**
+ * This represents the main class, that is responsible for the interaction with the user
+ * @author Simon
+ *
+ */
 public class VigralGUI extends JFrame {
 
-	
+	/**
+	 * The Singleton instance of VigralGUI
+	 */
 	private static VigralGUI mMainWindow = new VigralGUI();
+	
+	// some constant values
 	private static final int MARGIN = 10;
 	private static final int BUTTON_PANEL_HEIGHT = 100;
 	
@@ -54,6 +61,9 @@ public class VigralGUI extends JFrame {
 	
 	private static final int DEFAULT_PLAY_SPEED = 2001;
 	private static final int PLAY_STEP_SIZE = 200;
+	
+	
+	
 	
 	/**
 	 * This inner class defines the possible modes of the class 'VigralGUI'
@@ -65,6 +75,8 @@ public class VigralGUI extends JFrame {
 		public static final int VISUALISATION = 1;
 	}
 	
+	
+	// member fields
 	private ArrayList<AbstractAlgorithm> mAvailableAlgorithms = null;
 	private AbstractAlgorithm mChosenAlgorithm;
 	
@@ -73,7 +85,7 @@ public class VigralGUI extends JFrame {
 	private MenuBar mMenuBar;
 	private JComboBox mCb_algorithm = new JComboBox();
 	private DefaultComboBoxModel mAlgorithmBoxModel = new DefaultComboBoxModel();
-	private JSplitPane mSpltMainPanel = new JSplitPane();
+	private JSplitPane mSplt_ContentPanel = new JSplitPane();
 	private JButton mBtn_changeMode = new JButton();
 	private JButton mBtn_play = new JButton();
 	private JButton mBtn_pause = new JButton();
@@ -83,7 +95,7 @@ public class VigralGUI extends JFrame {
 	private JButton mBtn_jumpToEnd = new JButton();
 	private JPanel mGraphPanel = new JPanel();
 	private JPanel mButtonBar = new JPanel();
-	private JSplitPane mSpltContentPanel = new JSplitPane();
+	private JSplitPane mSplt_MainPanel = new JSplitPane();
 	private JPanel mButtonPanel = new JPanel();
 	private JTextArea mTxt_explanation = new JTextArea();
 	private DefaultCaret mDefCar;
@@ -105,11 +117,15 @@ public class VigralGUI extends JFrame {
 		return mMainWindow;
 	}
 	
-	
+
+
 	private ActionListener mOnTimerTick = new ActionListener() {
 		@Override
 		public void actionPerformed(ActionEvent e) {
+			// get graph of next step
 			Pair<Graph, String> p = mChosenAlgorithm.getNextStep();
+			
+			// show graph or pause, if there are no further graphs
 			if(p == null)
 				mBtn_pause.doClick();
 			else
@@ -117,30 +133,47 @@ public class VigralGUI extends JFrame {
 		}
 	};
 	
+	
+	// When clicking "visualization" in creation mode
 	private ActionListener mCreationListener = new ActionListener() {
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			// System.out.println("onclick graphcreation");
+			
+			// query the drawn graph
 			Graph graph = mGraphBuilder.getGraph();
+			
 			if(graph.getVertexCount() != 0 && mAvailableAlgorithms != null) {
+				
+				// query chosen algorithm
 				mChosenAlgorithm = mAvailableAlgorithms.get(mCb_algorithm.getSelectedIndex()); 
+				
+				// get requirements of the chosen algorithm
 				ArrayList<Pair<ElementType, String>> require = mChosenAlgorithm.getRequirements();
+				
 				if(require != null) {
+					// show requirements dialog
 					RequirementDialog dialog = new RequirementDialog(require, graph, mChosenAlgorithm);
 					dialog.setModal(true);
 					dialog.setVisible(true);
 				}
 				else {
+					// next step, if there are no requirements
 					requirementsApplied(graph);
 				}
 			}
 		}
 	};
 	
+	
+	// when clicking "creation" in visualization mode
 	private ActionListener mVisualisationListener = new ActionListener() {
 		@Override
 		public void actionPerformed(ActionEvent e) {
+			// change mode
 			changeMode(Mode.GRAPHCREATION);
+			
+			// pause visualization
 			mBtn_pause.doClick();
 		}
 	};
@@ -148,8 +181,8 @@ public class VigralGUI extends JFrame {
 	private ComponentListener onResizeGraphPanelListener = new ComponentListener() {
 		@Override
 		public void componentResized(ComponentEvent e) {
-			if(mSpltMainPanel.getDividerLocation() < mGraphPanel.getMinimumSize().width)
-				mSpltMainPanel.setDividerLocation(mGraphPanel.getMinimumSize().width);
+			if(mSplt_ContentPanel.getDividerLocation() < mGraphPanel.getMinimumSize().width)
+				mSplt_ContentPanel.setDividerLocation(mGraphPanel.getMinimumSize().width);
 			
 			mGraphBuilder.onResizePanel(mGraphPanel);
 		}
@@ -177,7 +210,7 @@ public class VigralGUI extends JFrame {
 	private ComponentListener onResizeContentPanelListener = new ComponentListener() {		
 		@Override
 		public void componentResized(ComponentEvent e) {
-			mSpltContentPanel.setDividerLocation(mSpltContentPanel.getBounds().height - mSpltContentPanel.getDividerSize() - BUTTON_PANEL_HEIGHT);
+			mSplt_MainPanel.setDividerLocation(mSplt_MainPanel.getBounds().height - mSplt_MainPanel.getDividerSize() - BUTTON_PANEL_HEIGHT);
 		}
 		@Override
 		public void componentShown(ComponentEvent e) {}
@@ -253,13 +286,14 @@ public class VigralGUI extends JFrame {
 	
 	
 	/**
-	 * Create
+	 * Create the single instance
 	 */
 	private VigralGUI() {
 		mMainWindow = this;
 		
 		mGraphBuilder = new GraphBuilder();
 		mGraphBuilder.addToPanel(mGraphPanel);
+		
 		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 650, 450);
@@ -269,7 +303,7 @@ public class VigralGUI extends JFrame {
 		initComponents();
 		changeMode(Mode.GRAPHCREATION);
 		
-		mSpltMainPanel.setDividerLocation(1.0d);
+		mSplt_ContentPanel.setDividerLocation(1.0d);
 		pack();
 		
 		mPlayTimer = new Timer(calcPlaySpeed(), mOnTimerTick);
@@ -284,14 +318,16 @@ public class VigralGUI extends JFrame {
 		mMenuBar = new MenuBar(this);
 		setJMenuBar(mMenuBar);
 		
+		// init button bar (play, pause, forward, ...)
 		initButtonBar();
 		mButtonBar.setSize(mButtonBar.getPreferredSize());
-				
+		
+		// init list of algorithms (plugins)
 		mCb_algorithm.setBackground(Color.WHITE);
 		initAlgorithms();
 		mCb_algorithm.setModel(mAlgorithmBoxModel);	
 		
-		
+		// init speed modificator (slider)
 		Hashtable<Integer, JLabel> labelTable = new Hashtable<Integer, JLabel>();
 		labelTable.put(new Integer(SPEED_MIN), new JLabel("Slow"));
 		labelTable.put(new Integer(SPEED_INIT), new JLabel("Default"));
@@ -302,6 +338,7 @@ public class VigralGUI extends JFrame {
 		mSldr_playSpeed.setPaintTicks(true);
 		mSldr_playSpeed.addChangeListener(onSliderValueChanged );
 		
+		// init button panel (show buttons available in creation mode)
 		mButtonPanel.setLayout(null);
 		mButtonPanel.add(mBtn_changeMode);
 		mButtonPanel.add(mButtonBar);
@@ -309,6 +346,7 @@ public class VigralGUI extends JFrame {
 		mButtonPanel.add(mSldr_playSpeed);
 		mButtonPanel.addComponentListener(onResizeButtonPanelListener);
 		
+		// init graph panel (graph drawing area)
 		mGraphPanel.setBackground(Color.WHITE);
 		mGraphPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
 		mGraphPanel.setLayout(null);
@@ -324,22 +362,23 @@ public class VigralGUI extends JFrame {
 		mDefCar = (DefaultCaret) mTxt_explanation.getCaret();
 		mDefCar.setUpdatePolicy(DefaultCaret.ALWAYS_UPDATE);
 		
-		// init the split panel
-		mSpltMainPanel.setOrientation(JSplitPane.HORIZONTAL_SPLIT);
-		mSpltMainPanel.setLeftComponent(mGraphPanel);
-		mSpltMainPanel.setRightComponent(mScp_scrollPane);
-		mSpltMainPanel.setResizeWeight(1.0d);
-		mSpltMainPanel.setOneTouchExpandable(true);
-		mSpltMainPanel.setDividerLocation(1.0d);
+		// init the content split panel (graph and description)
+		mSplt_ContentPanel.setOrientation(JSplitPane.HORIZONTAL_SPLIT);
+		mSplt_ContentPanel.setLeftComponent(mGraphPanel);
+		mSplt_ContentPanel.setRightComponent(mScp_scrollPane);
+		mSplt_ContentPanel.setResizeWeight(1.0d);
+		mSplt_ContentPanel.setOneTouchExpandable(true);
+		mSplt_ContentPanel.setDividerLocation(1.0d);
 		
-		mSpltContentPanel.setOrientation(JSplitPane.VERTICAL_SPLIT);
-		mSpltContentPanel.setTopComponent(mSpltMainPanel);
-		mSpltContentPanel.setBottomComponent(mButtonPanel);
-		mSpltContentPanel.setResizeWeight(1.0d);
-		mSpltContentPanel.addComponentListener(onResizeContentPanelListener);
+		// init the main split panel (content panel and buttonbar)
+		mSplt_MainPanel.setOrientation(JSplitPane.VERTICAL_SPLIT);
+		mSplt_MainPanel.setTopComponent(mSplt_ContentPanel);
+		mSplt_MainPanel.setBottomComponent(mButtonPanel);
+		mSplt_MainPanel.setResizeWeight(1.0d);
+		mSplt_MainPanel.addComponentListener(onResizeContentPanelListener);
 //		mSpltContentPanel.setEnabled(false);
-		mSpltContentPanel.setDividerSize(0);
-		setContentPane(mSpltContentPanel);
+		mSplt_MainPanel.setDividerSize(0);
+		setContentPane(mSplt_MainPanel);
 		
 		initSizesAndPositions();
 	}
@@ -353,23 +392,34 @@ public class VigralGUI extends JFrame {
 
 	
 	private void initButtonBar() {
+		
+		// init play, pause, etc. buttons
 		initButtonFromButtonBar(mBtn_jumpToStart, new ImageIcon("res/jumptostart_inactive.png"), new ImageIcon("res/jumptostart_active.png"), 0);
 		mBtn_jumpToStart.addActionListener(mJumpStartListener);
+		
 		initButtonFromButtonBar(mBtn_stepBack, new ImageIcon("res/stepback_inactive.png"), new ImageIcon("res/stepback_active.png"), 1);
 		mBtn_stepBack.addActionListener(mPreviousStepListener);
+		
 		initButtonFromButtonBar(mBtn_play, new ImageIcon("res/play_inactive.png"), new ImageIcon("res/play_active.png"), 2);
 		mBtn_play.addActionListener(mPlayListener);
+		
 		initButtonFromButtonBar(mBtn_pause, new ImageIcon("res/pause_inactive.png"), new ImageIcon("res/pause_active.png"), 2);
 		mBtn_pause.addActionListener(mPauseListener);
+		
 		initButtonFromButtonBar(mBtn_stepForward, new ImageIcon("res/stepforward_inactive.png"), new ImageIcon("res/stepforward_active.png"), 3);
 		mBtn_stepForward.addActionListener(mNextStepListener);
+		
 		initButtonFromButtonBar(mBtn_jumpToEnd, new ImageIcon("res/jumptoend_inactive.png"), new ImageIcon("res/jumptoend_active.png"), 4);
 		mBtn_jumpToEnd.addActionListener(mJumpEndListener);
+		
+		// show pause button by default
 		mBtn_pause.setVisible(false);
 	}
 	
-	private void initAlgorithms() {
 	
+	
+	private void initAlgorithms() {
+		// load plugins into algorithm list
 		mAvailableAlgorithms = PluginLoader.getInstance().loadPlugins();
 		if(mAvailableAlgorithms != null) {
 			for(int i = 0; i < mAvailableAlgorithms.size(); i++)
@@ -381,6 +431,7 @@ public class VigralGUI extends JFrame {
 	 * initiates the reloading of the plugins
 	 */
 	public void updateAlgorithmBox() {
+		// reload plugins and refill algorithm list
 		mAvailableAlgorithms.clear();
 		mAlgorithmBoxModel.removeAllElements();
 		
@@ -388,6 +439,7 @@ public class VigralGUI extends JFrame {
 //		onResizeButtonPanel();
 	}
 	
+	// calculates the automated visualization speed 
 	private int calcPlaySpeed() {
 		int speed = DEFAULT_PLAY_SPEED;
 		int usersChoice = mSldr_playSpeed.getValue();
@@ -416,6 +468,7 @@ public class VigralGUI extends JFrame {
 		mButtonBar.add(btn);
 	}
 	
+	// and again some GUI-foo
 	private void initSizesAndPositions() {
 		
 		mScp_scrollPane.setMinimumSize(new Dimension(0,0));
@@ -471,7 +524,10 @@ public class VigralGUI extends JFrame {
 	 */
 	public void requirementsApplied(Graph g) {
 		// System.out.println("requirements applied");
+		// change mode to visualization
 		changeMode(Mode.VISUALISATION);
+		
+		// load the first step of the algorithm
 		mChosenAlgorithm.setGraph(g);
 		mChosenAlgorithm.perform();
 		update(mChosenAlgorithm.getFirstStep());
@@ -493,6 +549,7 @@ public class VigralGUI extends JFrame {
 		mMode = mode;
 		mGraphBuilder.setMode(mMode);
 		
+		// toggle button visibilities
 		if(mMode == Mode.GRAPHCREATION) {
 			setTitle("ViGrAl - Graph Creation");
 			mCb_algorithm.setEnabled(true);
@@ -526,6 +583,7 @@ public class VigralGUI extends JFrame {
 		if(pair == null)
 			return;
 		
+		// show the the given graph and its explanation
 		mGraphBuilder.setResultingGraph(pair.getL());
 		mTxt_explanation.setText(pair.getR());
 	}
