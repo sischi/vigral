@@ -37,22 +37,22 @@ public interface Algorithm {
 	 * 
 	 * @return returns the first step
 	 */
-	public Pair<Graph, String> getFirstStep();
+	public Pair<ArrayList<Graph>, String> getFirstStep();
 	/**
 	 * 
 	 * @return returns the previous step
 	 */
-	public Pair<Graph, String> getPreviousStep();
+	public Pair<ArrayList<Graph>, String> getPreviousStep();
 	/**
 	 * 
 	 * @return returns the next step
 	 */
-	public Pair<Graph, String> getNextStep();
+	public Pair<ArrayList<Graph>, String> getNextStep();
 	/**
 	 * 
 	 * @return returns the last step
 	 */
-	public Pair<Graph, String> getLastStep();
+	public Pair<ArrayList<Graph>, String> getLastStep();
 	
 	/**
 	 * @return returns a human readable string identifying this algorithm 
