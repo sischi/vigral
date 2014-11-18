@@ -86,6 +86,7 @@ public class VigralGUI extends JFrame {
 	private JComboBox mCb_algorithm = new JComboBox();
 	private DefaultComboBoxModel mAlgorithmBoxModel = new DefaultComboBoxModel();
 	private JSplitPane mSplt_ContentPanel = new JSplitPane();
+	private JSplitPane mSplt_GraphPanel = new JSplitPane();
 	private JButton mBtn_changeMode = new JButton();
 	private JButton mBtn_play = new JButton();
 	private JButton mBtn_pause = new JButton();
@@ -93,7 +94,8 @@ public class VigralGUI extends JFrame {
 	private JButton mBtn_stepBack = new JButton();
 	private JButton mBtn_stepForward = new JButton();
 	private JButton mBtn_jumpToEnd = new JButton();
-	private JPanel mGraphPanel = new JPanel();
+	private JPanel mGraphPanel1 = new JPanel();
+	private JPanel mGraphPanel2 = new JPanel();
 	private JPanel mButtonBar = new JPanel();
 	private JSplitPane mSplt_MainPanel = new JSplitPane();
 	private JPanel mButtonPanel = new JPanel();
@@ -123,7 +125,7 @@ public class VigralGUI extends JFrame {
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			// get graph of next step
-			Pair<Graph, String> p = mChosenAlgorithm.getNextStep();
+			Pair<ArrayList<Graph>, String> p = mChosenAlgorithm.getNextStep();
 			
 			// show graph or pause, if there are no further graphs
 			if(p == null)
@@ -181,10 +183,10 @@ public class VigralGUI extends JFrame {
 	private ComponentListener onResizeGraphPanelListener = new ComponentListener() {
 		@Override
 		public void componentResized(ComponentEvent e) {
-			if(mSplt_ContentPanel.getDividerLocation() < mGraphPanel.getMinimumSize().width)
-				mSplt_ContentPanel.setDividerLocation(mGraphPanel.getMinimumSize().width);
+			if(mSplt_ContentPanel.getDividerLocation() < mGraphPanel1.getMinimumSize().width)
+				mSplt_ContentPanel.setDividerLocation(mGraphPanel1.getMinimumSize().width);
 			
-			mGraphBuilder.onResizePanel(mGraphPanel);
+			mGraphBuilder.onResizePanel(mGraphPanel1);
 		}
 		@Override
 		public void componentHidden(ComponentEvent e) {}
@@ -292,7 +294,7 @@ public class VigralGUI extends JFrame {
 		mMainWindow = this;
 		
 		mGraphBuilder = new GraphBuilder();
-		mGraphBuilder.addToPanel(mGraphPanel);
+		mGraphBuilder.addToPanel(mGraphPanel1, mGraphPanel2);
 		
 		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -346,12 +348,19 @@ public class VigralGUI extends JFrame {
 		mButtonPanel.add(mSldr_playSpeed);
 		mButtonPanel.addComponentListener(onResizeButtonPanelListener);
 		
-		// init graph panel (graph drawing area)
-		mGraphPanel.setBackground(Color.WHITE);
-		mGraphPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
-		mGraphPanel.setLayout(null);
-		mGraphPanel.addComponentListener(onResizeGraphPanelListener);
-		mGraphPanel.setCursor(Cursor.getPredefinedCursor(Cursor.CROSSHAIR_CURSOR));
+		// init 'main' graph panel (graph drawing area)
+		mGraphPanel1.setBackground(Color.WHITE);
+		mGraphPanel1.setBorder(new EmptyBorder(5, 5, 5, 5));
+		mGraphPanel1.setLayout(null);
+		mGraphPanel1.addComponentListener(onResizeGraphPanelListener);
+		mGraphPanel1.setCursor(Cursor.getPredefinedCursor(Cursor.CROSSHAIR_CURSOR));
+		
+		// init optional graph panel to be able to show a second graph in visualization mode
+		mGraphPanel2.setBackground(Color.WHITE);
+		mGraphPanel2.setBorder(new EmptyBorder(5, 5, 5, 5));
+		mGraphPanel2.setLayout(null);
+		mGraphPanel2.addComponentListener(onResizeGraphPanelListener);
+		mGraphPanel2.setCursor(Cursor.getPredefinedCursor(Cursor.CROSSHAIR_CURSOR));
 		
 		// init the side panel
 		mTxt_explanation.setLineWrap(true);
@@ -364,11 +373,19 @@ public class VigralGUI extends JFrame {
 		
 		// init the content split panel (graph and description)
 		mSplt_ContentPanel.setOrientation(JSplitPane.HORIZONTAL_SPLIT);
-		mSplt_ContentPanel.setLeftComponent(mGraphPanel);
+		mSplt_ContentPanel.setLeftComponent(mSplt_GraphPanel);
 		mSplt_ContentPanel.setRightComponent(mScp_scrollPane);
 		mSplt_ContentPanel.setResizeWeight(1.0d);
 		mSplt_ContentPanel.setOneTouchExpandable(true);
 		mSplt_ContentPanel.setDividerLocation(1.0d);
+		
+		// init the split panel for the graph and the optional second graph
+		mSplt_GraphPanel.setOrientation(JSplitPane.VERTICAL_SPLIT);
+		mSplt_GraphPanel.setTopComponent(mGraphPanel1);
+		mSplt_GraphPanel.setBottomComponent(mGraphPanel2);
+		mSplt_GraphPanel.setResizeWeight(1.0d);
+		mSplt_GraphPanel.setOneTouchExpandable(true);
+		mSplt_GraphPanel.setDividerLocation(1.0d);
 		
 		// init the main split panel (content panel and buttonbar)
 		mSplt_MainPanel.setOrientation(JSplitPane.VERTICAL_SPLIT);
@@ -376,7 +393,7 @@ public class VigralGUI extends JFrame {
 		mSplt_MainPanel.setBottomComponent(mButtonPanel);
 		mSplt_MainPanel.setResizeWeight(1.0d);
 		mSplt_MainPanel.addComponentListener(onResizeContentPanelListener);
-//		mSpltContentPanel.setEnabled(false);
+		// mSpltContentPanel.setEnabled(false);
 		mSplt_MainPanel.setDividerSize(0);
 		setContentPane(mSplt_MainPanel);
 		
@@ -387,7 +404,7 @@ public class VigralGUI extends JFrame {
 	 * sets the focus to the drawing pane
 	 */
 	public void setFocusToDrawPanel() {
-		mGraphPanel.requestFocus();
+		mGraphPanel1.requestFocus();
 	}
 
 	
@@ -478,7 +495,7 @@ public class VigralGUI extends JFrame {
 		Dimension btnDimen = new Dimension(200, 30);
 		mBtn_changeMode.setSize(btnDimen);
 		
-		mGraphPanel.setMinimumSize(new Dimension(550, 200));
+		mGraphPanel1.setMinimumSize(new Dimension(550, 200));
 		
 		mButtonBar.setSize(mButtonBar.getPreferredSize());
 		Rectangle buttonBarRect = mButtonBar.getBounds();
@@ -535,7 +552,7 @@ public class VigralGUI extends JFrame {
 	
 	/**
 	 * getter for the mode
-	 * @return returns the actual valid mode as an int
+	 * @return returns the current valid mode as an int
 	 */
 	public int getActualMode() {
 		return mMode;
@@ -579,11 +596,11 @@ public class VigralGUI extends JFrame {
 	}
 	
 	
-	private void update(Pair<Graph, String> pair) {
+	private void update(Pair<ArrayList<Graph>, String> pair) {
 		if(pair == null)
 			return;
 		
-		// show the the given graph and its explanation
+		// show the given graph and its explanation
 		mGraphBuilder.setResultingGraph(pair.getL());
 		mTxt_explanation.setText(pair.getR());
 	}
@@ -593,7 +610,7 @@ public class VigralGUI extends JFrame {
 	 * @return returns true if the drawing pane has the focus, false otherwise
 	 */
 	public boolean isGraphPanelFocused() {
-		return mGraphPanel.hasFocus();
+		return mGraphPanel1.hasFocus();
 	}
 
 	
