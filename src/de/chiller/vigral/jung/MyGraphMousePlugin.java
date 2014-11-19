@@ -213,7 +213,8 @@ public class MyGraphMousePlugin extends AbstractGraphMousePlugin implements Mous
     public void stopEditing() {
     	mEditingPossible = false;
     	changeMode(EDITING_MODE);
-    	mPicking.clearPickedCollection(VigralGUI.getInstance().getGraphBuilder().getVisualizationViewer());
+    	if(VigralGUI.getInstance().getGraphBuilder() != null)
+    		mPicking.clearPickedCollection(VigralGUI.getInstance().getGraphBuilder().getVisualizationViewer());
     }
     
     /**
