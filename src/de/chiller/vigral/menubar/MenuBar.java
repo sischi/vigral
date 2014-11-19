@@ -151,7 +151,7 @@ public class MenuBar extends JMenuBar {
 	private ActionListener onAbout = new ActionListener() {
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			JOptionPane.showMessageDialog(VigralGUI.getInstance(), "You are using ViGrAl version 0.2");
+			JOptionPane.showMessageDialog(VigralGUI.getInstance(), "You are using ViGrAl version " + VigralGUI.getInstance().getVersionNo());
 		}
 	};
 	
