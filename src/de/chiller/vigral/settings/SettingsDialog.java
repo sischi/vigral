@@ -109,7 +109,7 @@ public class SettingsDialog extends JDialog {
 	private void initComponents() {
 		setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 		Rectangle rect = VigralGUI.getInstance().getBounds();
-		setBounds(rect.x + 100, rect.y + 100, 500, 280);
+		setBounds(rect.x + 100, rect.y + 100, 500, 300);
 		setTitle("ViGrAl - Settings");
 		contentPane = new JPanel();
 		contentPane.setLayout(null);
