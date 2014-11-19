@@ -29,8 +29,11 @@ v0.2:
 ------------------
 + added "about" dialog that shows the current version
 + added possibility to modify sizes of edge and vertex labels
++ added ability of setting a custom label for an edge
 
 
 v0.1:
 ------------------
 + initial release
+
+
