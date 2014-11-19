@@ -611,7 +611,8 @@ public class GraphBuilder {
 	 * tells the graphbuilder to redraw the graph
 	 */
 	public void redraw() {
-		mVViewerList.get(0).repaint();
+		for(int i = 0; i < mVViewerList.size(); i++)
+			mVViewerList.get(i).repaint();
 	}
 	
 }
