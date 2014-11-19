@@ -46,6 +46,24 @@ import de.chiller.vigral.util.PluginLoader;
  */
 public class VigralGUI extends JFrame {
 
+	
+	
+	
+	/**
+	 * the current version number
+	 */
+	private static final String mVersion = "0.3";
+	
+	/**
+	 * method to query the version number of the current release
+	 * @return the running version number as a string
+	 */
+	public String getVersionNo() {
+		return mVersion;
+	}
+	
+	
+	
 	/**
 	 * The Singleton instance of VigralGUI
 	 */
@@ -186,7 +204,8 @@ public class VigralGUI extends JFrame {
 			if(mSplt_ContentPanel.getDividerLocation() < mGraphPanel1.getMinimumSize().width)
 				mSplt_ContentPanel.setDividerLocation(mGraphPanel1.getMinimumSize().width);
 			
-			mGraphBuilder.onResizePanel(mGraphPanel1);
+			mGraphBuilder.onResizePanel(mGraphPanel1, 0);
+			mGraphBuilder.onResizePanel(mGraphPanel2, 1);
 		}
 		@Override
 		public void componentHidden(ComponentEvent e) {}
