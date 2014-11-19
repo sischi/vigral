@@ -8,6 +8,8 @@ import java.awt.Rectangle;
 import java.awt.Shape;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.Point2D;
+import java.util.ArrayList;
+
 import javax.swing.JPanel;
 
 import org.apache.commons.collections15.Transformer;
@@ -39,7 +41,7 @@ public class GraphBuilder {
 	 */
 	private static final int PADDING = 10;
 
-	private Layout<Vertex, Edge> mLayout;
+	private ArrayList<Layout<Vertex, Edge>> mLayoutList;
 	
 	
 	/**
@@ -49,18 +51,18 @@ public class GraphBuilder {
 	/**
 	 * this graph represents the current step of the chosen algorithm
 	 */
-	private Graph mResultGraph;
+	private ArrayList<Graph> mResultingGraphs;
 	
 	
 	
 	/**
 	 * responsible for the visualization of the graph
 	 */
-	private VisualizationViewer<Vertex, Edge> mVViewer;
+	private ArrayList<VisualizationViewer<Vertex, Edge>> mVViewerList;
 	/**
 	 * responsible for the GraphMousePlugins (Drawing with the mouse and context menus)
 	 */
-	private MyModalGraphMouse mGraphMouse;
+	private ArrayList<MyModalGraphMouse> mGraphMouseList;
 	
 	/**
 	 * the settings instance
@@ -74,7 +76,7 @@ public class GraphBuilder {
 	// transformers that are responsible for the appearance of the vertices and edges
 	private Transformer<Vertex, Paint> mVertexLineTransformer = new Transformer<Vertex, Paint>() {
 		@Override
-		public Paint transform(Vertex arg0) {
+		public Paint transform(Vertex v) {
 			return MyColor.LIGHT_GRAY;
 		}
 	};
@@ -187,7 +189,8 @@ public class GraphBuilder {
 			}
 			
 			// set the label offset according to the number of lines of the label and edge label font size (center the label)
-			mVViewer.getRenderContext().setLabelOffset(offset * mSettings.getLabelSize(Settings.LABEL_EDGE));
+			for(int i = 0; i < mVViewerList.size(); i++)
+				mVViewerList.get(i).getRenderContext().setLabelOffset(offset * mSettings.getLabelSize(Settings.LABEL_EDGE));
 			
 			return lbl;
 		}
@@ -254,71 +257,137 @@ public class GraphBuilder {
 	public GraphBuilder() {
 		// create a graph
 		mGraph = new Graph();
-		mResultGraph = mGraph;
+		mResultingGraphs = new ArrayList<Graph>();
+		mResultingGraphs.add(mGraph);
+		
+		mVViewerList = new ArrayList<VisualizationViewer<Vertex, Edge>>();
+		mLayoutList = new ArrayList<Layout<Vertex, Edge>>();
+		mGraphMouseList = new ArrayList<MyModalGraphMouse>();
+		
+		/*
 		// add the graph to the layout
 		mLayout = new StaticLayout<Vertex, Edge>(mGraph);
 		// add the layout to the VisualizationViewer
-		mVViewer = new VisualizationViewer<Vertex, Edge>(mLayout);
+		mVViewer1 = new VisualizationViewer<Vertex, Edge>(mLayout);
 		
 		// create mouse handler
-		mGraphMouse = new MyModalGraphMouse(mVViewer.getRenderContext());
-		mVViewer.setGraphMouse(mGraphMouse);
-		mVViewer.setFocusable(true);
+		mGraphMouse = new MyModalGraphMouse(mVViewer1.getRenderContext());
+		mVViewer1.setGraphMouse(mGraphMouse);
+		mVViewer1.setFocusable(true);
 		mGraphMouse.setMode(ModalGraphMouse.Mode.EDITING);
 		
-		mVViewer.setBackground(Color.WHITE);
+		
+		mVViewer1.setBackground(Color.WHITE);
 		
 		// initialize the edge renderer
-		mVViewer.getRenderContext().setEdgeLabelTransformer(mEdgeLabelTransformer);
-		mVViewer.getRenderContext().setEdgeDrawPaintTransformer(mEdgePaintTransformer);
-		mVViewer.getRenderContext().setArrowDrawPaintTransformer(mEdgePaintTransformer);
-		mVViewer.getRenderContext().setArrowFillPaintTransformer(mEdgePaintTransformer);
-		mVViewer.getRenderContext().setEdgeArrowTransformer(new DirectionalEdgeArrowTransformer<Vertex, Edge>(20, 16, 10));
+		mVViewer1.getRenderContext().setEdgeLabelTransformer(mEdgeLabelTransformer);
+		mVViewer1.getRenderContext().setEdgeDrawPaintTransformer(mEdgePaintTransformer);
+		mVViewer1.getRenderContext().setArrowDrawPaintTransformer(mEdgePaintTransformer);
+		mVViewer1.getRenderContext().setArrowFillPaintTransformer(mEdgePaintTransformer);
+		mVViewer1.getRenderContext().setEdgeArrowTransformer(new DirectionalEdgeArrowTransformer<Vertex, Edge>(20, 16, 10));
 		
-		mVViewer.getRenderContext().setEdgeStrokeTransformer(new ConstantTransformer(new BasicStroke(3.0f)));
-		mVViewer.getRenderContext().getEdgeLabelRenderer().setRotateEdgeLabels(true);
-		mVViewer.getRenderContext().setEdgeFontTransformer(mEdgeFontTransformer);
-		mVViewer.getRenderContext().setEdgeLabelClosenessTransformer(new ConstantDirectionalEdgeValueTransformer<Vertex, Edge>(.5, .5));
+		mVViewer1.getRenderContext().setEdgeStrokeTransformer(new ConstantTransformer(new BasicStroke(3.0f)));
+		mVViewer1.getRenderContext().getEdgeLabelRenderer().setRotateEdgeLabels(true);
+		mVViewer1.getRenderContext().setEdgeFontTransformer(mEdgeFontTransformer);
+		mVViewer1.getRenderContext().setEdgeLabelClosenessTransformer(new ConstantDirectionalEdgeValueTransformer<Vertex, Edge>(.5, .5));
 		
 		// initialize the vertex renderer
-		mVViewer.getRenderContext().setVertexLabelTransformer(mVertexLabelTransformer);
-		mVViewer.getRenderContext().setVertexShapeTransformer(mVertexShapeTransformer);
-		mVViewer.getRenderContext().setVertexFillPaintTransformer(mVertexPaintTransformer);
-		mVViewer.getRenderContext().setVertexDrawPaintTransformer(mVertexLineTransformer);
-		mVViewer.getRenderContext().setVertexFontTransformer(mVertexFontTransformer);
-		mVViewer.getRenderer().getVertexLabelRenderer().setPosition(Renderer.VertexLabel.Position.CNTR);
+		mVViewer1.getRenderContext().setVertexLabelTransformer(mVertexLabelTransformer);
+		mVViewer1.getRenderContext().setVertexShapeTransformer(mVertexShapeTransformer);
+		mVViewer1.getRenderContext().setVertexFillPaintTransformer(mVertexPaintTransformer);
+		mVViewer1.getRenderContext().setVertexDrawPaintTransformer(mVertexLineTransformer);
+		mVViewer1.getRenderContext().setVertexFontTransformer(mVertexFontTransformer);
+		mVViewer1.getRenderer().getVertexLabelRenderer().setPosition(Renderer.VertexLabel.Position.CNTR);
+		*/
+		
+		mLayoutList.add(new StaticLayout<Vertex, Edge>(mGraph));
+		mLayoutList.add(new StaticLayout<Vertex, Edge>(new Graph()));
+		
+		for(int i = 0; i < mLayoutList.size(); i++) {
+			mVViewerList.add(new VisualizationViewer<Vertex, Edge>(mLayoutList.get(i)));
+			mGraphMouseList.add(new MyModalGraphMouse(mVViewerList.get(i).getRenderContext()));
+			initViewerLayout(mVViewerList.get(i), mLayoutList.get(i), mGraphMouseList.get(i));
+		}
+		
+		// because the index 0 is for the graph drawing pane ...
+		// mGraphMouseList.get(0).addEditingFunctionality();
+		
 	}
 
+	
+	
+	private void initViewerLayout(VisualizationViewer<Vertex, Edge> vv, Layout<Vertex, Edge> layout, MyModalGraphMouse graphMouse) {
+		
+			
+
+		vv.setGraphMouse(graphMouse);
+		vv.setFocusable(true);
+		
+		vv.setBackground(Color.WHITE);
+		
+		// initialize the edge renderer
+		vv.getRenderContext().setEdgeLabelTransformer(mEdgeLabelTransformer);
+		vv.getRenderContext().setEdgeDrawPaintTransformer(mEdgePaintTransformer);
+		vv.getRenderContext().setArrowDrawPaintTransformer(mEdgePaintTransformer);
+		vv.getRenderContext().setArrowFillPaintTransformer(mEdgePaintTransformer);
+		vv.getRenderContext().setEdgeArrowTransformer(new DirectionalEdgeArrowTransformer<Vertex, Edge>(20, 16, 10));
+		vv.getRenderContext().setEdgeStrokeTransformer(new ConstantTransformer(new BasicStroke(3.0f)));
+		vv.getRenderContext().getEdgeLabelRenderer().setRotateEdgeLabels(true);
+		vv.getRenderContext().setEdgeFontTransformer(mEdgeFontTransformer);
+		vv.getRenderContext().setEdgeLabelClosenessTransformer(new ConstantDirectionalEdgeValueTransformer<Vertex, Edge>(.5, .5));
+		
+		// initialize the vertex renderer
+		vv.getRenderContext().setVertexLabelTransformer(mVertexLabelTransformer);
+		vv.getRenderContext().setVertexShapeTransformer(mVertexShapeTransformer);
+		vv.getRenderContext().setVertexFillPaintTransformer(mVertexPaintTransformer);
+		vv.getRenderContext().setVertexDrawPaintTransformer(mVertexLineTransformer);
+		vv.getRenderContext().setVertexFontTransformer(mVertexFontTransformer);
+		vv.getRenderer().getVertexLabelRenderer().setPosition(Renderer.VertexLabel.Position.CNTR);
+		
+		graphMouse.setMode(ModalGraphMouse.Mode.EDITING);
+		graphMouse.removeEditingFunctionality();
+	}
+	
 	
 	
 	/**
 	 * adds the VisualisationViewer to the given panel
 	 * @param panel the panel represents the graph drawing panel
 	 */
-	public void addToPanel(JPanel panel) {
-		panel.add(mVViewer);
-		onResizePanel(panel);
+	public void addToPanel(JPanel panel1, JPanel panel2) {
+		panel1.add(mVViewerList.get(0));
+		panel2.add(mVViewerList.get(1));
+		onResizePanel(panel1, 0);
+		onResizePanel(panel2, 1);
 	}
 	
 	
 	/**
 	 * called if the panel (the frame) is resized
 	 * @param panel the given panel that shows the graph
+	 * @param the number of the given panel starting by 0
 	 */
-	public void onResizePanel(JPanel panel) {
+	public void onResizePanel(JPanel panel, int panel_nr) {
 		// get current dimension of the panel
 		Dimension dimen = new Dimension(panel.getBounds().width, panel.getBounds().height);
+		
+		// TODO: check how and if its necessary to check size of the optional graph panel
 		// resize the drawing space
-		mVViewer.setPreferredSize(dimen);
-		mVViewer.setSize(dimen);
+		mVViewerList.get(panel_nr).setPreferredSize(dimen);
+		mVViewerList.get(panel_nr).setSize(dimen);
 		
 		// possible reason for the modifylocationifoutofbounds not functioning properly !!!!! handle with care!!!!!
 		//mLayout.setSize(dimen);
 		
 		//mVViewer.resize(dimen);
 		// resize graph if needed
-		modifyLocationsIfOutOfBounds(mGraph);
-		modifyLocationsIfOutOfBounds(mResultGraph);
+		if(panel_nr == 0)
+			modifyLocationsIfOutOfBounds(mGraph, 0);
+		
+		for(int i = 0; i < mResultingGraphs.size(); i++)
+			modifyLocationsIfOutOfBounds(mResultingGraphs.get(i), i);
+		
+		//modifyLocationsIfOutOfBounds(mResultingGraphs.get(1));
 	}
 	
 	/**
@@ -326,16 +395,22 @@ public class GraphBuilder {
 	 * checks for all vertices if their position will be gone out of view. if so, the position will
 	 * be modified to avoid disappearing of some vertices. This will ensure, that the complete graph
 	 * is visible all the time.
+	 * @param graph the graph to the size of
+	 * @param number the number of that graph referring to the panel that shows the graph (0 or 1)
 	 */
-	private void modifyLocationsIfOutOfBounds(Graph graph) {
+	private void modifyLocationsIfOutOfBounds(Graph graph, int number) {
 		
 		if(!graph.getVertices().isEmpty()) {
-			Dimension dimen = mVViewer.getSize();
+			
+			// TODO check
+			Dimension dimen = mVViewerList.get(number).getSize();
 			int i = 0;
 			
 			//System.out.println("dimen: "+ dimen.toString());
 			for(Vertex v : graph.getVertices()) {
-				Point2D p = mLayout.transform(v);
+				
+				// TODO check
+				Point2D p = mLayoutList.get(number).transform(v);
 				p.setLocation(v.getLocation());
 				//System.out.println("vertex "+ i++ +": ("+ p.getX() +", "+ p.getY() +")");
 				double x = p.getX();
@@ -361,7 +436,9 @@ public class GraphBuilder {
 					//mLayout.setLocation(v, v.getLocation());
 				}
 			}
-			mVViewer.repaint();
+			
+			// TODO check
+			mVViewerList.get(number).repaint();
 		}
 	}
 	
@@ -380,7 +457,9 @@ public class GraphBuilder {
 			int i = 0;
 			
 			for(Vertex v : mGraph.getVertices()) {
-				Point2D p = mLayout.transform(v);
+				
+				// TODO check
+				Point2D p = mLayoutList.get(0).transform(v);
 				double x = p.getX();
 				double y = p.getY();
 				System.out.println("vertex "+ i++ +": ("+ p.getX() +", "+ p.getY() +")");
@@ -421,37 +500,56 @@ public class GraphBuilder {
 	 * setter for the displayed graph in visualization mode
 	 * @param g the graph that will be copied and displayed
 	 */
-	public void setResultingGraph(Graph g) {
-		mResultGraph = new Graph(g);
+	public void setResultingGraph(ArrayList<Graph> graphs) {
+		mResultingGraphs.clear();
+		for(int i = 0; i < graphs.size(); i++)
+			mResultingGraphs.add(i, new Graph(graphs.get(i)));
+		
 		showResultGraph();
 	}
 	
 
 	private void resetResultGraph() {
-		mResultGraph = mGraph;
-		mVViewer.repaint();
+		mResultingGraphs.clear();
+		
+		mResultingGraphs.add(mGraph);
+		mResultingGraphs.add(new Graph());
+		
+		for(int i = 0; i < mVViewerList.size(); i++)
+			mVViewerList.get(i).repaint();
 	}
 	
 	private void showOriginGraph() {
-		mLayout.setGraph(mGraph);
+		mLayoutList.get(0).setGraph(mGraph);
 		updateLocations();
-		mVViewer.repaint();
+		mVViewerList.get(0).repaint();
+		
+		//mResultingGraphs.clear();
+		//mResultingGraphs.add(mGraph);
 	}
 	
 	private void showResultGraph() {
-		mLayout.setGraph(mResultGraph);
+		
+		for(int i = 0; i < mResultingGraphs.size(); i++)
+			mLayoutList.get(i).setGraph(mResultingGraphs.get(i));
+		
 		updateLocations();
-		mVViewer.repaint();
+		
+		for(int i = 0; i < mResultingGraphs.size(); i++)
+			mVViewerList.get(i).repaint();
+		
 	}
 	
 	
 	private void updateLocations() {
-		for(Vertex v : mVViewer.getGraphLayout().getGraph().getVertices()) {
-			//mLayout.setLocation(v, v.getLocation());
-			Point2D p = mLayout.transform(v);
-			p.setLocation(v.getLocation());
+		for(int i = 0; i < mVViewerList.size(); i++) {
+			for(Vertex v : mVViewerList.get(i).getGraphLayout().getGraph().getVertices()) {
+				//mLayout.setLocation(v, v.getLocation());
+				Point2D p = mLayoutList.get(i).transform(v);
+				p.setLocation(v.getLocation());
+			}
+			modifyLocationsIfOutOfBounds((Graph) mVViewerList.get(i).getGraphLayout().getGraph(), i);
 		}
-		modifyLocationsIfOutOfBounds((Graph) mVViewer.getGraphLayout().getGraph());
 	}
 	
 	/**
@@ -461,12 +559,15 @@ public class GraphBuilder {
 	public void setMode(int mode) {
 		// toggle mouse editing functionality
 		if(mode == VigralGUI.Mode.GRAPHCREATION) {
-			mGraphMouse.addEditingFunctionality();
-			showOriginGraph();
+			mGraphMouseList.get(0).addEditingFunctionality();
+			// to default to the drawn graph in the first and to an empty graph in the second panel
 			resetResultGraph();
+			showResultGraph();
+			// to show the drawn graph in the first panel and to be able to edit this one
+			showOriginGraph();
 		}
 		else if(mode == VigralGUI.Mode.VISUALISATION) {
-			mGraphMouse.removeEditingFunctionality();
+			mGraphMouseList.get(0).removeEditingFunctionality();
 			showResultGraph();
 		}
 	}
@@ -493,8 +594,9 @@ public class GraphBuilder {
 	 */
 	public void resetGraph() {
 		mGraph = new Graph();
-		mLayout.setGraph(mGraph);
-		mVViewer.repaint();
+		mLayoutList.get(0).setGraph(mGraph);
+		mVViewerList.get(0).repaint();
+		resetResultGraph();
 	}
 	
 	/**
@@ -502,14 +604,14 @@ public class GraphBuilder {
 	 * @return the VisualizationViewer
 	 */
 	public VisualizationViewer<Vertex, Edge> getVisualizationViewer() {
-		return mVViewer;
+		return mVViewerList.get(0);
 	}
 	
 	/**
 	 * tells the graphbuilder to redraw the graph
 	 */
 	public void redraw() {
-		mVViewer.repaint();
+		mVViewerList.get(0).repaint();
 	}
 	
 }
