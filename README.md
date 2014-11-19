@@ -21,7 +21,7 @@ Release notes
 
 v0.3:
 ------------------
-+ made the drawing panel a split panel, to show up to two graphs simultaneously in visualization mode
++ Replaced the graph panel by a split panel, to show up to two graphs simultaneously in visualization mode
 + CAUTION: if you use the plugins_framework v0.3 and want to use this feature, you HAVE to use vigral v0.3
 
 
