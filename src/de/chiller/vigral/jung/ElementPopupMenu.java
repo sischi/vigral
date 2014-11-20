@@ -16,8 +16,15 @@ import edu.uci.ics.jung.visualization.VisualizationViewer;
 
 public class ElementPopupMenu {
 	
+	
+	/* Java 7
 	public static final int VERTEXMENU = 0b01;
 	public static final int EDGEMENU = 0b10;
+	*/
+	
+	// Java 6
+	public static final int VERTEXMENU = /* Java 6: */ Integer.parseInt("01", 2) /* Java 7: 0b01 */;
+	public static final int EDGEMENU = /* Java 6: */ Integer.parseInt("10", 2) /* Java 7: 0b10 */;
 	
 	private static int mMenuMode;
 	private static VisualizationViewer<Vertex, Edge> mVViewer;

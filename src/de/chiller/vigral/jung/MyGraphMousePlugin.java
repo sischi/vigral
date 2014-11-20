@@ -41,7 +41,7 @@ public class MyGraphMousePlugin extends AbstractGraphMousePlugin implements Mous
 	private final int PICKING_MODE = 1;
 	
 	
-	
+	/* Java 7
 	private static final int MASK_UNDIRECTED_EDGE = 0b00001;
 	private static final int MASK_DIRECTED_EDGE = 0b00010;
 	private static final int MASK_MULTIPLE_SELECT = 0b00100;
@@ -55,11 +55,33 @@ public class MyGraphMousePlugin extends AbstractGraphMousePlugin implements Mous
 	private static final int INVMASK_RECTANGULAR_SELECT = MASK_RECTANGULAR_SELECT ^ 0b11111;
 	private static final int INVMASK_KEY_NOT_MAPPED = MASK_KEY_NOT_MAPPED ^ 0b11111;
 	private static final int INVMASK_NOKEY = MASK_NOKEY ^ 0b11111;
+	*/
+	
+	// Java 6
+	private static final int MASK_UNDIRECTED_EDGE = Integer.parseInt("00001", 2); // for binary representation
+	private static final int MASK_DIRECTED_EDGE = Integer.parseInt("00010", 2);
+	private static final int MASK_MULTIPLE_SELECT = Integer.parseInt("00100", 2);
+	private static final int MASK_RECTANGULAR_SELECT = Integer.parseInt("01000", 2);
+	private static final int MASK_KEY_NOT_MAPPED = Integer.parseInt("10000", 2);
+	private static final int MASK_NOKEY = Integer.parseInt("00000", 2);
+	
+	// Java 6
+	private static final int INVMASK_UNDIRECTED_EDGE = MASK_UNDIRECTED_EDGE ^ Integer.parseInt("11111", 2);
+	private static final int INVMASK_DIRECTED_EDGE = MASK_DIRECTED_EDGE ^ Integer.parseInt("11111", 2);
+	private static final int INVMASK_MULTIPLE_SELECT = MASK_MULTIPLE_SELECT ^ Integer.parseInt("11111", 2);
+	private static final int INVMASK_RECTANGULAR_SELECT = MASK_RECTANGULAR_SELECT ^ Integer.parseInt("11111", 2);
+	private static final int INVMASK_KEY_NOT_MAPPED = MASK_KEY_NOT_MAPPED ^ Integer.parseInt("11111", 2);
+	private static final int INVMASK_NOKEY = MASK_NOKEY ^ Integer.parseInt("11111", 2);
 	
 	private PickSupport mPicking;
 	private EditSupport mEditing;
 	
+	/* Java 7
 	private int mKeyPressed = 0b0000;
+	*/
+	
+	// Java 6
+	private int mKeyPressed = Integer.parseInt("00000", 2);
 	private Settings mSettings;
 	
 	private boolean mEditingPossible = true;
@@ -114,14 +136,14 @@ public class MyGraphMousePlugin extends AbstractGraphMousePlugin implements Mous
 			GraphElementAccessor<Vertex, Edge> pickSupport = vv.getPickSupport();
 			if (pickSupport != null) {
 				final Vertex vertex = (Vertex) pickSupport.getVertex(vv.getModel().getGraphLayout(), p.getX(), p.getY());				
-				if (mKeyPressed == 0b0001) {
+				if (mKeyPressed == /* Java 6: */ Integer.parseInt("0001", 2) /*Java 7: 0b0001*/) {
 					if (!mEditingPossible)
 						return;
 
 					mPicking.clearPickedCollection(vv);
 					changeMode(EDITING_MODE);
 					mEditing.startEdge(e, vertex, EdgeType.UNDIRECTED);
-				} else if (mKeyPressed == 0b0010) {
+				} else if (mKeyPressed == /* Java 6: */ Integer.parseInt("0010", 2) /*Java 7: 0b0010*/) {
 					if (!mEditingPossible)
 						return;
 
@@ -129,13 +151,13 @@ public class MyGraphMousePlugin extends AbstractGraphMousePlugin implements Mous
 					changeMode(EDITING_MODE);
 					mEditing.startEdge(e, vertex, EdgeType.DIRECTED);
 
-				} else if (mKeyPressed == 0b0100) {
+				} else if (mKeyPressed == /* Java 6: */ Integer.parseInt("0100", 2) /*Java 7: 0b0100*/) {
 					if (vertex != null) {
 						changeMode(PICKING_MODE);
 						mPicking.addToSelection(vertex, vv, p);
 					}
 
-				} else if (mKeyPressed == 0b1000) {
+				} else if (mKeyPressed == /* Java 6: */ Integer.parseInt("1000", 2) /*Java 7: 0b1000*/) {
 					if (vertex == null) {
 						changeMode(PICKING_MODE);
 						mPicking.clearPickedCollection(vv);
