@@ -53,7 +53,7 @@ public class VigralGUI extends JFrame {
 	/**
 	 * the current version number
 	 */
-	private static final String mVersion = "0.3";
+	private static final String mVersion = "0.4";
 	
 	/**
 	 * method to query the version number of the current release
