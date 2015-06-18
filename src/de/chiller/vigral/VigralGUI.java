@@ -36,6 +36,7 @@ import de.chiller.vigral.algorithm.RequirementDialog;
 import de.chiller.vigral.graph.ElementType;
 import de.chiller.vigral.graph.Graph;
 import de.chiller.vigral.menubar.MenuBar;
+import de.chiller.vigral.util.ErrorDialog;
 import de.chiller.vigral.util.Pair;
 import de.chiller.vigral.util.PluginLoader;
 
@@ -169,17 +170,21 @@ public class VigralGUI extends JFrame {
 				mChosenAlgorithm = mAvailableAlgorithms.get(mCb_algorithm.getSelectedIndex()); 
 				
 				// get requirements of the chosen algorithm
-				ArrayList<Pair<ElementType, String>> require = mChosenAlgorithm.getRequirements();
-				
-				if(require != null) {
-					// show requirements dialog
-					RequirementDialog dialog = new RequirementDialog(require, graph, mChosenAlgorithm);
-					dialog.setModal(true);
-					dialog.setVisible(true);
-				}
-				else {
-					// next step, if there are no requirements
-					requirementsApplied(graph);
+				try {
+					ArrayList<Pair<ElementType, String>> require = mChosenAlgorithm.getRequirements();
+						
+					if(require != null) {
+						// show requirements dialog
+						RequirementDialog dialog = new RequirementDialog(require, graph, mChosenAlgorithm);
+						dialog.setModal(true);
+						dialog.setVisible(true);
+					}
+					else {
+						// next step, if there are no requirements
+						requirementsApplied(graph);
+					}
+				} catch(Exception ex) {
+					ErrorDialog.showErrorDialog(null, "somethings wrong with requirements of algorithm '"+ mChosenAlgorithm.getAlgorithmName() +"'", ex);
 				}
 			}
 		}
@@ -565,7 +570,11 @@ public class VigralGUI extends JFrame {
 		
 		// load the first step of the algorithm
 		mChosenAlgorithm.setGraph(g);
-		mChosenAlgorithm.perform();
+		try {
+			mChosenAlgorithm.perform();
+		} catch(Exception e) {
+			ErrorDialog.showErrorDialog(null, "cant perform algorithm '" + mChosenAlgorithm.getAlgorithmName() + "'", e);
+		}
 		update(mChosenAlgorithm.getFirstStep());
 	}
 	
