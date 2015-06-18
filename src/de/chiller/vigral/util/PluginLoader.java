@@ -6,6 +6,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.ArrayList;
+import java.util.jar.JarEntry;
 
 import de.chiller.vigral.algorithm.AbstractAlgorithm;
 
@@ -61,7 +62,8 @@ public class PluginLoader {
 		try {
 			url = mPluginDir.toURI().toURL();
 		} catch (MalformedURLException e) {
-			e.printStackTrace();
+			ErrorDialog.showErrorDialog(null, "malformed url", e);
+			//e.printStackTrace();
 			return null;
 		}
 		URL[] urls = new URL[]{url};
@@ -69,14 +71,14 @@ public class PluginLoader {
 		ClassLoader loader = new URLClassLoader(urls);
 		for(String name : classes) {
 			try {
-				System.out.println("name: "+ name);
+				//System.out.println("name: "+ name);
 				Class clss = loader.loadClass(name);
 				Object o = clss.newInstance();
-				System.out.println("getclassname: "+ o.getClass().getName());
-				System.out.println("getsuperclass: "+ o.getClass().getSuperclass().getName());
+				//System.out.println("getclassname: "+ o.getClass().getName());
+				//System.out.println("getsuperclass: "+ o.getClass().getSuperclass().getName());
 				AbstractAlgorithm algo = (AbstractAlgorithm) o;
 				algorithms.add(algo);
-			} catch(NoClassDefFoundError e) {
+			} /*catch(NoClassDefFoundError e) {
 				e.printStackTrace();
 			} catch (ClassNotFoundException e) {
 				e.printStackTrace();
@@ -84,11 +86,98 @@ public class PluginLoader {
 				e.printStackTrace();
 			} catch (IllegalAccessException e) {
 				e.printStackTrace();
-			} catch (Exception e) {
+			}*/ catch (Exception e) {
+				ErrorDialog.showErrorDialog(null, "cannot load plugin '" + name + "'", e);
+			}
+		}
+		
+		try {
+			algorithms.addAll(loadPluginsJar());
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+			
+		return algorithms;
+	}
+	
+	
+	
+	public ArrayList<AbstractAlgorithm> loadPluginsJar() {
+		
+		if(!mPluginDir.exists()) {
+			//System.out.println("plugin dir ("+ mPluginDir +") does not exist!");
+			return null;
+		}
+			
+		String[] jarFilenames = mPluginDir.list(new FilenameFilter() {
+			@Override
+			public boolean accept(File dir, String name) {
+				return name.endsWith(".jar");
+			}
+		});
+		
+		String[] classNames = new String[jarFilenames.length];
+		File[] jarFiles = new File[jarFilenames.length];
+		for(int i = 0; i < jarFilenames.length; i++) {
+			classNames[i] = jarFilenames[i].substring(0, jarFilenames[i].length() - 4);
+			jarFiles[i] = new File(mPluginDir.getPath() + "/" + jarFilenames[i]);
+		}
+		
+		if(jarFilenames.length == 0)
+			return null;
+		
+		/*
+		URL url = null;
+		try {
+			url = mPluginDir.toURI().toURL();
+		} catch (MalformedURLException e) {
+			ErrorDialog.showErrorDialog(null, "malformed url", e);
+			//e.printStackTrace();
+			return null;
+		}
+		//URL[] urls = new URL[]{url};
+		URL[] urls;
+		try {
+			urls={new URL("jar:file:"+ url +"!/")};
+		} catch (Exception e) {
+			ErrorDialog.showErrorDialog(null, "cannot URL Array for '" + urls + "'", e);
+		}
+		*/
+		ArrayList<AbstractAlgorithm> algorithms = new ArrayList<AbstractAlgorithm>();
+		
+		String className = "";
+		for(int i = 0; i < jarFiles.length; i++) {
+			try {
+				className = classNames[i];
+				URL fileURL = jarFiles[i].toURI().toURL();
+				String jarURL = "jar:" + fileURL + "!/";
+				URL urls[] = { new URL(jarURL) };
+				ClassLoader loader = new URLClassLoader(urls);
+				//System.out.println("name: "+ name);
+				Class clss = loader.loadClass(className);
+				Object o = clss.newInstance();
+				//System.out.println("getclassname: "+ o.getClass().getName());
+				//System.out.println("getsuperclass: "+ o.getClass().getSuperclass().getName());
+				AbstractAlgorithm algo = (AbstractAlgorithm) o;
+				algorithms.add(algo);
+			} /*catch(NoClassDefFoundError e) {
 				e.printStackTrace();
+			} catch (ClassNotFoundException e) {
+				e.printStackTrace();
+			} catch (InstantiationException e) {
+				e.printStackTrace();
+			} catch (IllegalAccessException e) {
+				e.printStackTrace();
+			}*/ catch (Exception e) {
+				ErrorDialog.showErrorDialog(null, "cannot load plugin '" + className + "'", e);
 			}
 		}
 		
 		return algorithms;
 	}
+	
+	
+	
+	
+	
 }
